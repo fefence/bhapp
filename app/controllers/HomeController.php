@@ -15,9 +15,10 @@ class HomeController extends BaseController {
 	|
 	*/
 
-	public function showWelcome()
+	public function show()
 	{
-		return View::make('hello');
+		$matches = Match::where('league_details_id', '=', 112)->where('season', '=', '2013')->get();
+		return View::make('hello')->with(array('data' => $matches));
 	}
 
 }
