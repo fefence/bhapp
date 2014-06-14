@@ -1,6 +1,11 @@
-@extend('layout')
+@extends('layout')
 
 @section('content')
-	<h1> Твори..  </h1>
-
+<table class="noMargin noPadding">
+    @foreach($games as $game)
+    <tr>
+        <td>{{$game->bookmakerName}} {{$game->type}} {{$game->bet}} @ {{$game->odds}} {{$game->income}}</td>
+    </tr>
+    @endforeach
+</table>
 @stop

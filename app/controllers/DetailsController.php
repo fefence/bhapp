@@ -2,7 +2,7 @@
 
 class DetailsController extends \BaseController
 {
-    public function details($team, $match_id)
+    public function details($team, $match_id, $game = '')
     {
         // $date_str = \DateTime::createFromFormat("d-m-y", $date)->format("Y-m-d");
         $match = Match::find($match_id);
@@ -25,7 +25,8 @@ class DetailsController extends \BaseController
             ->take(10)
             ->get(['home', 'away', 'homeGoals', 'awayGoals', 'matchDate', 'resultShort']);
         $away = $match->away;
-        $matchesA = Match::matchesForSeason($match->league_details_id, $match->season)
+        $matchesA = Match
+            ::matchesForSeason($match->league_details_id, $match->season)
             ->where(function ($query) use ($away) {
                 $query->where('home', '=', $away)
                     ->orWhere('away', '=', $away);
@@ -51,8 +52,16 @@ class DetailsController extends \BaseController
         return View::make('details')->with(['data' => $games, 'home' => $matchesH, 'hometeam' => $home, 'awayteam' => $away, 'away' => $matchesA, 'h2h' => $h2h]);
     }
 
-    public function detailsPPM($home, $away, $date)
+    public function detailsPPM($match_id, $game)
     {
-        return View::make('ppmdetails');
+        $match = Match::find($match_id);
+        $games = $match->ppm()->where('user_id', '=', Auth::user()->id)
+            ->join('bookmaker', 'ppm.bookmaker_id', '=', 'bookmaker.id')
+            ->join('game_type', 'ppm.game_type_id', '=', 'game_type.id')
+            ->where('type', '=', $game)
+            ->where('match_id', '=', $match_id)
+            ->where('confirmed', '=', 1)
+            ->get(['bookmakerName', 'type', 'bet', 'bsf', 'income', 'odds']);
+        return View::make('ppmdetails')->with(['games' => $games]);
     }
 }

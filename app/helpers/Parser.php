@@ -1,9 +1,10 @@
 <?php
 
+use Illuminate\Database\Eloquent;
 class Parser
 {
 
-    public static function parseMatchOddsForGame($games)
+    public static function parseMatchOddsForGames($games)
     {
         // return "boo";
         foreach ($games as $game) {
@@ -25,16 +26,15 @@ class Parser
                     $cols = $row->getElementsByTagName('td');
                     if ($cols->length > 3) {
                         $oddsX = $cols->item(2)->getAttribute("data-odd");
-                        // return $oddsX;
+//                         return $oddsX;
                         // $odds3 = $cols->item(3)->getAttribute("data-odd");
                         $h = $row->getElementsByTagName('th');
                         foreach ($h as $h1) {
-                            // echo $b[0]." ".$h1->nodeValue;
                             if (strpos($h1->nodeValue, $bookmaker->bookmakerName)) {
                                 $game->odds = $oddsX;
                                 $game->income = $oddsX * $game->bet;
                                 $game->save();
-                                return $game;
+                                break 1;
                             }
                         }
                     }

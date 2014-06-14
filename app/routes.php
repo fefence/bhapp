@@ -5,8 +5,8 @@ Route::get('/boo', function(){
 });
 
 //details views
-Route::get('/details/{home}/{away}/{date}', "DetailsController@detailsPPM");
-Route::get('/details/{team}/{date}', "DetailsController@details");
+Route::get('/details/ppm/{date}/{game}', "DetailsController@detailsPPM");
+Route::get('/details/{team}/{date}/{game}', "DetailsController@details");
 
 //pool management
 Route::post('/pools/get', "PoolsController@poolsGet");
@@ -30,7 +30,7 @@ Route::get('/group/{groups_id}/odds', 'GamesController@getMatchOddsForGames');
 
 //games actions
 Route::post('/save', 'GamesController@saveTable');
-Route::get('/confirm/{game_id}', 'GamesController@confirmGame');
+Route::get('/confirm/{game_id}/{game_type_id}', 'GamesController@confirmGame');
 Route::get('/delete/{game_id}', 'GamesController@removeMatch');
 
 

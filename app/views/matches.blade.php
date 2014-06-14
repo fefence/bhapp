@@ -89,7 +89,7 @@
 					<td class='editable warning' id="{{$d->game_type_id}}">{{$d->bet}}</td>
 					<td class='editable warning' id="{{$d->game_type_id}}">{{$d->odds}}</td>
 					<td>{{$d->income}}</td>
-					<td><a href="/confirm/{{$d->games_id}}"> + <span style='display: none;'>{{$d->match_id}}</span></a>({{ $count[$d->match_id] }})</td>
+					<td><a href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}"> + <span style='display: none;'>{{$d->match_id}}</span></a>({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})</td>
 				</tr>
 			@endforeach
 			@foreach($grey as $tmp)
@@ -155,22 +155,22 @@
 			  var m = re.exec(aData[4]);
 			  team = m[1];
 		} else {
-			team = aData[3]+"/"+aData[4]
+			team = 'ppm';
 		}
 		var re = new RegExp('display: none;">(.*?)</span>');
 	  	var m = re.exec(aData[13]);
 	  	var id = m[1];
 		// alert(id);
 		// var d = aData[1].replace(/\//g, '-');
-		var promise = testAjax(team, id);
+		var promise = testAjax(team, id, aData[7]);
 		promise.success(function (data) {
 		  text = data;
 		});
 		return text;
 	}
 
-	function testAjax(team, mDate) {
-		var url = "/details/" + team + "/" + mDate;
+	function testAjax(team, mDate, game) {
+		var url = "/details/" + team + "/" + mDate + "/" + game;
 		// alert(url);
 		return $.ajax({
 			async: false,

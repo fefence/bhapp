@@ -21,8 +21,12 @@ class GamesController extends \BaseController
 
     public function getMatchOddsForGames($groups_id)
     {
-        $games = User::find(Auth::user()->id)->games()->where('groups_id', '=', $groups_id)->get();
-        Parser::parseMatchOddsForGame($games);
+        $games = User::find(Auth::user()->id)
+                ->games()
+                ->where('groups_id', '=', $groups_id)
+                ->where('confirmed', '=', 0)
+                ->get();
+        Parser::parseMatchOddsForGames($games);
         return Redirect::back();
     }
 
@@ -66,9 +70,9 @@ class GamesController extends \BaseController
         return $game->bsf . "#" . $game->bet . "#" . $game->odds . "#" . $game->income . "#" . $bsf;
     }
 
-    public function confirmGame($game_id)
+    public function confirmGame($game_id, $game_type_id)
     {
-        Games::confirmGame($game_id);
+        Games::confirmGame($game_id, $game_type_id);
         return Redirect::back();
     }
 

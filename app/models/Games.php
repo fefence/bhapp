@@ -23,15 +23,15 @@ class Games extends Eloquent
 
     public static function recalculate($groups_id, $multiplier, $amount, $user_id)
     {
-            $games = Games::where('groups_id', '=', $groups_id)->where('user_id', '=', $user_id)->get();
-            $bsfpm = $amount / count($games);
-            $bpm = $amount * $multiplier / count($games);
-            foreach ($games as $game) {
-                $game->bet = $bpm;
-                $game->bsf = $bsfpm;
-                $game->income = $game->odds * $game->bet;
-                $game->save();
-            }
+        $games = Games::where('groups_id', '=', $groups_id)->where('user_id', '=', $user_id)->get();
+        $bsfpm = $amount / count($games);
+        $bpm = $amount * $multiplier / count($games);
+        foreach ($games as $game) {
+            $game->bet = $bpm;
+            $game->bsf = $bsfpm;
+            $game->income = $game->odds * $game->bet;
+            $game->save();
+        }
 
     }
 
@@ -135,10 +135,13 @@ class Games extends Eloquent
     }
 
 
-
-    public static function confirmGame($game_id)
+    public static function confirmGame($game_id, $game_type_id)
     {
-        $game = Games::find($game_id);
+        if ($game_type_id < 5) {
+            $game = Games::find($game_id);
+        } else if ($game_type_id >= 5 && $game_type_id < 9) {
+            $game = PPM::find($game_id);
+        }
         $nGame = $game->replicate();
         $nGame->save();
         $game->confirmed = 1;
