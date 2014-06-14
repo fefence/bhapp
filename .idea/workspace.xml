@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="655a6231-50be-43b3-a9fe-21263a9bd7de" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/views/footer.blade.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/views/users.php" afterPath="" />
     </list>
     <ignored path="bhapp.iws" />
     <ignored path=".idea/workspace.xml" />
