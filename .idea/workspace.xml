@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="655a6231-50be-43b3-a9fe-21263a9bd7de" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/views/tmp.blade.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/views/test.blade.php" afterPath="" />
     </list>
     <ignored path="bhapp.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -359,13 +359,6 @@
     <entry file="file://$PROJECT_DIR$/app/views/sessions/create.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="18" column="0" selection-start="302" selection-end="302" vertical-scroll-proportion="0.32038835" vertical-offset="240" max-vertical-offset="1064">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/test.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="19" selection-start="138" selection-end="138" vertical-scroll-proportion="0.23786408" vertical-offset="0" max-vertical-offset="824">
           <folding />
         </state>
       </provider>
