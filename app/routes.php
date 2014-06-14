@@ -5,8 +5,8 @@ Route::get('/boo', function(){
 });
 
 //details views
-Route::get('/details/{home}/{away}/{date}', "GamesController@detailsPPM");
-Route::get('/details/{team}/{date}', "GamesController@details");
+Route::get('/details/{home}/{away}/{date}', "DetailsController@detailsPPM");
+Route::get('/details/{team}/{date}', "DetailsController@details");
 
 //pool management
 Route::post('/pools/get', "PoolsController@poolsGet");
