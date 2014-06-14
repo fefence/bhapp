@@ -17,7 +17,7 @@
 	                    $d = array('team' => $hometeam, 'match' => $h);
 	                  ?>
 	                
-					<td>@include('layouts.partials.square', array('data' => $d)) {{$h->home}} - {{$h->away}} <a href="#">{{$h->homeGoals}}:{{$h->awayGoals}}</a> 3.40 {{$h->matchDate}}</td>
+					<td>@include('layouts.partials.square', array('data' => $d)) {{$h->home}} - {{$h->away}} <a href="#">{{$h->homeGoals}}:{{$h->awayGoals}}</a> {{$h->matchDate}}</td>
 				</tr>
 				@endforeach
 			</table>
@@ -29,7 +29,7 @@
 					<?php
 	                    $d = array('team' => $awayteam, 'match' => $h);
 	                  ?>
-					<td>@include('layouts.partials.square', array('data' => $d)) {{$h->home}} - {{$h->away}} <a href="#">{{$h->homeGoals}}:{{$h->awayGoals}}</a> 3.40 {{$h->matchDate}}</td>
+					<td>@include('layouts.partials.square', array('data' => $d)) {{$h->home}} - {{$h->away}} <a href="#">{{$h->homeGoals}}:{{$h->awayGoals}}</a> {{$h->matchDate}}</td>
 				</tr>
 				@endforeach
 			</table>
@@ -41,7 +41,7 @@
 					<?php
 	                    $d = array('match' => $h);
 	                  ?>
-					<td>@include('layouts.partials.square', array('data' => $d)) {{$h->home}} - {{$h->away}} <a href="#">{{$h->homeGoals}}:{{$h->awayGoals}}</a> 3.40 {{$h->matchDate}}</td>
+					<td>@include('layouts.partials.square', array('data' => $d)) {{$h->home}} - {{$h->away}} <a href="#">{{$h->homeGoals}}:{{$h->awayGoals}}</a> {{$h->matchDate}}</td>
 				</tr>
 				@endforeach
 			</table>
@@ -50,7 +50,7 @@
 			<table class="noMargin noPadding">
 				@foreach($data as $game)
 					<tr>
-						<td>{{$game->bookmakerName}} {{$game->type}} {{$game->bet}} {{$game->odds}} {{$game->income}}</td>
+						<td>{{$game->bookmakerName}} {{$game->type}} {{$game->bet}} @ {{$game->odds}} {{$game->income}}</td>
 					</tr>
 				@endforeach
 			</table>

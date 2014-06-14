@@ -8,4 +8,8 @@ class PPM extends Eloquent {
 
     public static $unguarded = true;
 
+    public function match()
+    {
+        return $this->belongsTo('Match');
+    }
 }

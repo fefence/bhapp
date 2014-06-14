@@ -58,7 +58,7 @@
 				<th style="width:40px;">bet</th>
 				<th style="width:40px;">odds</th>
 				<th style="width:40px;">income</th>
-				<th style="width:10px;"></th>
+				<th style="width:26px;"></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -89,7 +89,7 @@
 					<td class='editable warning' id="{{$d->game_type_id}}">{{$d->bet}}</td>
 					<td class='editable warning' id="{{$d->game_type_id}}">{{$d->odds}}</td>
 					<td>{{$d->income}}</td>
-					<td><a href="/confirm/{{$d->games_id}}"> + <span style='display: none;'>{{$d->match_id}}</span></a></td>
+					<td><a href="/confirm/{{$d->games_id}}"> + <span style='display: none;'>{{$d->match_id}}</span></a>({{ $count[$d->match_id] }})</td>
 				</tr>
 			@endforeach
 			@foreach($grey as $tmp)

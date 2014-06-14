@@ -16,7 +16,17 @@ class Match extends Eloquent {
 
 	public function odds() {
     	return $this->hasMany('Odds1x2');
-    }    
+    }
+
+    public function games()
+    {
+        return $this->hasMany('Games');
+    }
+
+    public function ppm()
+    {
+        return $this->hasMany('PPM');
+    }
 
     public static function matchesForSeason($leagueId, $season) {
 
