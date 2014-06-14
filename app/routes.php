@@ -14,8 +14,8 @@ Route::post('/pools/insert', "PoolsController@poolsInsert");
 Route::get('/poolmanagement', "PoolsController@managePools");
 
 //leagues to play management
-Route::get('/addleagues', "GroupController@addLeaguesToPlay");
-Route::post('/saveleaguestoplay', "GroupController@saveLeagues");
+Route::get('/addleagues', "SettingsController@addLeaguesToPlay");
+Route::post('/saveleaguestoplay', "SettingsController@saveLeagues");
 
 //PPM views
 Route::get('/ppm/{from?}/{to?}', "PPMController@display");
