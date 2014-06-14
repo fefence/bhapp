@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="655a6231-50be-43b3-a9fe-21263a9bd7de" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/views/users.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/views/tmp.blade.php" afterPath="" />
     </list>
     <ignored path="bhapp.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -24,7 +24,19 @@
     <favorites_list name="bhapp" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file leaf-file-name="routes.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/routes.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="63" column="70" selection-start="2463" selection-end="2467" vertical-scroll-proportion="0.33333334" vertical-offset="1498" max-vertical-offset="3024">
+              <folding>
+                <element signature="e#7#392#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -397,6 +409,15 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1680">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/routes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="63" column="70" selection-start="2463" selection-end="2467" vertical-scroll-proportion="0.33333334" vertical-offset="1498" max-vertical-offset="3024">
+          <folding>
+            <element signature="e#7#392#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
