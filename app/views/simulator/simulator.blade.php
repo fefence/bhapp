@@ -14,7 +14,6 @@
 @stop
 
 @section('content')
-
 <table class='simulator'>
 		{{Form::open(array('url' => $action."/".$country."/".$league))}}
 	<tr>
@@ -122,7 +121,6 @@
 			</tr>
 		</tbody>
 	</table>
-
 	<script type="text/javascript">
 	function fnFormatDetails ( oTable, nTr )
 	{
