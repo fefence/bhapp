@@ -120,7 +120,7 @@
 					<td>-</td>
 					<td>-</td>
 					<td>-</td>
-					<td>-</td>
+					<td><span style='display: none;'>{{$d->id}}</span></td>
 				</tr>
 				@endforeach
 			@endforeach
@@ -160,7 +160,7 @@
 		var re = new RegExp('display: none;">(.*?)</span>');
 	  	var m = re.exec(aData[13]);
 	  	var id = m[1];
-		// alert(id);
+//		alert(id);
 		// var d = aData[1].replace(/\//g, '-');
 		var promise = testAjax(team, id, aData[7]);
 		promise.success(function (data) {

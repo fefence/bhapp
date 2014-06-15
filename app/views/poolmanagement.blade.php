@@ -31,11 +31,6 @@
 				<p class="text-center">Account State: {{$global->account}} €</p>
 			</div>
 	    </div>
-	    <div class="col-xs-3">
-			<div class="alert alert-warning">
-				<p class="text-center">Pool: {{$global->amount}} €</p>
-			</div>
-	    </div>
 	</div>
 
 	<!-- PPS -->

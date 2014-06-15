@@ -3,9 +3,9 @@
 		<div class="navbar-collapse collapse">
 		  <ul class="nav navbar-nav">
 		    <li class="{{Request::path() == 'home' ? 'active' : '';}}" ><a href="{{ URL::to('home') }}">pps</a></li>
-		    <li><a href="{{URL::to('/ppm')}}">ppm</a></li>
-		    <li><a href="{{URL::to('/livescore')}}">livescore</a></li>
-		    <li><a href="{{URL::to('/poolmanagement')}}">pool management</a></li>
+		    <li class="{{Request::path() == 'ppm' ? 'active' : '';}}"><a href="{{URL::to('/ppm')}}">ppm</a></li>
+		    <li class="{{Request::path() == 'livescore' ? 'active' : '';}}"><a href="{{URL::to('/livescore')}}">livescore</a></li>
+		    <li class="{{Request::path() == 'poolmanagement' ? 'active' : '';}}"><a href="{{URL::to('/poolmanagement')}}">pool management</a></li>
 		    <li class="{{Request::path() == 'countries' ? 'active' : '';}}"><a href="{{ URL::to('countries') }}">stats</a></li>
 		    
 		    <li class="dropdown">
@@ -39,7 +39,7 @@
 		    <li><p class="navbar-text"><span class="text-default">I: {{$pool->income}}</span></p></li>
 		    @endif
 		    @if(isset($global))
-		    <li><p class="navbar-text"><span class="text-success">{{$global->amount}}</span></p></li>
+		    <li><p class="navbar-text"><span class="text-success">{{$global->in_transit}}</span></p></li>
 		    <li><p class="navbar-text"><span class="text-success">{{$global->income}}</span></p></li>
 		    @endif
 		  </ul>

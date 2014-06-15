@@ -28,6 +28,50 @@ class Match extends Eloquent {
         return $this->hasMany('PPM');
     }
 
+    /**
+     * @param $match
+     * @return array
+     */
+    public static function getMatchesForTeams($match)
+    {
+        $home = $match->home;
+        $matchesH = Match::matchesForSeason($match->league_details_id, $match->season)
+            ->where(function ($query) use ($home) {
+                $query->where('home', '=', $home)
+                    ->orWhere('away', '=', $home);
+            })
+            ->where('resultShort', '<>', '-')
+            ->orderBy('matchDate', 'desc')
+            ->take(10)
+            ->get(['home', 'away', 'homeGoals', 'awayGoals', 'matchDate', 'resultShort']);
+        $away = $match->away;
+        $matchesA = Match
+            ::matchesForSeason($match->league_details_id, $match->season)
+            ->where(function ($query) use ($away) {
+                $query->where('home', '=', $away)
+                    ->orWhere('away', '=', $away);
+            })
+            ->where('resultShort', '<>', '-')
+            ->orderBy('matchDate', 'desc')
+            ->take(10)
+            ->get(['home', 'away', 'homeGoals', 'awayGoals', 'matchDate', 'resultShort']);
+
+        $h2h = Match::where('league_details_id', '=', $match->league_details_id)
+            ->where(function ($query) use ($away) {
+                $query->where('home', '=', $away)
+                    ->orWhere('away', '=', $away);
+            })
+            ->where(function ($query) use ($home) {
+                $query->where('home', '=', $home)
+                    ->orWhere('away', '=', $home);
+            })
+            ->where('resultShort', '<>', '-')
+            ->orderBy('matchDate', 'desc')
+            ->take(10)
+            ->get(['home', 'away', 'homeGoals', 'awayGoals', 'matchDate', 'resultShort']);
+        return array($home, $matchesH, $away, $matchesA, $h2h);
+    }
+
     public static function matchesForSeason($leagueId, $season) {
 
     	return Match::where('league_details_id', '=', $leagueId)->where('season', '=', $season)->orderBy('matchDate', 'ASC')->orderBy('matchTime', 'ASC');

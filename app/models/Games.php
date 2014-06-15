@@ -146,5 +146,35 @@ class Games extends Eloquent
         $game->save();
     }
 
+    /**
+     * @param $match
+     * @return mixed
+     */
+    public static function confirmedGamesForMatch($match, $user_id)
+    {
+        $games = $match->games()->where('user_id', '=', $user_id)
+            ->join('bookmaker', 'games.bookmaker_id', '=', 'bookmaker.id')
+            ->join('game_type', 'games.game_type_id', '=', 'game_type.id')
+            ->join('standings', 'games.standings_id', '=', 'standings.id')
+            ->where('confirmed', '=', 1)
+            ->get(['bookmakerName', 'type', 'bet', 'bsf', 'income', 'odds']);
+        return $games;
+    }
+
+    /**
+     * @param $match
+     * @return mixed
+     */
+    public static function notConfirmedGamesForMatch($match, $user_id)
+    {
+        $games = $match->games()->where('user_id', '=', $user_id)
+            ->join('bookmaker', 'games.bookmaker_id', '=', 'bookmaker.id')
+            ->join('game_type', 'games.game_type_id', '=', 'game_type.id')
+            ->join('standings', 'games.standings_id', '=', 'standings.id')
+            ->where('confirmed', '=', 0)
+            ->get(['bookmakerName', 'type', 'bet', 'bsf', 'income', 'odds']);
+        return $games;
+    }
+
 }
 

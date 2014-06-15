@@ -210,11 +210,6 @@ class Updater {
 
 	}
 
-	public static function updatePPM() {
-		$games = [5,6,7,8];
-		
-	}
-
 	public static function getPPMMatches() {
 		$leagues = LeagueDetails::where('ppm', '=', 1)->lists('id');
 		return Match::whereIn('league_details_id', $leagues)
