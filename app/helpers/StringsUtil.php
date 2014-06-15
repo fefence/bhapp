@@ -1,6 +1,6 @@
 <?php
 
-class HeadingsUtil
+class StringsUtil
 {
 
     public static function calculateHeading($fromdate, $todate)
@@ -26,5 +26,22 @@ class HeadingsUtil
             $small = date('d-M-y (D)', strtotime($fromdate)) . " to " . date('d-M-y (D)', strtotime($todate));
             return array($big, $small);
         }
+    }
+
+    /**
+     * @param $fromdate
+     * @param $todate
+     * @return array
+     */
+    public static function calculateDates($fromdate, $todate)
+    {
+        if ($fromdate == "") {
+            $fromdate = date("Y-m-d", time());
+        }
+        if ($todate == "") {
+            $todate = date("Y-m-d", time());
+            return array($fromdate, $todate);
+        }
+        return array($fromdate, $todate);
     }
 }
