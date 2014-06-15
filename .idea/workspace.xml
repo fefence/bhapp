@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="655a6231-50be-43b3-a9fe-21263a9bd7de" name="Default" comment="" />
+    <list default="true" id="655a6231-50be-43b3-a9fe-21263a9bd7de" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/DetailsController.php" afterPath="$PROJECT_DIR$/app/controllers/DetailsController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/PPM.php" afterPath="$PROJECT_DIR$/app/models/PPM.php" />
+    </list>
     <ignored path="bhapp.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -23,10 +26,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="SeriesController.php" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/controllers/SeriesController.php">
+      <file leaf-file-name="DetailsController.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/controllers/DetailsController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="281" column="20" selection-start="9282" selection-end="9282" vertical-scroll-proportion="0.06443914" vertical-offset="7814" max-vertical-offset="10556">
+            <state line="4" column="0" selection-start="57" selection-end="57" vertical-scroll-proportion="0.13160987" vertical-offset="0" max-vertical-offset="851">
               <folding />
             </state>
           </provider>
@@ -73,14 +76,14 @@
         <option value="$PROJECT_DIR$/app/controllers/PPMController.php" />
         <option value="$PROJECT_DIR$/app/models/Games.php" />
         <option value="$PROJECT_DIR$/app/models/Match.php" />
-        <option value="$PROJECT_DIR$/app/controllers/DetailsController.php" />
         <option value="$PROJECT_DIR$/app/views/matches.blade.php" />
         <option value="$PROJECT_DIR$/app/views/poolmanagement.blade.php" />
         <option value="$PROJECT_DIR$/app/models/Pools.php" />
         <option value="$PROJECT_DIR$/app/views/layouts/partials/navigation.blade.php" />
-        <option value="$PROJECT_DIR$/app/models/PPM.php" />
         <option value="$PROJECT_DIR$/app/helpers/Updater.php" />
         <option value="$PROJECT_DIR$/app/controllers/PoolsController.php" />
+        <option value="$PROJECT_DIR$/app/models/PPM.php" />
+        <option value="$PROJECT_DIR$/app/controllers/DetailsController.php" />
       </list>
     </option>
   </component>
@@ -502,13 +505,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/controllers/DetailsController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="62" selection-start="299" selection-end="299" vertical-scroll-proportion="0.29612222" vertical-offset="0" max-vertical-offset="851">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/views/matches.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="163" column="18" selection-start="5387" selection-end="5387" vertical-scroll-proportion="0.36699507" vertical-offset="4266" max-vertical-offset="8904">
@@ -533,13 +529,6 @@
     <entry file="file://$PROJECT_DIR$/app/views/layouts/partials/navigation.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="7" column="59" selection-start="575" selection-end="575" vertical-scroll-proportion="0.23031728" vertical-offset="0" max-vertical-offset="1484">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/models/PPM.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="8" selection-start="1212" selection-end="1212" vertical-scroll-proportion="0.86839014" vertical-offset="157" max-vertical-offset="1148">
           <folding />
         </state>
       </provider>
@@ -602,7 +591,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/controllers/SeriesController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="281" column="20" selection-start="9282" selection-end="9282" vertical-scroll-proportion="0.06443914" vertical-offset="7814" max-vertical-offset="10556">
+        <state line="281" column="20" selection-start="9282" selection-end="9282" vertical-scroll-proportion="9.085918" vertical-offset="254" max-vertical-offset="10556">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/models/PPM.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="41" column="5" selection-start="1600" selection-end="1600" vertical-scroll-proportion="0.93419504" vertical-offset="325" max-vertical-offset="1344">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controllers/DetailsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="0" selection-start="57" selection-end="57" vertical-scroll-proportion="0.13160987" vertical-offset="0" max-vertical-offset="851">
           <folding />
         </state>
       </provider>

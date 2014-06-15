@@ -2,7 +2,6 @@
 
 class DetailsController extends \BaseController
 {
-
     public function details($team, $match_id, $game = '')
     {
         $match = Match::find($match_id);
@@ -11,15 +10,10 @@ class DetailsController extends \BaseController
         return View::make('details')->with(['data' => $games, 'home' => $matchesH, 'hometeam' => $home, 'awayteam' => $away, 'away' => $matchesA, 'h2h' => $h2h]);
     }
 
-    public function detailsPPM($match_id, $game)
+    public function detailsPPM($match_id, $type)
     {
         $match = Match::find($match_id);
-        $games = $match->ppm()->where('user_id', '=', Auth::user()->id)
-            ->join('bookmaker', 'ppm.bookmaker_id', '=', 'bookmaker.id')
-            ->join('game_type', 'ppm.game_type_id', '=', 'game_type.id')
-            ->where('type', '=', $game)
-            ->where('confirmed', '=', 1)
-            ->get(['bookmakerName', 'type', 'bet', 'bsf', 'income', 'odds']);
+        $games = PPM::getPPMForMatchType($type, $match);
         return View::make('ppmdetails')->with(['games' => $games]);
     }
 }

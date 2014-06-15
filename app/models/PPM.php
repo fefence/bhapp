@@ -30,8 +30,15 @@ class PPM extends Eloquent {
         return $games;
     }
 
-    public static function ppmForLeagueUser($league_details_id, $user_id) {
-
+    public static function getPPMForMatchType($type, $match)
+    {
+        $games = $match->ppm()->where('user_id', '=', Auth::user()->id)
+            ->join('bookmaker', 'ppm.bookmaker_id', '=', 'bookmaker.id')
+            ->join('game_type', 'ppm.game_type_id', '=', 'game_type.id')
+            ->where('type', '=', $type)
+            ->where('confirmed', '=', 1)
+            ->get(['bookmakerName', 'type', 'bet', 'bsf', 'income', 'odds']);
+        return $games;
     }
 
 }
