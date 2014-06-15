@@ -7,8 +7,6 @@ class Games extends Eloquent
 {
     protected $table = 'games';
 
-    public $timestamps = false;
-
     public static $unguarded = true;
 
     public function group()

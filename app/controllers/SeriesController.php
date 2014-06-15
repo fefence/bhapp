@@ -14,6 +14,7 @@ class SeriesController extends BaseController {
 					if ($series == NULL) {
 						$series = new Series;
 						$series->team = $league->country;
+                        $series->league_details_id = $league->id;
 						$series->game_type_id = $i;
 						$series->current_length = 0;
 						$series->start_match_id = $match->id;
@@ -22,7 +23,7 @@ class SeriesController extends BaseController {
 					}
 					$series->current_length = $series->current_length + 1;
 					$series->end_match_id = $match->id;
-					$series->league_details_id = $match->league_details_id;
+					$series->league_details_id = $league->id;
 					if ($this->endSeries($match, $i)) {
 						$series->active = 0;
 						$duplicate = Series::where('start_match_id', '=', $series->start_match_id)

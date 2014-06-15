@@ -42,6 +42,7 @@ class PPMController extends \BaseController {
             ->where('confirmed', '=', 0)
             ->where('matchDate', '>=', $fromdate)
 			->where('matchDate', '<=', $todate)
+            ->select([DB::raw('ppm.id as id, ppm.*')])
 			->get();
 		Parser::parseMatchOddsForGames($games);
         return Redirect::back();
