@@ -172,55 +172,23 @@ class Parser
 
         $table = $dom->getElementById("league-summary-next");
         $rows = $table->getElementsByTagName("tr");
-        $time = "";
-        $date = "";
-        $home = "";
-        $away = "";
-        $id = "";
-        $group = $current;
-        foreach ($rows as $row) {
-            $headings = $row->getElementsByTagName('th');
-            if ($headings->length > 0) {
-                if ($headings->item(0)->nodeValue == ($current->round + 1) . '. Round') {
-                    break 1;
-                }
-            }
-            $cols = $row->getElementsByTagName('td');
+
+        $ids = array();
+        $count = $current->matches()->count();
+        for ($i = 0; $i < $count; $i ++) {
+            $cols = $rows->item($i)->getElementsByTagName('td');
             if ($cols->length > 0) {
                 $a = $cols->item(1)->getElementsByTagName('a');
                 foreach ($a as $link) {
                     $href = $link->getAttribute("href");
                     $arr = explode("/", $href);
                     $id = $arr[count($arr) - 2];
+                    array_push($ids, $id);
                 }
-                if (strlen($cols->item(0)->nodeValue) > 3) {
-                    $tmp = explode(" ", $cols->item(0)->nodeValue);
-                    $time = $tmp[1] . ":00";
-                    $datetmp = explode(".", $tmp[0]);
-                    $date = $datetmp[2] . "-" . $datetmp[1] . "-" . $datetmp[0];
-                }
-                if (strlen($cols->item(1)->nodeValue) > 0) {
-                    $home = explode(' - ', $cols->item(1)->nodeValue)[0];
-                    $away = explode(' - ', $cols->item(1)->nodeValue)[1];
-                }
-                //$attrs = $col->getAttribute("data-odd");
-                return $home." - ".$away;
-                $match = Match::firstOrNew(array('id' => $id));
-                $match->home = $home;
-                $match->away = $away;
-                $match->matchTime = $time;
-                $match->matchDate = $date;
-                $match->groups_id = $group->id;
-                $match->save();
-
                 // return $match;
             }
         }
-        $datetime = $group->matches()->orderBy('matchDate', 'desc')->orderBy('matchTime', 'desc')->take(1)->get(['matchDate', 'matchTime'])[0];
-        // return $datetime;
-        $group->update_time = date('Y-M-d H:i:s', strtotime("$datetime->matchDate.' '.$datetime->matchTime + 2 hours"));
-        // return $group->update_time;
-        $group->save();
+        return $ids;
     }
 
     private static function get_http_response_code($url)
