@@ -15,17 +15,6 @@
 @stop
 
 @section('content')
-	<!-- {{ Form::open(array('url' => '/pools/get')) }}
-	    
-	{{ Form::label('amount', 'Amount') }}
-	{{ Form::text('amount') }}
-
-	{{ Form::hidden('league', $league_details_id) }}
-	
-	{{ Form::submit('get') }}
-
-	{{ Form::close() }}
- -->
 	<table id="matches">
 		<thead>
 			<tr>

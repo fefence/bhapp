@@ -28,7 +28,7 @@ class Groups extends Eloquent {
             ->join('bookmaker', 'games.bookmaker_id', '=', 'bookmaker.id')
             ->join('game_type', 'games.game_type_id', '=', 'game_type.id')
             ->join('standings', 'games.standings_id', '=', 'standings.id')
-            ->select(DB::raw('`games`.id as games_id, `games`.*, `standings`.*, `match`.home,`match`.away,`match`.matchDate,`match`.matchTime, bookmaker.bookmakerName, game_type.type'))
+            ->select(DB::raw('`games`.id as games_id, `games`.*, `standings`.*, `match`.home,`match`.away,`match`.matchDate,`match`.matchTime, `match`.resultShort, bookmaker.bookmakerName, game_type.type'))
             ->where('user_id', '=', Auth::user()->id)
             ->where('confirmed', '=', 0)
             ->orderBy('matchDate')
@@ -46,7 +46,7 @@ class Groups extends Eloquent {
             ->orderBy('matchDate')
             ->orderBy('matchTime')
             ->orderBy('streak')
-            ->get(['home', 'away', 'matchDate', 'matchTime', 'streak', 'team', 'match.id']);
+            ->get(['home', 'away', 'matchDate', 'matchTime', 'streak', 'team', 'match.id', 'resultShort']);
         // }
         $m2 = $gr->matches()
             ->whereIn('away', $standings)
@@ -54,7 +54,7 @@ class Groups extends Eloquent {
             ->orderBy('matchDate')
             ->orderBy('matchTime')
             ->orderBy('streak')
-            ->get(['home', 'away', 'matchDate', 'matchTime', 'streak', 'team', 'match.id']);
+            ->get(['home', 'away', 'matchDate', 'matchTime', 'streak', 'team', 'match.id', 'resultShort']);
         return array($m1, $m2);
     }
 }

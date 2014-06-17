@@ -150,13 +150,14 @@ class Games extends Eloquent
      * @param $match
      * @return mixed
      */
-    public static function confirmedGamesForMatch($match, $user_id)
+    public static function confirmedGamesForMatch($match, $user_id, $team)
     {
         $games = $match->games()->where('user_id', '=', $user_id)
             ->join('bookmaker', 'games.bookmaker_id', '=', 'bookmaker.id')
             ->join('game_type', 'games.game_type_id', '=', 'game_type.id')
             ->join('standings', 'games.standings_id', '=', 'standings.id')
             ->where('confirmed', '=', 1)
+            ->where('team', '=', $team)
             ->get(['bookmakerName', 'type', 'bet', 'bsf', 'income', 'odds']);
         return $games;
     }
@@ -176,5 +177,19 @@ class Games extends Eloquent
         return $games;
     }
 
+    /**
+     * @param $groups_id
+     * @param $user_id
+     * @return mixed
+     */
+    public static function getGamesForGroupUser($groups_id, $user_id)
+    {
+        $games = User::find($user_id)
+            ->games()
+            ->where('groups_id', '=', $groups_id)
+            ->where('confirmed', '=', 0)
+            ->get();
+        return $games;
+    }
 }
 

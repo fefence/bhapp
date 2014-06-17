@@ -16,6 +16,7 @@ class Updater {
 			}
 			if ($match->groups_id != 0) {
 				$games = Updater::getAllGamesForMatch($match->id);
+                return $games;
 				foreach ($games as $game) {
 					Updater::updatePool($game, $match->resultShort);
 					if ($game->special == 1) {
@@ -23,6 +24,7 @@ class Updater {
 					}
 				}
 				if (Updater::isLastGameInGroup($match)) {
+                    return $match->home." - ".$match->away;
 					Updater::updateGroup($match->groups_id);
 				}
 			}

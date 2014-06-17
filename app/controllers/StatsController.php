@@ -1,28 +1,17 @@
 <?php
 
-class MatchController extends BaseController
+class StatsController extends BaseController
 {
-
-    public function showWelcome($country, $leagueName, $season)
-    {
-
-        return View::make('stats');
-
-    }
-
     public function getStats($country, $leagueName, $season)
     {
-
         $league = LeagueDetails::where('country', '=', $country)->where('fullName', '=', $leagueName)->first();
-
         $distResults = $this->getUniqueResults($league->id, $season);
-
         $allCount = Match::matchesForSeason($league->id, $season)->count();
         $drawCount = Match::matchesForSeason($league->id, $season)->where('resultShort', '=', 'D')->count();
         $homeCount = Match::matchesForSeason($league->id, $season)->where('resultShort', '=', 'H')->count();
         $awayCount = Match::matchesForSeason($league->id, $season)->where('resultShort', '=', 'A')->count();
         $seq = $this->getSequences($country, $leagueName, $season);
-        $sSeq = Match::matchesForSeason($league->id, $season)->get(array('resultShort', 'home', 'away', 'matchDate', 'matchTime', 'homeGoals', 'awayGoals'));
+        $sSeq = Match::matchesForSeason($league->id, $season)->get();
         $pps1x2 = SeriesController::getSeriesForMatches($league->id, $season, 1);
         $pps00 = SeriesController::getSeriesForMatches($league->id, $season, 2);
         $pps11 = SeriesController::getSeriesForMatches($league->id, $season, 3);

@@ -234,15 +234,7 @@
               <td>
               @foreach($series as $s)
                   <?php
-                    $m = new Match;
-                    $m->home = $s->home;
-                    $m->away = $s->away;
-                    $m->matchDate = $s->matchDate;
-                    $m->matchTime = $s->matchTime;
-                    $m->resultShort = $s->resultShort;
-                    $m->homeGoals = $s->homeGoals;
-                    $m->awayGoals = $s->awayGoals;
-                    $d = array('team' => $team, 'match' => $m);
+                    $d = array('team' => $team, 'match' => $s);
                   ?>
                 @if($s->current_length > 1)
                   {{ $s->current_length - 1}}

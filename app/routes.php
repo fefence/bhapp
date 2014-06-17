@@ -1,6 +1,6 @@
 <?php
 Route::get('/boo', function(){
-	return Updater::getPPMMatches();
+//	return Updater::getPPMMatches();
 	return Updater::update();
 });
 
@@ -72,4 +72,4 @@ Route::get('/roundpercent/{country}/{league}', 'SeriesController@percentDrawsPer
 Route::get('countries', array('as' => 'countries', 'uses' => 'LeagueDetailsController@getCountriesPlusLeagues'));
 Route::get('{country}', array('as' => 'country', 'uses' => 'LeagueDetailsController@getLeaguesForCountry'));
 Route::get('{country}/{league}/archive', array('as' => 'archive', 'uses' => "LeagueDetailsController@getImportedSeasons"));
-Route::get('{country}/{league}/{season}/stats', array('as' => 'stats', 'uses' => "MatchController@getStats"));
+Route::get('{country}/{league}/{season}/stats', array('as' => 'stats', 'uses' => "StatsController@getStats"));

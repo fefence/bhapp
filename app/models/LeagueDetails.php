@@ -31,11 +31,27 @@ class LeagueDetails extends Eloquent
         return $leagueDetails->id;
     }
 
-    /**
-     * @param $fromdate
-     * @param $todate
-     * @return array
-     */
+    public static function getLeaguesAsArray()
+    {
+        $countries = LeagueDetails::distinct()->orderBy('country')->get(['country']);
+        $data = array();
+        foreach ($countries as $country) {
+            $leagues = LeagueDetails::where('country', '=', $country->country)->get(array('fullName', 'id'));
+            $names = array();
+            foreach ($leagues as $league) {
+                $seasons = ImportedSeasons::distinct()->where('league_details_id', '=', $league->id)->orderBy('season', 'DESC')->get();
+                $s = array();
+                foreach ($seasons as $season) {
+                    array_push($s, $season->season);
+                }
+                $names[$league->fullName] = $s;
+                // array_push($names, $league->fullName['season']);
+            }
+            $data[$country->country] = $names;
+        }
+        return $data;
+    }
+
     public static function getLeaguesWithMatches($fromdate, $todate)
     {
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
