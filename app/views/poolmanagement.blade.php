@@ -26,13 +26,89 @@
 				<p class="text-center">Profit: {{$global->profit}} €</p>
 			</div>
 	    </div>
-	    <div class="col-xs-3">
-			<div class="alert alert-success">
-				<p class="text-center">Account State: {{$global->account}} €</p>
-			</div>
-	    </div>
+        <div class="col-xs-3">
+            <div class="alert alert-success">
+                <p class="text-center">Account State: {{$global->account}} €</p>
+            </div>
+        </div>
+        <div class="col-xs-3">
+            <div class="alert alert-info">
+                <p class="text-center">Legacy: {{$global->account}} €</p>
+            </div>
+        </div>
 	</div>
 
+<h6>PPS</h6>
+<div class="row">
+    <table class="table-bordered" style="margin-bottom: 20px;">
+        <tr>
+            <th style="width: 40%;text-align: center;">Country::League</th>
+            <th style="width: 10%;text-align: center;">Profit</th>
+            <th style="width: 10%;text-align: center;">Account State</th>
+            <th style="width: 10%;text-align: center;">Pool</th>
+            <th style="width: 10%;text-align: center;">Amount</th>
+            <th style="width: 10%;text-align: center;">Action</th>
+        </tr>
+        @foreach($ppspools as $ppspool)
+        <tr>
+            <td><p class="text-center">{{$ppspool->country}} :: {{$ppspool->fullName}}</p></td>
+            <td><p class="text-center">{{$global->profit}} €</p></td>
+            <td><p class="text-center">{{$global->account}} €</p></td>
+            <td><p class="text-center">{{$global->amount}} €</p></td>
+            <td><input type="text"></td>
+            <td><button class="btn btn-sm btn-primary getbtn" type="button">get</button><button class="btn btn-sm btn-warning insertbtn" type="button">insert</button></td>
+        </tr>
+        @endforeach
+    </table>
+</div>
+
+    <h6>PPM</h6>
+    <div class="row">
+        <table class="table-bordered" style="margin-bottom: 20px;">
+            <tr>
+                <th style="width: 40%;text-align: center;">Country::League</th>
+                <th style="width: 10%;text-align: center;">Profit</th>
+                <th style="width: 10%;text-align: center;">Account State</th>
+                <th style="width: 10%;text-align: center;">Pool</th>
+                <th style="width: 10%;text-align: center;">Amount</th>
+                <th style="width: 10%;text-align: center;">Action</th>
+            </tr>
+            @foreach($ppmpools as $ppmpool)
+            <tr>
+                <td><p class="text-center">{{$ppmpool->country}} :: {{$ppmpool->fullName}}</p></td>
+                <td><p class="text-center">{{$ppmpool->profit}} €</p></td>
+                <td><p class="text-center">{{$ppmpool->account}} €</p></td>
+                <td><p class="text-center">{{$ppmpool->amount}} €</p></td>
+                <td><input type="text"></td>
+                <td><button class="btn btn-sm btn-primary getbtn" type="button">get</button><button class="btn btn-sm btn-warning insertbtn" type="button">insert</button></td>
+            </tr>
+            @endforeach
+        </table>
+    </div>
+
+    <h6>Free Play</h6>
+    <div class="row">
+        <table class="table-bordered" style="margin-bottom: 20px;">
+            <tr>
+                <th style="width: 40%;text-align: center;">Country::League</th>
+                <th style="width: 10%;text-align: center;">Profit</th>
+                <th style="width: 10%;text-align: center;">Account State</th>
+                <th style="width: 10%;text-align: center;">Pool</th>
+                <th style="width: 10%;text-align: center;">Amount</th>
+                <th style="width: 10%;text-align: center;">Action</th>
+            </tr>
+            @foreach($ppspools as $ppspool)
+            <tr>
+                <td><p class="text-center">{{$ppspool->country}} :: {{$ppspool->fullName}}</p></td>
+                <td><p class="text-center">{{$global->profit}} €</p></td>
+                <td><p class="text-center">{{$global->account}} €</p></td>
+                <td><p class="text-center">{{$global->amount}} €</p></td>
+                <td><input type="text"></td>
+                <td><button class="btn btn-sm btn-primary getbtn" type="button">get</button><button class="btn btn-sm btn-warning insertbtn" type="button">insert</button></td>
+            </tr>
+            @endforeach
+        </table>
+    </div>
 	<!-- PPS -->
 	@foreach($ppspools as $ppspool)
 	<div class="row">
