@@ -1,7 +1,7 @@
 <?php
 Route::get('/boo', function(){
 //	return Updater::getPPMMatches();
-    return Parser::parseMatchesFromSummary(Groups::find(63));
+//    return Parser::parseMatchesFromSummary(Groups::find(63));
 	return Updater::update();
 });
 

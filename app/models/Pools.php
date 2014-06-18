@@ -25,7 +25,8 @@ class Pools extends Eloquent {
     {
         $ppmpoolsq = Pools::where('user_id', '=', $user_id)
             ->where('pools.ppm', '=', 1)
-            ->join('leagueDetails', 'leagueDetails.id', '=', 'pools.league_details_id');
+            ->join('leagueDetails', 'leagueDetails.id', '=', 'pools.league_details_id')
+            ->select([DB::raw('pools.*, leagueDetails.fullName, leagueDetails.country')]);
         return $ppmpoolsq;
     }
 
@@ -33,7 +34,8 @@ class Pools extends Eloquent {
     {
         $ppspoolsq = Pools::where('user_id', '=', $user_id)
             ->where('pools.ppm', '=', 0)
-            ->join('leagueDetails', 'leagueDetails.id', '=', 'pools.league_details_id');
+            ->join('leagueDetails', 'leagueDetails.id', '=', 'pools.league_details_id')
+            ->select([DB::raw('pools.*, leagueDetails.fullName, leagueDetails.country')]);
         return $ppspoolsq;
     }
 }
