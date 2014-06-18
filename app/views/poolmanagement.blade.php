@@ -52,9 +52,9 @@
         @foreach($ppspools as $ppspool)
         <tr>
             <td><p class="text-center">{{$ppspool->country}} :: {{$ppspool->fullName}}</p></td>
-            <td><p class="text-center">{{$global->profit}} €</p></td>
-            <td><p class="text-center">{{$global->account}} €</p></td>
-            <td><p class="text-center">{{$global->amount}} €</p></td>
+            <td><p class="text-center">{{$ppspool->profit}} €</p></td>
+            <td><p class="text-center">{{$ppspool->account}} €</p></td>
+            <td><p class="text-center">{{$ppspool->amount}} €</p></td>
             <td><input type="text"></td>
             <td><button class="btn btn-sm btn-primary getbtn" type="button">get</button><button class="btn btn-sm btn-warning insertbtn" type="button">insert</button></td>
         </tr>
@@ -100,9 +100,9 @@
             @foreach($ppspools as $ppspool)
             <tr>
                 <td><p class="text-center">{{$ppspool->country}} :: {{$ppspool->fullName}}</p></td>
-                <td><p class="text-center">{{$global->profit}} €</p></td>
-                <td><p class="text-center">{{$global->account}} €</p></td>
-                <td><p class="text-center">{{$global->amount}} €</p></td>
+                <td><p class="text-center">{{$ppspool->profit}} €</p></td>
+                <td><p class="text-center">{{$ppspool->account}} €</p></td>
+                <td><p class="text-center">{{$ppspool->in_transit}} €</p></td>
                 <td><input type="text"></td>
                 <td><button class="btn btn-sm btn-primary getbtn" type="button">get</button><button class="btn btn-sm btn-warning insertbtn" type="button">insert</button></td>
             </tr>
