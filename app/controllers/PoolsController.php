@@ -19,9 +19,9 @@ class PoolsController extends \BaseController
 
     public function poolsGet()
     {
-        $league = Input::get('league');
+        $id = Input::get('id');
         $amount = Input::get('amount');
-        $pool = Pools::where('user_id', '=', Auth::user()->id)->where('league_details_id', '=', $league)->first();
+        $pool = Pools::find($id);
         $main = CommonPools::where('user_id', '=', Auth::user()->id)->first();
         $pool->amount = $pool->amount - $amount;
         $pool->current = $pool->amount;
@@ -30,7 +30,7 @@ class PoolsController extends \BaseController
         $main->save();
 
         if ($pool->ppm == 0) {
-            $groups_id = Groups::where('league_details_id', '=', $league)->where('state', '=', 2)->first(['id'])->id;
+            $groups_id = Groups::where('league_details_id', '=', $pool->league_details_id)->where('state', '=', 2)->first(['id'])->id;
             Updater::recalculateGroup($groups_id, Auth::user()->id);
         } else {
         }
@@ -39,9 +39,9 @@ class PoolsController extends \BaseController
 
     public function poolsInsert()
     {
-        $league = Input::get('league');
+        $id = Input::get('id');
         $amount = Input::get('amount');
-        $pool = Pools::where('user_id', '=', Auth::user()->id)->where('league_details_id', '=', $league)->first();
+        $pool = Pools::find($id);
         $main = CommonPools::where('user_id', '=', Auth::user()->id)->first();
         $pool->amount = $pool->amount + $amount;
         $pool->current = $pool->amount;
@@ -49,7 +49,7 @@ class PoolsController extends \BaseController
         $pool->save();
         $main->save();
         if ($pool->ppm == 0) {
-            $groups_id = Groups::where('league_details_id', '=', $league)->where('state', '=', 2)->first(['id'])->id;
+            $groups_id = Groups::where('league_details_id', '=', $pool->league_details_id)->where('state', '=', 2)->first(['id'])->id;
             Updater::recalculateGroup($groups_id, Auth::user()->id);
         }
         return Redirect::back();

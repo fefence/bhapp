@@ -11,7 +11,7 @@
 @stop
 
 @section('pageHeader')
-	@include('layouts.partials.pageheader', array('calendar' => true, 'big' => "Today's matches", 'small' => '28-Apr-14 (Mon)'))
+	@include('layouts.partials.pageheader', array('calendar' => true, 'big' => isset($big)?$big:"Matches", 'small' => isset($small)?$small:"some date here"))
 @stop
 
 @section('content')

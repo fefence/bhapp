@@ -152,6 +152,45 @@ class Parser
         $group->save();
     }
 
+    public static function parseMatchesFromSummary($current)
+    {
+        $baseUrl = "http://www.betexplorer.com/soccer/";
+        $tail = "";
+
+        $league = LeagueDetails::findOrFail($current->league_details_id);
+        $url = $baseUrl . $league->country . "/" . $league->fullName . "/" . $tail;
+
+        if (Parser::get_http_response_code($url) != "200") {
+            return "Wrong fixtures url! --> $url";
+        }
+        $data = file_get_contents($url);
+
+        $dom = new domDocument;
+
+        @$dom->loadHTML($data);
+        $dom->preserveWhiteSpace = false;
+
+        $table = $dom->getElementById("league-summary-next");
+        $rows = $table->getElementsByTagName("tr");
+
+        $ids = array();
+        $count = $current->matches()->count();
+        for ($i = 0; $i < $count; $i ++) {
+            $cols = $rows->item($i)->getElementsByTagName('td');
+            if ($cols->length > 0) {
+                $a = $cols->item(1)->getElementsByTagName('a');
+                foreach ($a as $link) {
+                    $href = $link->getAttribute("href");
+                    $arr = explode("/", $href);
+                    $id = $arr[count($arr) - 2];
+                    array_push($ids, $id);
+                }
+                // return $match;
+            }
+        }
+        return $ids;
+    }
+
     private static function get_http_response_code($url)
     {
         $headers = get_headers($url);

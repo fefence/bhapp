@@ -2,11 +2,11 @@
 	<div class="col-xs-6 noPadding">
 	<!-- main content -->
 		<div class="page-header">
-			<h2 style="margin: 0px 0px 10px 0px;">{{ $big }} 
+			<h3 style="margin: 0px 0px 10px 0px;">{{ $big }}
 			@if(isset($small))
 				<small>{{ $small }}</small>
 			@endif
-			</h2>
+			</h3>
 		</div>
 	</div>
 	@if ($calendar)

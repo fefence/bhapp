@@ -5,12 +5,14 @@ class PPMController extends \BaseController
 
     public function display($fromdate = "", $todate = "")
     {
+        list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
+        list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate);
         $games = PPM::ppmForDates($fromdate, $todate);
         $count = array();
         foreach ($games as $g) {
             $count[$g->id] = User::find(Auth::user()->id)->ppm()->where('match_id', '=', $g->match_id)->where('confirmed', '=', 1)->where('game_type_id', '=', $g->game_type_id)->count();
         }
-        return View::make('matches')->with(['data' => $games, 'grey' => array(), 'ppm' => true, 'league_details_id' => -1, 'from' => $fromdate, 'to' => $todate, 'count' => $count]);
+        return View::make('matches')->with(['data' => $games, 'grey' => array(), 'ppm' => true, 'league_details_id' => -1, 'from' => $fromdate, 'to' => $todate, 'count' => $count, 'big' => $big, 'small' => $small]);
     }
 
     public function getOdds($fromdate = "", $todate = "")
