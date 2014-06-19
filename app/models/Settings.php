@@ -20,6 +20,12 @@ class Settings extends Eloquent
 
         $ids = Standings::distinct('league_details_id')->lists('league_details_id');
         $ids2 = Series::where('game_type_id', '>', 4)->lists('league_details_id');
+        if (count($ids) == 0) {
+            $ids = [-1];
+        }
+        if (count($ids2) == 0) {
+            $ids2 = [-1];
+        }
         $league = LeagueDetails::orderBy('country')->whereIn('id', $ids)->orWhereIn('id', $ids2)->get();
 
         foreach ($league as $l) {

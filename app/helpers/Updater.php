@@ -23,8 +23,7 @@ class Updater {
 					}
 				}
 				if (Updater::isLastGameInGroup($match)) {
-                    return $match->home." - ".$match->away;
-					Updater::updateGroup($match->groups_id);
+					return Updater::updateGroup($match->groups_id);
 				}
 			}
 		}
@@ -215,8 +214,18 @@ class Updater {
 		$leagues = LeagueDetails::where('ppm', '=', 1)->lists('id');
 		return Match::whereIn('league_details_id', $leagues)
 			->where('resultShort', '=', '-')
+            ->where('league_details_id', '=', 69)
+            ->where('season', '=', '2013-2014')
 			->get();
 
 	}
+
+    public static function updatePPM() {
+        $matches = self::getPPMMatches();
+//        return $matches;
+        foreach($matches as $match) {
+            self::updateDetails($match);
+        }
+    }
 
 }
