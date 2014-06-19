@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="655a6231-50be-43b3-a9fe-21263a9bd7de" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/controllers/MatchController.php" afterPath="$PROJECT_DIR$/app/controllers/StatsController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/DetailsController.php" afterPath="$PROJECT_DIR$/app/controllers/DetailsController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/Games.php" afterPath="$PROJECT_DIR$/app/models/Games.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/GamesController.php" afterPath="$PROJECT_DIR$/app/controllers/GamesController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/Groups.php" afterPath="$PROJECT_DIR$/app/models/Groups.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/LeagueDetails.php" afterPath="$PROJECT_DIR$/app/models/LeagueDetails.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/LeagueDetailsController.php" afterPath="$PROJECT_DIR$/app/controllers/LeagueDetailsController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/helpers/Updater.php" afterPath="$PROJECT_DIR$/app/helpers/Updater.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/matches.blade.php" afterPath="$PROJECT_DIR$/app/views/matches.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes.php" afterPath="$PROJECT_DIR$/app/routes.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/layouts/partials/square.blade.php" afterPath="$PROJECT_DIR$/app/views/layouts/partials/square.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/stats.blade.php" afterPath="$PROJECT_DIR$/app/views/stats.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="655a6231-50be-43b3-a9fe-21263a9bd7de" name="Default" comment="" />
     <ignored path="bhapp.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -34,19 +20,6 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="bhapp" />
-  </component>
-  <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="Groups.php" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/models/Groups.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="56" column="104" selection-start="2231" selection-end="2231" vertical-scroll-proportion="0.6324582" vertical-offset="1010" max-vertical-offset="1848">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -238,7 +211,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1440" height="874" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
