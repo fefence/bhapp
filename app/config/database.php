@@ -57,7 +57,7 @@ return array(
 			'host'      => 'localhost',
 			'database'  => 'bhapp',
 			'username'  => 'forge',
-			'password'  => 'wEJO0mIg6G44FL6OIIbu',
+			'password'  => 'TH2oxu9adyXeFfxv8ynC',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
