@@ -7,10 +7,10 @@
 	</ol>
 	<div class="pull-right">
 		@if(isset($group))
-		<a href="/group/{{$group}}/odds">refresh odds</a> |
+		<a href="/groupodds/{{$group}}">refresh odds</a> |
 		@endif
-		@if(isset($ppm) && $ppm == true && isset($from) && isset($to))
-		<a href="/ppm/{{$from}}/{{$to}}/odds">refresh odds</a> |
+		@if(isset($ppm) && $ppm == true && isset($fromdate) && isset($todate))
+		<a href="/ppm/{{$fromdate}}/{{$todate}}/odds">refresh odds</a> |
 		@endif
 		@if(isset($save) && $save)
 		<a id="save" href="#" class="text-danger">save</a> |
