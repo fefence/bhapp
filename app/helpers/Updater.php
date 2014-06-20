@@ -140,15 +140,15 @@ class Updater {
 						->where('streak', '>=', $i - 1)->lists('team', 'id');
 
 						break 1;
-					} else { 
+					} else {
 						$teams = Standings::where('league_details_id', '=', $gr->league_details_id)
 						->where('streak', '>=', $i)->lists('team', 'id');
 
 					}
 					break 1;
-				} 
+				}
 			}
-		} 
+		}
 		$pool = User::find($user_id)->pools()->where('league_details_id', '=', $gr->league_details_id)->first();
 		$bsfpm = $pool->amount / count($teams);
 		$bpm = $pool->amount * $setting->multiplier / count($teams);
@@ -178,7 +178,7 @@ class Updater {
 				$game->save();
 				$game->income = $game->odds * $game->bet;
 				$game->save();
-				
+
 			} else if (count($matches) > 1) {
 				$match = $matches[0];
 				$game = Games::firstOrCreate(['user_id' => $user_id, 'match_id' => $match->id, 'groups_id' => $match->groups_id, 'game_type_id' => 1, 'bookmaker_id' => 1, 'standings_id' =>$st_id]);
@@ -187,7 +187,7 @@ class Updater {
 				// $game->odds = 3;
 				$game->special = 1;
 				$game->save();
-				
+
 				$game->income = $game->odds * $game->bet;
 				$game->save();
 			}
@@ -204,28 +204,94 @@ class Updater {
 			->where('active', '=', 1)
 			->first();
 		// return $series;
-		$game = PPM::firstOrNew(['user_id' => Auth::user()->id, 'game_type_id' => $game_type_id, 'country' => $team, 'series_id' => $series->id, 'match_id' => $series->end_match_id]);
+		$game = PPM::firstOrNew(['user_id' => $user_id, 'game_type_id' => $game_type_id, 'country' => $team, 'series_id' => $series->id, 'match_id' => $series->end_match_id]);
 		$game->odds = 3;
 		$game->save();
+
 
 	}
 
 	public static function getPPMMatches() {
-		$leagues = LeagueDetails::where('ppm', '=', 1)->lists('id');
-		return Match::whereIn('league_details_id', $leagues)
-			->where('resultShort', '=', '-')
-            ->where('league_details_id', '=', 69)
-            ->where('season', '=', '2013-2014')
-			->get();
+        $ids = Series::where('game_type_id', '>', 4)
+            ->where('active', '=', 1)
+            ->lists('end_match_id');
+		return Match::whereIn('id', $ids)
+            ->get();
 
 	}
 
     public static function updatePPM() {
         $matches = self::getPPMMatches();
-//        return $matches;
         foreach($matches as $match) {
-            self::updateDetails($match);
+//            return self::getNextPPMMatch($match);
+            $match = self::updateDetails($match);
+            if ($match->resultShort != '-') {
+                for ($i = 5; $i < 9; $i++) {
+                    $serie = Series::where('end_match_id', '=', $match->id)
+                        ->where('active', '=', 1)
+                        ->where('game_type_id', '=', $i)
+                        ->first();
+                    $next_match = self::getNextPPMMatch($match);
+                    $games = $match->ppm()->where('game_type_id', '=', $i)->where('confirmed', '=', 1)->get();
+                    if (SeriesController::endSeries($match, $i)) {
+                        $news = $serie->replicate();
+                        $news->current_length = 1;
+                        $news->start_match_id = $next_match->id;
+                        $news->active = 1;
+                        $serie->active = 0;
+                        $serie->save();
+                        $news->end_match_id = $next_match->id;
+                        $news->current_length = $news->current_length + 1;
+                        $news->save();
+                        foreach ($games as $game) {
+                            $pool = Pools::where('user_id', '=', $game->user_id)->where('league_details_id', '=', $match->league_details_id)->where('ppm', '=', 1)->first();
+                            $pool->income = $pool->income + $game->income;
+                            $pool->save();
+                            $newgame = PPM::firstOrNew(['user_id' => $game->user_id, 'series_id' => $news->id, 'match_id' => $next_match->id, 'game_type_id' => $game->game_type_id, 'country' => $game->country, 'confirmed' => 0]);
+                            $newgame->bet = 0;
+                            $newgame->bsf = $newgame->bsf + $game->bsf+$game->bet;
+                            $newgame->odds = 3;
+                            $newgame->income = 0;
+                            $newgame->save();
+                        }
+                    } else {
+                        $serie->current_length = $serie->current_length + 1;
+                        $serie->save();
+
+                        foreach ($games as $game) {
+                            $newgame = PPM::firstOrNew(['user_id' => $game->user_id, 'series_id' => $serie->id, 'match_id' => $next_match->id, 'game_type_id' => $game->game_type_id, 'country' => $game->country, 'confirmed' => 0]);
+                            $newgame->bet = 0;
+                            $newgame->bsf = $newgame->bsf + $game->bsf+$game->bet;
+                            $newgame->odds = 3;
+                            $newgame->income = 0;
+                            $newgame->confirmed = 0;
+                            $newgame->save();
+                            $pool = Pools::where('user_id', '=', $game->user_id)->where('league_details_id', '=', $match->league_details_id)->where('ppm', '=', 1)->first();
+                            $pool->amount = $pool->amount + $game->bet;
+                            $pool->save();
+                        }
+                    }
+
+
+//                    $settings = Settings::where('game_type_id', '=', $i)->where('league_details_id', '=', $match->league_details_id)->get();
+//                    foreach($settings as $setting) {
+//                        self::addPPMMatchForUser($match->league_details_id, $i, $setting->user_id);
+//                    }
+                }
+
+            }
         }
+    }
+
+    public static function getNextPPMMatch($match)
+    {
+        return Match::where('league_details_id', '=', $match->league_details_id)
+            ->where('matchDate', '>=', $match->matchDate)
+            ->where('resultShort', '=', '-')
+            ->where('season', '=', $match->season)
+            ->orderBy('matchDate')
+            ->orderBy('matchTime')
+            ->first();
     }
 
 }
