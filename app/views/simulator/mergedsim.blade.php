@@ -27,11 +27,11 @@
 		{{Form::hidden('count', isset($count)?$count:"")}}
 	@for($i = 0; $i < $count; $i ++)
 	<tr>
-		<td>{{Form::text('country[]', isset($country)?$country[$i]:"")}}</td>
-		<td>{{Form::text('league[]', isset($league)?$league[$i]:"")}}</td>
-		<td>{{Form::text('multiply[]', isset($multiply)?$multiply[$i]:"")}}</td>
-		<td>{{Form::text('init[]', isset($init)?$init[$i]:"")}}</td>
-		<td>{{Form::text('rounds[]', isset($rounds)?$rounds[$i]:"")}}</td>
+		<td>{{Form::text('country[]', isset($country[$i])?$country[$i]:"")}}</td>
+		<td>{{Form::text('league[]', isset($league[$i])?$league[$i]:"")}}</td>
+		<td>{{Form::text('multiply[]', isset($multiply[$i])?$multiply[$i]:"")}}</td>
+		<td>{{Form::text('init[]', isset($init[$i])?$init[$i]:"")}}</td>
+		<td>{{Form::text('rounds[]', isset($rounds[$i])?$rounds[$i]:"")}}</td>
 	</tr>
 	@endfor
 	<tr>
