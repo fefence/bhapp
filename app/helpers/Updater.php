@@ -272,11 +272,6 @@ class Updater {
                         }
                     }
 
-
-//                    $settings = Settings::where('game_type_id', '=', $i)->where('league_details_id', '=', $match->league_details_id)->get();
-//                    foreach($settings as $setting) {
-//                        self::addPPMMatchForUser($match->league_details_id, $i, $setting->user_id);
-//                    }
                 }
 
             }

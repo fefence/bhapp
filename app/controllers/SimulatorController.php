@@ -588,8 +588,12 @@ class SimulatorController extends BaseController {
 	}
 
 	public function getSimMerged($count = 3) {
-		
-		return View::make('simulator.mergedsim')->with(['count' => $count]);
+        $country = ['france', 'france', 'france'];
+        $league = ['ligue-1', 'ligue-2', 'national'];
+        $init = ['100', '100', '100'];
+        $multiply = ['0.9', '0.9', '0.9'];
+        $rounds = ['2,5', '2,5', '2,5'];
+		return View::make('simulator.mergedsim')->with(['count' => $count, 'country' => $country, 'league' => $league, 'multiply' => $multiply, 'init' => $init, 'rounds' => $rounds]);
 	}
 	public function newSimMerged() {
 		$count = Input::get('count');

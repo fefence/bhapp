@@ -2,7 +2,8 @@
 Route::get('/boo', function(){
 //	return Updater::getPPMMatches();
 //    return Parser::parseMatchesFromSummary(Groups::find(63));
-	return Updater::updatePPM();
+	Updater::updatePPM();
+    return Updater::update();
 });
 
 //details views
@@ -26,7 +27,7 @@ Route::get('/ppm/{from?}/{to?}/odds', "PPMController@getOdds");
 Route::get('/livescore/{from?}/{to?}', "LivescoreController@livescore");
 
 //Groups views
-Route::get('/group/{id}', 'GamesController@getGamesForGroup');
+Route::get('/group/{id}/{fromdate?}/{todate?}', 'GamesController@getGamesForGroup');
 Route::get('/group/{groups_id}/odds', 'GamesController@getMatchOddsForGames');
 
 //games actions

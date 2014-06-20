@@ -2,20 +2,29 @@
 
 class GamesController extends \BaseController
 {
-    public function getGamesForGroup($league_details_id)
+    public function getGamesForGroup($league_details_id, $fromdate = "", $todate = "")
     {
         $pool = Pools::getPoolForUserLeague(Auth::user()->id, $league_details_id);
         $gr = Groups::getCurrentGroupId($league_details_id);
         $games = User::find(Auth::user()->id)->games()->where('groups_id', '=', $gr->id)->lists('standings_id');
-        $data = Groups::getGamesForGroup($gr->id);
         $standings = Standings::whereNotIn('id', $games)->lists('team');
 //        $matches = Groups::find($gr->id)->matches()->get(['id']);
         $count = array();
+
+        if ($fromdate == '' && $todate == '') {
+            $data = Groups::getGamesForGroup($gr->id);
+            $grey = Groups::getMatchesNotInGames($gr->id, $standings);
+            list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
+        } else {
+            list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
+            $data = Groups::getGamesForGroupAndDates($gr->id, $fromdate, $todate);
+            $grey = Groups::getMatchesNotInGamesForDates($gr->id, $standings, $fromdate, $todate);
+        }
         foreach($data as $g) {
             $match = Match::find($g->match_id);
             $count[$g->id] = count(Games::confirmedGamesForMatch($match, Auth::user()->id, $g->team));
         }
-        return View::make('matches')->with(['data' => $data, 'grey' => Groups::getMatchesNotInGames($gr->id, $standings), 'count' => $count, 'pool' => $pool, 'league_details_id' => $league_details_id, 'group' => $gr->id]);
+        return View::make('matches')->with(['data' => $data, 'grey' => $grey, 'count' => $count, 'pool' => $pool, 'league_details_id' => $league_details_id, 'group' => $gr->id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "group/$league_details_id"]);
     }
 
     public function confirmGame($game_id, $game_type_id)

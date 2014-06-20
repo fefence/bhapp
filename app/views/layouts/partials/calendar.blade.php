@@ -1,6 +1,6 @@
 <div class="col-xs-3" style="padding-top:1px;text-align:right;">
 	@if(isset($fromdate) && isset($todate)) 
-	<span><a href="/{{$base}}/{{date('Y-m-d', strtotime($fromdate) - 86400)}}/{{date('Y-m-d', strtotime($fromdate) - 86400)}}" class="btn btn-default"><</a></span>&nbsp;<span><a href="/{{$base}}" class="btn btn-default">today</a>&nbsp;<a href="/{{$base}}/{{date('Y-m-d', strtotime($fromdate) + 86400)}}/{{date('Y-m-d', strtotime($fromdate) + 86400)}}" class="btn btn-default">></a>
+	<span><a href="/{{$base}}/{{date('Y-m-d', strtotime($fromdate) - 86400)}}/{{date('Y-m-d', strtotime($fromdate) - 86400)}}" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Here date"><</a></span>&nbsp;<span><a href="/{{$base}}" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Here date today">today</a>&nbsp;<a href="/{{$base}}/{{date('Y-m-d', strtotime($fromdate) + 86400)}}/{{date('Y-m-d', strtotime($fromdate) + 86400)}}" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Here date">></a>
 	@else
 	<span><a href="#" class="btn btn-default"><</a></span>&nbsp;<span><a href="/{{$base}}" class="btn btn-default">today</a>&nbsp;<a href="#" class="btn btn-default">></a>
 	@endif
