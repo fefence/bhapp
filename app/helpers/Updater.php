@@ -225,7 +225,6 @@ class Updater {
         $time = time();
         $matches = self::getPPMMatches();
         foreach($matches as $match) {
-//            return self::getNextPPMMatch($match);
             $match = self::updateDetails($match);
             if ($match->resultShort != '-') {
                 for ($i = 5; $i < 9; $i++) {
@@ -277,8 +276,9 @@ class Updater {
                 }
 
             }
-            return (time() - $time);
         }
+        return (time() - $time);
+
     }
 
     public static function getNextPPMMatch($match)
