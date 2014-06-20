@@ -33,7 +33,7 @@
 				<tr class="{{$d->match_id}}">
 					<td>{{$d->country}}</td>
 					<td>{{$d->fullName}}</td>
-					<td><a href="/group/{{$d->id}}">GO</a></td>
+					<td><a href="/group/{{$d->id}}/{{isset($fromdate)?$fromdate.'/':''}}{{isset($todate)?$todate:''}}">GO</a></td>
 				</tr>
 			@endforeach
 		</tbody>

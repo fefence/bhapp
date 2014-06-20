@@ -6,7 +6,7 @@ class PPMController extends \BaseController
     public function display($fromdate = "", $todate = "")
     {
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
-        list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate);
+        list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, '');
         $games = PPM::ppmForDates($fromdate, $todate);
         $count = array();
         foreach ($games as $g) {

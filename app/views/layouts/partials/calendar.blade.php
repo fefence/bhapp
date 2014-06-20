@@ -1,6 +1,6 @@
 <div class="col-xs-3" style="padding-top:1px;text-align:right;">
 	@if(isset($fromdate) && isset($todate)) 
-	<span><a href="/{{$base}}/{{date('Y-m-d', strtotime($fromdate) - 86400)}}/{{date('Y-m-d', strtotime($fromdate) - 86400)}}" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Here date"><</a></span>&nbsp;<span><a href="/{{$base}}" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Here date today">today</a>&nbsp;<a href="/{{$base}}/{{date('Y-m-d', strtotime($fromdate) + 86400)}}/{{date('Y-m-d', strtotime($fromdate) + 86400)}}" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Here date">></a>
+	<span><a href="/{{$base}}/{{date('Y-m-d', strtotime($fromdate) - 86400)}}/{{date('Y-m-d', strtotime($fromdate) - 86400)}}" class="btn btn-default"><</a></span>&nbsp;<span><a href="/{{$base}}/{{date('Y-m-d', time())}}/{{date('Y-m-d', time())}}" class="btn btn-default">today</a>&nbsp;<a href="/{{$base}}/{{date('Y-m-d', strtotime($fromdate) + 86400)}}/{{date('Y-m-d', strtotime($fromdate) + 86400)}}" class="btn btn-default">></a>
 	@else
 	<span><a href="#" class="btn btn-default"><</a></span>&nbsp;<span><a href="/{{$base}}" class="btn btn-default">today</a>&nbsp;<a href="#" class="btn btn-default">></a>
 	@endif
@@ -43,7 +43,9 @@ $(document).ready(function(){
 			    // }
 			}
 		});
-	$("#go").on("click", function(){
+
+
+    $("#go").on("click", function(){
 		// alert(dp.datepicker('getDates')[0]+" - "+dp.datepicker('getDates')[1]);
 		var d = new Date(dp.datepicker('getDates')[0]);
 		var d1 = new Date(dp.datepicker('getDates')[1]);
