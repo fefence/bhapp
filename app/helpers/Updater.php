@@ -216,6 +216,7 @@ class Updater {
             ->where('active', '=', 1)
             ->lists('end_match_id');
 		return Match::whereIn('id', $ids)
+            ->where('resultShort', '=', '-')
             ->get();
 
 	}
