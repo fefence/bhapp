@@ -27,7 +27,7 @@ class Updater {
 				}
 			}
 		}
-		return (time() - $time)." sec for ".count($allMatches)." matches";
+		return (time() - $time);
 	}
 
 
@@ -222,6 +222,7 @@ class Updater {
 	}
 
     public static function updatePPM() {
+        $time = time();
         $matches = self::getPPMMatches();
         foreach($matches as $match) {
 //            return self::getNextPPMMatch($match);
@@ -276,6 +277,7 @@ class Updater {
                 }
 
             }
+            return (time() - $time);
         }
     }
 

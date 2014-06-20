@@ -37,8 +37,8 @@ class UpdatePPMCommand extends Command {
 	 */
 	public function fire()
 	{
-        Updater::updatePPM();
-        $this->info("done");
+        $time = Updater::updatePPM();
+        $this->info($time." sec elapsed");
 	}
 
 	/**

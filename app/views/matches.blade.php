@@ -54,7 +54,7 @@
 			@foreach($data as $d)
 				<tr class="{{$d->match_id}}" id="{{isset($d->games_id)?$d->games_id:''}}">
 					<td class="center"><img class="clickable" src="/images/table-unfold.png"></td>	          
-		  			<td>{{date('d/m/y', strtotime($d->matchDate))}}</td>
+		  			<td>{{date('d M', strtotime($d->matchDate))}}</td>
 					<td>{{substr($d->matchTime, 0, strlen($d->matchTime)-3)}}</td>
 					<td>
 						@if ($d->team == $d->home)
@@ -85,7 +85,7 @@
 				@foreach($tmp as $d)
 				<tr id="no">
 					<td class="center"><img class="clickable" src="/images/table-unfold.png"></td>	          
-		  			<td>{{date('d/m/y', strtotime($d->matchDate))}}</td>
+		  			<td>{{date('d M', strtotime($d->matchDate))}}</td>
 					<td>{{substr($d->matchTime, 0, strlen($d->matchTime)-3)}}</td>
 					<td>
 						@if ($d->team == $d->home)
