@@ -2,8 +2,8 @@
 Route::get('/boo', function(){
 //	return Updater::getPPMMatches();
 //    return Parser::parseMatchesFromSummary(Groups::find(63));
-	Updater::updatePPM();
-    return Updater::update();
+	return Updater::updatePPM();
+    //return Updater::update();
 });
 
 //details views
