@@ -259,6 +259,7 @@ class Updater {
                         }
                     } else {
                         $serie->current_length = $serie->current_length + 1;
+                        $serie->end_match_id = $next_match->id;
                         $serie->save();
 
                         foreach ($games as $game) {
