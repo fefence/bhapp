@@ -33,6 +33,7 @@ Route::get('/groupodds/{groups_id}', 'GamesController@getMatchOddsForGames');
 //games actions
 Route::post('/save', 'GamesController@saveTable');
 Route::get('/confirm/{game_id}/{game_type_id}', 'GamesController@confirmGame');
+Route::get('/delete/{game_id}/{game_type_id}', 'GamesController@deleteGame');
 Route::get('/delete/{game_id}', 'GamesController@removeMatch');
 
 

@@ -126,7 +126,7 @@ class Games extends Eloquent
                 }
             }
             if ($recalc) {
-                Games::recalculate($setting->league_details_id, $setting->multiplier, $pool->amount);
+                Games::recalculate($setting->league_details_id, $setting->multiplier, $pool->amount, $user_id);
             }
 
         }
@@ -144,6 +144,16 @@ class Games extends Eloquent
         $nGame->save();
         $game->confirmed = 1;
         $game->save();
+    }
+
+    public static function deleteGame($game_id, $game_type_id)
+    {
+        if ($game_type_id < 5) {
+            $game = Games::find($game_id);
+        } else if ($game_type_id >= 5 && $game_type_id < 9) {
+            $game = PPM::find($game_id);
+        }
+        $game->delete();
     }
 
     /**

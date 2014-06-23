@@ -34,6 +34,12 @@ class GamesController extends \BaseController
         return Redirect::back();
     }
 
+    public function deleteGame($game_id, $game_type_id)
+    {
+        Games::deleteGame($game_id, $game_type_id);
+        return Redirect::back();
+    }
+
     public function removeMatch($game_id)
     {
         return Redirect::back();
