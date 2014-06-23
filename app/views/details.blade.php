@@ -50,7 +50,7 @@
 			<table class="noMargin noPadding">
 				@foreach($data as $game)
 					<tr>
-						<td>{{$game->bookmakerName}} {{$game->type}} {{$game->bet}} @ {{$game->odds}} {{$game->income}} <a href="/delete/{{$game->game_type_id}}/{{$game->id}}">-</a> </td>
+						<td>{{$game->bookmakerName}} {{$game->type}} bsf: {{$game->bsf}} {{$game->bet}} @ {{$game->odds}} {{$game->income}} <a href="/delete/{{$game->id}}/{{$game->game_type_id}}">-</a> </td>
 					</tr>
 				@endforeach
 			</table>

@@ -141,6 +141,7 @@ class Games extends Eloquent
             $game = PPM::find($game_id);
         }
         $nGame = $game->replicate();
+        $nGame->bsf = 0;
         $nGame->save();
         $game->confirmed = 1;
         $game->save();
@@ -153,6 +154,12 @@ class Games extends Eloquent
         } else if ($game_type_id >= 5 && $game_type_id < 9) {
             $game = PPM::find($game_id);
         }
+        $nGame = Games::where('user_id', '=', $game->user_id)
+            ->where('match_id', '=', $game->match_id)
+            ->where('confirmed', '=', 0)
+            ->first();
+        $nGame->bsf = $nGame->bsf + $game->bsf;
+        $nGame->save();
         $game->delete();
     }
 
@@ -168,7 +175,7 @@ class Games extends Eloquent
             ->join('standings', 'games.standings_id', '=', 'standings.id')
             ->where('confirmed', '=', 1)
             ->where('team', '=', $team)
-            ->get(['bookmakerName', 'type', 'bet', 'bsf', 'income', 'odds']);
+            ->get(['bookmakerName', 'type', 'bet', 'bsf', 'income', 'odds', 'games.id', 'game_type_id']);
         return $games;
     }
 
@@ -183,7 +190,7 @@ class Games extends Eloquent
             ->join('game_type', 'games.game_type_id', '=', 'game_type.id')
             ->join('standings', 'games.standings_id', '=', 'standings.id')
             ->where('confirmed', '=', 0)
-            ->get(['bookmakerName', 'type', 'bet', 'bsf', 'income', 'odds']);
+            ->get(['bookmakerName', 'type', 'bet', 'bsf', 'income', 'odds', 'games.id', 'game_type_id']);
         return $games;
     }
 
