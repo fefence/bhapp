@@ -53,7 +53,7 @@
 		<tbody>
 			@foreach($data as $d)
 				<tr class="{{$d->match_id}}" id="{{isset($d->games_id)?$d->games_id:''}}">
-					<td class="center"><img class="clickable" src="/images/table-unfold.png"></td>	          
+					<td class="center"><img class="clickable" src="/images/plus-small.png"></td>
 		  			<td>{{date('d M', strtotime($d->matchDate))}}</td>
 					<td>{{substr($d->matchTime, 0, strlen($d->matchTime)-3)}}</td>
 					<td>
@@ -84,7 +84,7 @@
 			@foreach($grey as $tmp)
 				@foreach($tmp as $d)
 				<tr id="no">
-					<td class="center"><img class="clickable" src="/images/table-unfold.png"></td>	          
+					<td class="center"><img class="clickable" src="/images/plus-small.png"></td>
 		  			<td>{{date('d M', strtotime($d->matchDate))}}</td>
 					<td>{{substr($d->matchTime, 0, strlen($d->matchTime)-3)}}</td>
 					<td>
@@ -276,16 +276,16 @@
 
 	    $('#matches tbody').on('click', '.clickable', function () {
 				var nTr = this.parentNode.parentNode;
-				if ( this.src.match('table-fold') )
+				if ( this.src.match('minus-small') )
 				{
 					/* This row is already open - close it */
-					this.src = "/images/table-unfold.png";
+					this.src = "/images/plus-small.png";
 					oTable.fnClose( nTr );
 				}
 				else
 				{
 					/* Open this row */
-					this.src = "/images/table-fold.png";
+					this.src = "/images/minus-small.png";
 					oTable.fnOpen( nTr, fnFormatDetails(oTable, nTr), 'details' );
 				}
 			} );
