@@ -15,13 +15,116 @@
 
 @section('content')
 <!-- tabbed nav -->
-<ul class="nav nav-tabs" id="myTab" style="border: none;">
+<ul class="nav nav-pills" id="myTab" style="border: none;">
   <li class='active'><a href="#myppsleagues">My PPS Leagues</a></li>
   <li><a href="#myppmleagues">My PPM Leagues</a></li>
   <li><a href="#mybookmakers">My Bookmakers</a></li>
   <li><a href="#personal">Personal</a></li>
 </ul>
+
 <form id="settingsform" method="post" action="settings/save">
+
+<h6>PPS</h6>
+<div class="row">
+    <table class="table-bordered" style="margin-bottom: 20px; width: 100%;">
+        <tr>
+            <th style="width: 15%;text-align: center;">Country::League</th>
+            <th style="width: %;text-align: center;">1x2</th>
+            <th style="width: %;text-align: center;">0:0</th>
+            <th style="width: %;text-align: center;">1:1</th>
+            <th style="width: %;text-align: center;">2:2</th>
+        </tr>
+        <tr>
+            <td><p class="text-center">Lithuania :: A Lyga</p></td>
+            <td style="padding-left: 10px;"><div class="radio">
+                    <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                        Disabled
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                        Automatic
+                    </label>
+                    <input type="text" name="optionsRadios" id="optionsRadios2" value="2" style="width: 25px;"> to <input type="text" name="optionsRadios" id="optionsRadios2" value="6" style="width: 25px;"> at <input type="text" name="optionsRadios" id="optionsRadios2" value="0.9" style="width: 25px;">
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                        Fixed
+                    </label>
+                    <input type="text" name="optionsRadios" id="optionsRadios2" value="2" style="width: 25px;"> to <input type="text" name="optionsRadios" id="optionsRadios2" value="6" style="width: 25px;"> at <input type="text" name="optionsRadios" id="optionsRadios2" value="0.9" style="width: 25px;">
+                </div>
+            </td>
+            <td style="padding-left: 10px;"><div class="radio">
+                    <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                        Disabled
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                        Automatic
+                    </label>
+                    <input type="text" name="optionsRadios" id="optionsRadios2" value="2" style="width: 25px;"> to <input type="text" name="optionsRadios" id="optionsRadios2" value="6" style="width: 25px;"> at <input type="text" name="optionsRadios" id="optionsRadios2" value="0.9" style="width: 25px;">
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                        Fixed
+                    </label>
+                    <input type="text" name="optionsRadios" id="optionsRadios2" value="2" style="width: 25px;"> to <input type="text" name="optionsRadios" id="optionsRadios2" value="6" style="width: 25px;"> at <input type="text" name="optionsRadios" id="optionsRadios2" value="0.9" style="width: 25px;">
+                </div>
+            </td>
+            <td style="padding-left: 10px;"><div class="radio">
+                    <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                        Disabled
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                        Automatic
+                    </label>
+                    <input type="text" name="optionsRadios" id="optionsRadios2" value="2" style="width: 25px;"> to <input type="text" name="optionsRadios" id="optionsRadios2" value="6" style="width: 25px;"> at <input type="text" name="optionsRadios" id="optionsRadios2" value="0.9" style="width: 25px;">
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                        Fixed
+                    </label>
+                    <input type="text" name="optionsRadios" id="optionsRadios2" value="2" style="width: 25px;"> to <input type="text" name="optionsRadios" id="optionsRadios2" value="6" style="width: 25px;"> at <input type="text" name="optionsRadios" id="optionsRadios2" value="0.9" style="width: 25px;">
+                </div>
+            </td>
+            <td style="padding-left: 10px;"><div class="radio">
+                    <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                        Disabled
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                        Automatic
+                    </label>
+                    <input type="text" name="optionsRadios" id="optionsRadios2" value="2" style="width: 25px;"> to <input type="text" name="optionsRadios" id="optionsRadios2" value="6" style="width: 25px;"> at <input type="text" name="optionsRadios" id="optionsRadios2" value="0.9" style="width: 25px;">
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                        Fixed
+                    </label>
+                        <input type="text" name="optionsRadios" id="optionsRadios2" value="2" style="width: 25px;"> to <input type="text" name="optionsRadios" id="optionsRadios2" value="6" style="width: 25px;"> at <input type="text" name="optionsRadios" id="optionsRadios2" value="0.9" style="width: 25px;">
+                </div>
+            </td>
+      </tr>
+    </table>
+</div>
+
+
 <div id='content' class="tab-content">
 	<!-- tab::myleagues -->
 	<div class="tab-pane active" id="myppsleagues">
@@ -64,11 +167,11 @@
 							  </td>
 							  <td id="1">
 								  	<p>
-				  			  	      	<select name="{{$s[0]}}-opt" class="form-control opt" style="width: 100px; height: 30px; font-size: 90%; padding: 3px; display: inline;">
-										  <option value="disabled" {{($s[1]['auto'] == 0)?"selected":""}}>Disabled</option>
-										  <option value="auto" {{($s[1]['auto'] == 1)?"selected":""}}>Automatic</option>
-										  <option value="fixed" {{($s[1]['auto'] == 2)?"selected":""}}>Fixed</option>
-										</select> <span id='inpts' style="{{($s[1]['auto'] != 1)?'display: none;':''}}"> from <input id="from" name="{{$s[0]}}-from" class="min_start" type="text" style="width: 25px;" value="{{($s[1]['auto'] == 1)?$s[1]['from']:''}}"> to <input id="to" name="{{$s[0]}}-to" class="min_start" type="text" style="width: 25px;" value="{{($s[1]['auto'] == 1)?$s[1]['to']:''}}"> <input id="multiplier" name="{{$s[0]}}-mul" class="min_start" type="text" style="width: 25px;" value="{{($s[1]['auto'] == 1)?$s[1]['multiplier']:''}}"> </span><span id="ltspan" style="{{($s[1]['auto'] != 2)?'display: none;':''}}">from <input id="lt" name="{{$s[0]}}-lt" class="min_start" type="text" style="width: 25px;" value="{{($s[1]['auto'] == 2)?$s[1]['from']:''}}"><input id="multiplier" name="{{$s[0]}}-mul1"class="min_start" type="text" style="width: 25px;" value="{{($s[1]['auto'] == 2)?$s[1]['multiplier']:''}}"></span>
+                                            <select name="{{$s[0]}}-opt" class="form-control opt" style="width: 100px; height: 30px; font-size: 90%; padding: 3px; display: inline;">
+                                              <option value="disabled" {{($s[1]['auto'] == 0)?"selected":""}}>Disabled</option>
+                                              <option value="auto" {{($s[1]['auto'] == 1)?"selected":""}}>Automatic</option>
+                                              <option value="fixed" {{($s[1]['auto'] == 2)?"selected":""}}>Fixed</option>
+                                            </select> <span id='inpts' style="{{($s[1]['auto'] != 1)?'display: none;':''}}"> from <input id="from" name="{{$s[0]}}-from" class="min_start" type="text" style="width: 25px;" value="{{($s[1]['auto'] == 1)?$s[1]['from']:''}}"> to <input id="to" name="{{$s[0]}}-to" class="min_start" type="text" style="width: 25px;" value="{{($s[1]['auto'] == 1)?$s[1]['to']:''}}"> <input id="multiplier" name="{{$s[0]}}-mul" class="min_start" type="text" style="width: 25px;" value="{{($s[1]['auto'] == 1)?$s[1]['multiplier']:''}}"> </span><span id="ltspan" style="{{($s[1]['auto'] != 2)?'display: none;':''}}">from <input id="lt" name="{{$s[0]}}-lt" class="min_start" type="text" style="width: 25px;" value="{{($s[1]['auto'] == 2)?$s[1]['from']:''}}"><input id="multiplier" name="{{$s[0]}}-mul1"class="min_start" type="text" style="width: 25px;" value="{{($s[1]['auto'] == 2)?$s[1]['multiplier']:''}}"></span>
 									</p>
 								</td>
 							  @for($j = 2; $j < 5; $j ++)
