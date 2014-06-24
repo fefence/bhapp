@@ -145,6 +145,11 @@ class Games extends Eloquent
         $nGame->save();
         $game->confirmed = 1;
         $game->save();
+        $m = Match::find($game->match_id);
+        $pool = Pools::where('user_id', '=', $game->user_id)->where('league_details_id', '=', $m->league_details_id)->first();
+        $pool->current = $pool->current + $game->bsf;
+        $pool->save();
+
     }
 
     public static function deleteGame($game_id, $game_type_id)
@@ -156,10 +161,16 @@ class Games extends Eloquent
         }
         $nGame = Games::where('user_id', '=', $game->user_id)
             ->where('match_id', '=', $game->match_id)
+            ->where('standings_id', '=', $game->standings_id)
             ->where('confirmed', '=', 0)
             ->first();
         $nGame->bsf = $nGame->bsf + $game->bsf;
         $nGame->save();
+
+        $m = Match::find($game->match_id);
+        $pool = Pools::where('user_id', '=', $game->user_id)->where('league_details_id', '=', $m->league_details_id)->first();
+        $pool->current = $pool->current - $game->bsf;
+        $pool->save();
         $game->delete();
     }
 

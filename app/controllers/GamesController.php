@@ -72,15 +72,6 @@ class GamesController extends \BaseController
         if ($col == 9 || $col == '9') {
             $game->bsf = $value;
             $game->save();
-
-            if ($game_type_id > 0 && $game_type_id < 5) {
-                $m = Match::find($game->match_id);
-                $matches = Groups::find($m->groups_id)->matches()->lists('id');
-                $bsf = Games::where('user_id', '=', Auth::user()->id)->whereIn('match_id', $matches)->sum('bsf');
-                $pool = Pools::where('user_id', '=', Auth::user()->id)->where('league_details_id', '=', $m->league_details_id)->first();
-                $pool->current = $bsf;
-                $pool->save();
-            }
         }
         if ($col == 10 || $col == '10') {
             $game->bet = $value;

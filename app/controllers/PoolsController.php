@@ -24,7 +24,6 @@ class PoolsController extends \BaseController
         $pool = Pools::find($id);
         $main = CommonPools::where('user_id', '=', Auth::user()->id)->first();
         $pool->amount = $pool->amount - $amount;
-        $pool->current = $pool->amount;
         $main->in_transit = $main->in_transit + $amount;
         $pool->save();
         $main->save();
@@ -44,7 +43,6 @@ class PoolsController extends \BaseController
         $pool = Pools::find($id);
         $main = CommonPools::where('user_id', '=', Auth::user()->id)->first();
         $pool->amount = $pool->amount + $amount;
-        $pool->current = $pool->amount;
         $main->in_transit = $main->in_transit - $amount;
         $pool->save();
         $main->save();
