@@ -61,7 +61,7 @@
                     <input type="hidden" name="id" value="{{$ppspool->id}}">
                 </form>
             </td>
-            <td><button class="btn btn-sm btn-primary getbtn" type="button">get</button><button class="btn btn-sm btn-warning insertbtn" type="button">insert</button></td>
+            <td><button class="btn btn-sm btn-primary getbtn" type="button">-</button><button class="btn btn-sm btn-warning insertbtn" type="button">+</button></td>
         </tr>
         @endforeach
     </table>
@@ -90,7 +90,7 @@
                         <input type="hidden" name="id" value="{{$ppmpool->id}}">
                     </form>
                 </td>
-                <td><button class="btn btn-sm btn-primary getbtn" type="button">get</button><button class="btn btn-sm btn-warning insertbtn" type="button">insert</button></td>
+                <td><button class="btn btn-sm btn-primary getbtn" type="button">-</button><button class="btn btn-sm btn-warning insertbtn" type="button">+</button></td>
             </tr>
             @endforeach
         </table>
@@ -119,7 +119,7 @@
                         <input type="hidden" name="id" value="{{$ppspool->id}}">
                     </form>
                 </td>
-                <td><button class="btn btn-sm btn-primary getbtn" type="button">get</button><button class="btn btn-sm btn-warning insertbtn" type="button">insert</button></td>
+                <td><button class="btn btn-sm btn-primary getbtn" type="button">-</button><button class="btn btn-sm btn-warning insertbtn" type="button">+</button></td>
             </tr>
             @endforeach
         </table>
