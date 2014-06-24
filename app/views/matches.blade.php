@@ -89,8 +89,8 @@ $i = 0;
     @else
     @foreach($d as $dd)
     <tr id="no">
-<!--        <td class="center"><img class="clickable" src="/images/plus-small.png"></td>-->
-        <td></td>
+        <td class="center"><img class="clickable" src="/images/plus-small.png"></td>
+<!--        <td></td>-->
         <td>{{date('d M', strtotime($dd->matchDate))}}</td>
         <td>{{substr($dd->matchTime, 0, strlen($dd->matchTime)-3)}}</td>
         <td>
@@ -212,6 +212,14 @@ $i = 0;
             "bJQueryUI": true,
             "sPaginationType": "full_numbers"
         });
+
+        var oTable1 = $("#matches1").dataTable({
+            "iDisplayLength": 100,
+            "bJQueryUI": true,
+            "sDom": '<"top"><"bottom"><"clear">',
+            "sPaginationType": "full_numbers"
+        });
+
         $("thead input").keyup(function () {
             /* Filter on the column (the index) of this element */
             oTable.fnFilter(this.value, $("thead input").index(this));
@@ -298,6 +306,19 @@ $i = 0;
             }
         });
 
+        $('#matches1 tbody').on('click', '.clickable', function () {
+            var nTr = this.parentNode.parentNode;
+            if (this.src.match('minus-small')) {
+                /* This row is already open - close it */
+                this.src = "/images/plus-small.png";
+                oTable1.fnClose(nTr);
+            }
+            else {
+                /* Open this row */
+                this.src = "/images/minus-small.png";
+                oTable1.fnOpen(nTr, fnFormatDetails(oTable1, nTr), 'details');
+            }
+        });
         // if ($("#crr").text() != $("#pool").text()) {
         //   		$("#crr").html("<strong>"+$("#crr").text()+"</strong>");
         //   	} else {
