@@ -174,6 +174,18 @@ class Games extends Eloquent
         $game->delete();
     }
 
+    public static function addGame($groups_id, $standings_id, $user_id, $match_id) {
+        $game = new Games;
+        $game->user_id = $user_id;
+        $game->bet = 0;
+        $game->odds = 3;
+        $game->match_id = $match_id;
+        $game->game_type_id = 1;
+        $game->special= 0;
+        $game->standings_id = $standings_id;
+        $game->groups_id = $groups_id;
+        $game->save();
+    }
     /**
      * @param $match
      * @return mixed

@@ -1,9 +1,7 @@
 <?php
 Route::get('/boo', function(){
 //	return Updater::getPPMMatches();
-//    return Parser::parseMatchesFromSummary(Groups::find(63));
-    Parser::parseLeagueSeries(Groups::find(63));
-	return Updater::updatePPM();
+   	return Updater::updatePPM();
     //return Updater::update();
 });
 
@@ -35,6 +33,7 @@ Route::get('/groupodds/{groups_id}', 'GamesController@getMatchOddsForGames');
 Route::post('/save', 'GamesController@saveTable');
 Route::get('/confirm/{game_id}/{game_type_id}', 'GamesController@confirmGame');
 Route::get('/delete/{game_id}/{game_type_id}', 'GamesController@deleteGame');
+Route::get('/addgame/{groups_id}/{standings_id}/{match_id}', 'GamesController@addGame');
 
 //Route::get('/nextmatches/{country}/{league}', 'MatchController@getNextMatchesForPlay');
 

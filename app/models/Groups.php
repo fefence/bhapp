@@ -63,15 +63,17 @@ class Groups extends Eloquent {
             ->orderBy('matchDate')
             ->orderBy('matchTime')
             ->orderBy('streak')
-            ->get(['home', 'away', 'matchDate', 'matchTime', 'streak', 'team', 'match.id', 'resultShort']);
-        // }
+            ->select(DB::raw("standings.id as standings_id, home, away, matchDate, matchTime, streak, team, match.id, resultShort, groups_id"))
+            ->get();
+                    // }
         $m2 = $gr->matches()
             ->whereIn('away', $standings)
             ->join('standings', 'match.away', '=', 'standings.team')
             ->orderBy('matchDate')
             ->orderBy('matchTime')
             ->orderBy('streak')
-            ->get(['home', 'away', 'matchDate', 'matchTime', 'streak', 'team', 'match.id', 'resultShort']);
+            ->select(DB::raw("standings.id as standings_id, home, away, matchDate, matchTime, streak, team, match.id, resultShort, groups_id"))
+            ->get();
         return array($m1, $m2);
     }
 
@@ -86,8 +88,8 @@ class Groups extends Eloquent {
             ->orderBy('matchDate')
             ->orderBy('matchTime')
             ->orderBy('streak')
-            ->get(['home', 'away', 'matchDate', 'matchTime', 'streak', 'team', 'match.id', 'resultShort']);
-        // }
+            ->select(DB::raw("standings.id as standings_id, home, away, matchDate, matchTime, streak, team, match.id, resultShort, groups_id"))
+            ->get();        // }
         $m2 = $gr->matches()
             ->whereIn('away', $standings)
             ->where('matchDate', '>=', $fromdate)
@@ -96,7 +98,8 @@ class Groups extends Eloquent {
             ->orderBy('matchDate')
             ->orderBy('matchTime')
             ->orderBy('streak')
-            ->get(['home', 'away', 'matchDate', 'matchTime', 'streak', 'team', 'match.id', 'resultShort']);
+            ->select(DB::raw("standings.id as standings_id, home, away, matchDate, matchTime, streak, team, match.id, resultShort, groups_id"))
+            ->get();
         return array($m1, $m2);
     }
 }

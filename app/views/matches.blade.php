@@ -115,7 +115,7 @@ $i = 0;
         <td>-</td>
         <td>-</td>
         <td>-</td>
-        <td><span style='display: none;'>{{$dd->id}}</span></td>
+        <td><a href="/addgame/{{$dd->groups_id}}/{{$dd->standings_id}}/{{$dd->id}}">+</a> <span style='display: none;'>{{$dd->id}}</span></td>
     </tr>
     @endforeach
     @endif
