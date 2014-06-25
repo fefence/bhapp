@@ -2,6 +2,7 @@
 Route::get('/boo', function(){
 //	return Updater::getPPMMatches();
 //    return Parser::parseMatchesFromSummary(Groups::find(63));
+    Parser::parseLeagueSeries(Groups::find(63));
 	return Updater::updatePPM();
     //return Updater::update();
 });
