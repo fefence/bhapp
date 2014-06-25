@@ -49,7 +49,7 @@ class Updater {
 		// return $next;
 		// Parser::parseMatchesForGroup($next);
 		Parser::parseMatchesForGroup($current, $next);
-		Parser::parseLeagueSeries($current);
+		Parser::parseLeagueSeries($current->league_details_id);
 		$ids = Settings::where('league_details_id', '=', $current->league_details_id)->lists('user_id');
 		foreach ($ids as $id) {
 			Updater::recalculateGroup($current->id, $id);
@@ -226,6 +226,7 @@ class Updater {
         $matches = self::getPPMMatches();
         foreach($matches as $match) {
             $match = self::updateDetails($match);
+            Parser::parseLeagueSeries($match->league_details_id);
             if ($match->resultShort != '-') {
                 for ($i = 5; $i < 9; $i++) {
                     $serie = Series::where('end_match_id', '=', $match->id)

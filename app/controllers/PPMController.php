@@ -9,13 +9,20 @@ class PPMController extends \BaseController
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, '');
         $games = PPM::ppmForDates($fromdate, $todate);
         $count = array();
+        $league_ids = array();
         foreach ($games as $g) {
             $count[$g->id] = User::find(Auth::user()->id)->ppm()->where('match_id', '=', $g->match_id)->where('confirmed', '=', 1)->where('game_type_id', '=', $g->game_type_id)->count();
+            array_push($league_ids,$g->league_details_id);
         }
         $datarr = array();
         $datarr[0] = $games;
+        if (count($league_ids) > 0) {
+        $standings = Standings::whereIn('league_details_id', $league_ids)->lists('place', 'team');
+        } else {
+            $standings = array();
+        }
 //        $datarr[1] = array();
-        return View::make('matches')->with(['datarr' => $datarr, 'ppm' => true, 'league_details_id' => -1, 'fromdate' => $fromdate, 'todate' => $todate, 'count' => $count, 'big' => $big, 'small' => $small]);
+        return View::make('matches')->with(['datarr' => $datarr, 'standings' => $standings, 'ppm' => true, 'league_details_id' => -1, 'fromdate' => $fromdate, 'todate' => $todate, 'count' => $count, 'big' => $big, 'small' => $small]);
     }
 
     public function getOdds($fromdate = "", $todate = "")
