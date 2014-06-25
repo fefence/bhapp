@@ -17,7 +17,7 @@ $i = 0;
 
 @section('content')
 @foreach($datarr as $data)
-<table id="matches{{$i}}">
+<table id="matches{{$i}}" style="margin-bottom: 30px;">
     <thead>
     <tr>
         <th><input type="hidden"></th>
@@ -218,13 +218,14 @@ $i = 0;
         var oTable = $("#matches0").dataTable({
             "iDisplayLength": 100,
             "bJQueryUI": true,
+            "sDom": '<"top"i>t<"bottom"><"clear">',
             "sPaginationType": "full_numbers"
         });
 
         var oTable1 = $("#matches1").dataTable({
             "iDisplayLength": 100,
             "bJQueryUI": true,
-            "sDom": '<"top"><"bottom"><"clear">',
+            "sDom": '<"top"i>t<"bottom"><"clear">',
             "sPaginationType": "full_numbers"
         });
 
