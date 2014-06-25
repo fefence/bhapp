@@ -34,48 +34,52 @@
             <th style="width: %;text-align: center;">1:1</th>
             <th style="width: %;text-align: center;">2:2</th>
         </tr>
+        @foreach($pps as $country=>$leagues)
+            @foreach($leagues as $name=>$s)
+
         <tr>
-            <td><p class="text-center">Lithuania :: A Lyga</p></td>
+            <td><p class="text-center">{{$country}} :: {{$name}}</p></td>
+
             <td style="padding-left: 10px;"><div class="radio">
                     <label>
-                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                        <input type="radio" name="{{$s[0]}}-opt" id="optionsRadios1" value="option1" checked>
                         Disabled
                     </label>
                 </div>
                 <div class="radio">
                     <label>
-                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                        <input type="radio" name="{{$s[0]}}-opt" id="optionsRadios2" value="option2">
                         Automatic
                     </label>
-                    <input type="text" name="optionsRadios" id="optionsRadios2" value="2" style="width: 25px;"> to <input type="text" name="optionsRadios" id="optionsRadios2" value="6" style="width: 25px;"> at <input type="text" name="optionsRadios" id="optionsRadios2" value="0.9" style="width: 25px;">
+                    <input type="text" name="{{$s[0]}}-opt" id="optionsRadios2" value="2" style="width: 25px;"> to <input type="text" name="optionsRadios" id="optionsRadios2" value="6" style="width: 25px;"> at <input type="text" name="optionsRadios" id="optionsRadios2" value="0.9" style="width: 25px;">
                 </div>
                 <div class="radio">
                     <label>
-                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                        <input type="radio" name="{{$s[0]}}-opt" id="optionsRadios2" value="option2">
                         Fixed
                     </label>
-                    <input type="text" name="optionsRadios" id="optionsRadios2" value="2" style="width: 25px;"> to <input type="text" name="optionsRadios" id="optionsRadios2" value="6" style="width: 25px;"> at <input type="text" name="optionsRadios" id="optionsRadios2" value="0.9" style="width: 25px;">
+                    <input type="text" name="{{$s[0]}}-opt" id="optionsRadios2" value="2" style="width: 25px;"> to <input type="text" name="optionsRadios" id="optionsRadios2" value="6" style="width: 25px;"> at <input type="text" name="optionsRadios" id="optionsRadios2" value="0.9" style="width: 25px;">
                 </div>
             </td>
             <td style="padding-left: 10px;"><div class="radio">
                     <label>
-                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                        <input type="radio" name="{{$s[0]}}-opt" id="optionsRadios1" value="option1" checked>
                         Disabled
                     </label>
                 </div>
                 <div class="radio">
                     <label>
-                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                        <input type="radio" name="{{$s[0]}}-opt" id="optionsRadios2" value="option2">
                         Automatic
                     </label>
-                    <input type="text" name="optionsRadios" id="optionsRadios2" value="2" style="width: 25px;"> to <input type="text" name="optionsRadios" id="optionsRadios2" value="6" style="width: 25px;"> at <input type="text" name="optionsRadios" id="optionsRadios2" value="0.9" style="width: 25px;">
+                    <input type="text" name="{{$s[0]}}-opt" id="optionsRadios2" value="2" style="width: 25px;"> to <input type="text" name="optionsRadios" id="optionsRadios2" value="6" style="width: 25px;"> at <input type="text" name="optionsRadios" id="optionsRadios2" value="0.9" style="width: 25px;">
                 </div>
                 <div class="radio">
                     <label>
-                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                        <input type="radio" name="{{$s[0]}}-opt" id="optionsRadios2" value="option2">
                         Fixed
                     </label>
-                    <input type="text" name="optionsRadios" id="optionsRadios2" value="2" style="width: 25px;"> to <input type="text" name="optionsRadios" id="optionsRadios2" value="6" style="width: 25px;"> at <input type="text" name="optionsRadios" id="optionsRadios2" value="0.9" style="width: 25px;">
+                    <input type="text" name="{{$s[0]}}-opt" id="optionsRadios2" value="2" style="width: 25px;"> to <input type="text" name="optionsRadios" id="optionsRadios2" value="6" style="width: 25px;"> at <input type="text" name="optionsRadios" id="optionsRadios2" value="0.9" style="width: 25px;">
                 </div>
             </td>
             <td style="padding-left: 10px;"><div class="radio">
@@ -121,6 +125,8 @@
                 </div>
             </td>
       </tr>
+        @endforeach
+        @endforeach
     </table>
 </div>
 
@@ -148,7 +154,7 @@
 							  	&nbsp;
 							  </td>
 							  <td style="text-align:center;width: 250px;">
-							  	<abbr title="Enables leagues series in the play per series mode at the specified legnth">1x2</abbr> (<abbr title="Number of matches before a series becomes active. Example: If Liverpool has not made a draw for 3 matches in a row and length is set to 3 the next Liverpool match will become available to play.">?</abbr>) 
+							  	<abbr title="Enables leagues series in the play per series mode at the specified legnth">1x2</abbr> (<abbr title="Number of matches before a series becomes active. Example: If Liverpool has not made a draw for 3 matches in a row and length is set to 3 the next Liverpool match will become available to play.">?</abbr>)
 							  </td>
 							  <td>
 							  	0:0
@@ -180,14 +186,14 @@
 				  			  	      	<select class="form-control" style="width: 100px; height: 30px; font-size: 90%; padding: 3px; display: inline;">
 										  <option value="disabled">Disabled</option>
 										  <option value="enabled">Enabled</option>
-										</select> 
+										</select>
 									</p>
 								  </td>
 							  @endfor
 							</tr>
-							
+
 							@endforeach
-						</table>						
+						</table>
 				      </div>
 					    </div>
 			    	</div>
@@ -214,7 +220,7 @@
 						<table id="ppm" class="table">
 							<tr>
 							  <td>
-							  	
+
 							  </td>
 							  <td>
 							  	Series
@@ -229,7 +235,7 @@
 							  	2:2
 							  </td>
 							</tr>
-							
+
 							@foreach($ppm as $country=>$s)
 
 							<tr>
@@ -238,14 +244,14 @@
 							  </td>
 							  @for($j = 5; $j < 9; $j ++)
 								  <td>
-				  			  	      	<input name="ppm[]" class="activate_league_for_play" type="checkbox" value='{{$s[0]}}#{{$j}}' {{(count($s[$j]) > 0)?"checked":""}}> 
+				  			  	      	<input name="ppm[]" class="activate_league_for_play" type="checkbox" value='{{$s[0]}}#{{$j}}' {{(count($s[$j]) > 0)?"checked":""}}>
 								  </td>
 							  @endfor
 							</tr>
 
 							@endforeach
 
-						</table>						
+						</table>
 				      </div>
 					    </div>
 			    	</div>
@@ -350,7 +356,7 @@
 	$("#save").on('click', function(){
 		$("#settingsform").submit();
 	});
-	
+
   $('#myTab a').click(function (e) {
   e.preventDefault()
   $(this).tab('show')
