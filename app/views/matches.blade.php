@@ -25,11 +25,11 @@ $i = 0;
         <th><input type="text" name="search_engine" class="search_init" placeholder="time"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="home"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="away"></th>
-        <th><input type="text" name="search_engine" class="search_init" placeholder="r"></th>
         <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
+        <th><input type="text" name="search_engine" class="search_init" placeholder="r"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="game"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="bookie"></th>
-        <th><input type="hidden"></th>
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
@@ -167,11 +167,11 @@ $i = 0;
             team = 'ppm';
         }
         var re = new RegExp('display: none;">(.*?)</span>');
-        var m = re.exec(aData[13]);
+        var m = re.exec(aData[14]);
         var id = m[1];
 //		alert(id);
         // var d = aData[1].replace(/\//g, '-');
-        var promise = testAjax(team, id, aData[7]);
+        var promise = testAjax(team, id, aData[8]);
         promise.success(function (data) {
             text = data;
         });
