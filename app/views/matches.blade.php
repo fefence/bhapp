@@ -4,7 +4,7 @@
 <!-- breadcrumbs -->
 <?php
 $list = array();
-$active = 'Home';
+$active = isset($group)?'PPS':'PPM';
 $elements = array('active' => $active, 'list' => $list);
 $i = 0;
 ?>
