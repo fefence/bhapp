@@ -260,10 +260,10 @@ $i = 0;
             "callback": function (sValue, y) {
                 var aPos = oTable.fnGetPosition(this);
                 var arr = sValue.split("#");
-                oTable.fnUpdate(arr[0], aPos[0], 9);
-                oTable.fnUpdate(arr[1], aPos[0], 10);
-                oTable.fnUpdate(arr[2], aPos[0], 11);
-                oTable.fnUpdate(arr[3], aPos[0], 12);
+                oTable.fnUpdate(arr[0], aPos[0], 10);
+                oTable.fnUpdate(arr[1], aPos[0], 11);
+                oTable.fnUpdate(arr[2], aPos[0], 12);
+                oTable.fnUpdate(arr[3], aPos[0], 13);
                 if (arr[4] != "") {
                     if (arr[4] != $("#pool").text()) {
                         $("#crr").html("<strong>" + arr[4] + "</strong>");

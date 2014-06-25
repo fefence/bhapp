@@ -72,17 +72,17 @@ class GamesController extends \BaseController
         $value = Input::get('value');
         $col = Input::get('column');
         $bsf = "";
-        if ($col == 9 || $col == '9') {
+        if ($col == 10 || $col == '10') {
             $game->bsf = $value;
             $game->save();
         }
-        if ($col == 10 || $col == '10') {
+        if ($col == 11 || $col == '11') {
             $game->bet = $value;
             $game->income = $game->odds * $value;
             $game->save();
 
         }
-        if ($col == 11 || $col == '11') {
+        if ($col == 12 || $col == '12') {
             $game->odds = $value;
             $game->income = $value * $game->bet;
             $game->save();
