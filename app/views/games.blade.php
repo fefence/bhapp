@@ -4,7 +4,7 @@
 	<!-- breadcrumbs -->
 	<?php
 		$list = array();
-		$active = 'Home';
+		$active = 'PPS';
 		$elements = array('active' => $active, 'list' => $list);
 	?>
 	@include('layouts.partials.breadcrumbs', array('elements' => $elements))

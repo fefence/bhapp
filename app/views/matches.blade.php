@@ -3,8 +3,13 @@
 @section('breadcrumbs')
 <!-- breadcrumbs -->
 <?php
-$list = array();
-$active = isset($group)?'PPS':'PPM';
+if (isset($group)) {
+    $list = array('PPS' => URL::route("home"));
+    $active = $league->country."/".$league->fullName;
+} else {
+    $list = array();
+    $active = "PPM";
+}
 $elements = array('active' => $active, 'list' => $list);
 $i = 0;
 ?>

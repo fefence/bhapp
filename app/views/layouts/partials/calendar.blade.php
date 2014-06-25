@@ -49,6 +49,9 @@ $(document).ready(function(){
 		// alert(dp.datepicker('getDates')[0]+" - "+dp.datepicker('getDates')[1]);
 		var d = new Date(dp.datepicker('getDates')[0]);
 		var d1 = new Date(dp.datepicker('getDates')[1]);
+		if (d1 == 'Invalid Date') {
+            var $d1 = d;
+        }
 		// alert(dateFormat(date, 'yyyy-mm-dd'));
 		var curr_date = d.getDate();
 		var curr_month = d.getMonth() + 1; //Months are zero based
