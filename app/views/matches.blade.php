@@ -34,6 +34,7 @@ $i = 0;
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
     </tr>
     <tr>
         <th></th>
@@ -41,15 +42,16 @@ $i = 0;
         <th style="width:50px;">time</th>
         <th>home</th>
         <th>away</th>
-        <th style="width:10px;">r</th>
         <th style="width:10px;">l</th>
+        <th>res</th>
+        <th style="width:10px;">r</th>
         <th style="width:60px;">game</th>
         <th style="width:40px;">bookie</th>
         <th style="width:40px;">bsf</th>
         <th style="width:40px;">bet</th>
         <th style="width:40px;">odds</th>
         <th style="width:40px;">income</th>
-        <th style="width:26px;"></th>
+        <th style="widows: 35;              px;"></th>
     </tr>
     </thead>
     <tbody>
@@ -73,8 +75,9 @@ $i = 0;
             {{$d->away}}
             @endif
         </td>
-        <td>{{$d->resultShort}}</td>
         <td>{{$d->streak}}</td>
+        <td>{{$d->homeGoals}}:{{$d->awayGoals}}</td>
+        <td>{{$d->resultShort}}</td>
         <td class='editabledd warning'>{{$d->type}}</td>
         <td class='editabledd warning'>{{$d->bookmakerName}}</td>
         <td class='editable warning' id="{{$d->game_type_id}}">{{$d->bsf}}</td>
@@ -107,8 +110,9 @@ $i = 0;
             {{$dd->away}}
             @endif
         </td>
-        <td>{{$dd->resultShort}}</td>
         <td>{{$dd->streak}}</td>
+        <td>{{$dd->homeGoals}}:{{$dd->awayGoals}}</td>
+        <td>{{$dd->resultShort}}</td>
         <td>-</td>
         <td>-</td>
         <td>-</td>
