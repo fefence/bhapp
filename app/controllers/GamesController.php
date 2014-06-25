@@ -43,8 +43,9 @@ class GamesController extends \BaseController
         return Redirect::back();
     }
 
-    public function removeMatch($game_id)
+    public function addGame($groups_id, $standings_id, $match_id)
     {
+        Games::addGame($groups_id, $standings_id, Auth::user()->id, $match_id);
         return Redirect::back();
     }
 
