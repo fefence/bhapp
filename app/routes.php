@@ -61,9 +61,12 @@ Route::post('/settings/save', 'SettingsController@saveSettings');
 Route::post('/settings/remove', 'SettingsController@remove');
 
 //home
-Route::get('/home/{from?}/{to?}', array('as' => 'home', 'uses' => 'GroupController@getGroups'));
+Route::get('/pps/{from?}/{to?}', array('as' => 'home', 'uses' => 'GroupController@getGroups'));
 Route::get('/', function(){
 	return Redirect::route('home');
+});
+Route::get('/home', function(){
+    return Redirect::route('home');
 });
 
 //stats views

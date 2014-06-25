@@ -2,7 +2,7 @@
 	<div class="container noPadding">
 		<div class="navbar-collapse collapse">
 		  <ul class="nav navbar-nav">
-		    <li class="{{Request::path() == 'home' ? 'active' : '';}}" ><a href="{{ URL::to('home') }}">pps</a></li>
+		    <li class="{{Request::path() == 'pps' ? 'active' : '';}}" ><a href="{{ URL::to('pps') }}">pps</a></li>
 		    <li class="{{Request::path() == 'ppm' ? 'active' : '';}}"><a href="{{URL::to('/ppm')}}">ppm</a></li>
 		    <li class="{{Request::path() == 'livescore' ? 'active' : '';}}"><a href="{{URL::to('/livescore')}}">livescore</a></li>
 		    <li class="{{Request::path() == 'poolmanagement' ? 'active' : '';}}"><a href="{{URL::to('/poolmanagement')}}">pool</a></li>
