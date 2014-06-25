@@ -43,10 +43,10 @@ class Parser
         }
     }
 
-    public static function parseLeagueSeries($group)
+    public static function parseLeagueSeries($league_details_id)
     {
         $baseUrl = "http://www.betexplorer.com/soccer/";
-        $league = LeagueDetails::findOrFail($group->league_details_id);
+        $league = LeagueDetails::findOrFail($league_details_id);
         $url = $baseUrl . $league->country . "/" . $league->fullName . "/";
 
         if (Parser::get_http_response_code($url) != "200") {
@@ -68,7 +68,7 @@ class Parser
             $place = $cols->item(0)->nodeValue;
             $team = $cols->item(1)->nodeValue;
             $streak = $cols->item(6)->nodeValue;
-            $stand = Standings::firstOrNew(['league_details_id' => $group->league_details_id, 'team' => $team]);
+            $stand = Standings::firstOrNew(['league_details_id' => $league_details_id, 'team' => $team]);
             $stand->streak = $streak;
             $stand->place = explode(".", $place)[0];
             $stand->save();
