@@ -67,6 +67,7 @@ $i = 0;
             @else
             {{$d->home}}
             @endif
+            ({{$standings[$d->home]}})
         </td>
         <td>
             @if ($d->team == $d->away)
@@ -74,6 +75,7 @@ $i = 0;
             @else
             {{$d->away}}
             @endif
+            ({{$standings[$d->away]}})
         </td>
         <td>{{$d->streak}}</td>
         <td>{{$d->homeGoals}}:{{$d->awayGoals}}</td>
@@ -102,6 +104,7 @@ $i = 0;
             @else
             {{$dd->home}}
             @endif
+            ({{$standings[$dd->home]}})
         </td>
         <td>
             @if ($dd->team == $dd->away)
@@ -109,6 +112,7 @@ $i = 0;
             @else
             {{$dd->away}}
             @endif
+            ({{$standings[$dd->away]}})
         </td>
         <td>{{$dd->streak}}</td>
         <td>{{$dd->homeGoals}}:{{$dd->awayGoals}}</td>

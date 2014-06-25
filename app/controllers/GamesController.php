@@ -28,7 +28,9 @@ class GamesController extends \BaseController
         $arr = array();
         $arr[0] = $data;
         $arr[1] = $grey;
-        return View::make('matches')->with(['datarr' => $arr, 'count' => $count, 'pool' => $pool, 'league_details_id' => $league_details_id, 'group' => $gr->id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "group/$league_details_id", 'big' => $big, 'small' => $small]);
+        $standings = Standings::where('league_details_id', '=', $league_details_id)->lists('place', 'team');
+
+        return View::make('matches')->with(['standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'league_details_id' => $league_details_id, 'group' => $gr->id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "group/$league_details_id", 'big' => $big, 'small' => $small]);
     }
 
     public function confirmGame($game_id, $game_type_id)
