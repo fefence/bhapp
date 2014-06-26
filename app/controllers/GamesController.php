@@ -14,11 +14,13 @@ class GamesController extends \BaseController
         if ($fromdate == '' && $todate == '') {
             $data = Groups::getGamesForGroup($gr->id);
             $grey = Groups::getMatchesNotInGames($gr->id, $standings);
+            $tail = "";
             list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
         } else {
             list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
             $data = Groups::getGamesForGroupAndDates($gr->id, $fromdate, $todate);
             $grey = Groups::getMatchesNotInGamesForDates($gr->id, $standings, $fromdate, $todate);
+            $tail = "/".$fromdate."/".$todate;
         }
         foreach($data as $g) {
             $match = Match::find($g->match_id);
@@ -31,7 +33,7 @@ class GamesController extends \BaseController
         $standings = Standings::where('league_details_id', '=', $league_details_id)->lists('place', 'team');
 
         $league = LeagueDetails::find($league_details_id);
-        return View::make('matches')->with(['league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $gr->id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "group/$league_details_id", 'big' => $big, 'small' => $small]);
+        return View::make('matches')->with(['tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $gr->id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "group/$league_details_id", 'big' => $big, 'small' => $small]);
     }
 
     public function confirmGame($game_id, $game_type_id)
@@ -49,6 +51,30 @@ class GamesController extends \BaseController
     public function addGame($groups_id, $standings_id, $match_id)
     {
         Games::addGame($groups_id, $standings_id, Auth::user()->id, $match_id);
+        return Redirect::back();
+    }
+
+    public static function confirmAllGames($group_id, $fromdate = "", $todate = "") {
+        if ($fromdate == '' && $todate == '') {
+            $data = Games::where('groups_id', '=', $group_id)
+                ->where('user_id', '=', Auth::user()->id)
+                ->where('confirmed', '=', 0)
+                ->get(['games.id', 'game_type_id']);
+
+        } else {
+            list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
+            $data = Games::join('match', 'match.id' , '=', 'games.match_id')
+                ->where('games.groups_id', '=', $group_id)
+                ->where('user_id', '=', Auth::user()->id)
+                ->where('matchDate', '>=', $fromdate)
+                ->where('matchDate', '<=', $todate)
+                ->where('confirmed', '=', 0)
+                ->get(['games.id', 'game_type_id']);
+
+        }
+        foreach($data as $game) {
+            Games::confirmGame($game->id, $game->game_type_id);
+        }
         return Redirect::back();
     }
 

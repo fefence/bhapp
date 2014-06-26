@@ -34,6 +34,8 @@ Route::post('/save', 'GamesController@saveTable');
 Route::get('/confirm/{game_id}/{game_type_id}', 'GamesController@confirmGame');
 Route::get('/delete/{game_id}/{game_type_id}', 'GamesController@deleteGame');
 Route::get('/addgame/{groups_id}/{standings_id}/{match_id}', 'GamesController@addGame');
+Route::get('/confirmall/{group_id}/{fromdate?}/{todate?}', 'GamesController@confirmAllGames');
+Route::get('/recalc/{group_id}', 'GamesController@recalculateGroup');
 
 //Route::get('/nextmatches/{country}/{league}', 'MatchController@getNextMatchesForPlay');
 
