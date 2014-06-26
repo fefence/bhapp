@@ -12,37 +12,39 @@ class SettingsController extends BaseController
 
     public function saveSettings()
     {
-        // return Input::all();
+//        return Input::all();
         $leagues = LeagueDetails::get(['id']);
         foreach ($leagues as $league) {
-            $dd = Input::get($league->id . '-opt');
-            $setting = Settings::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $league->id, 'game_type_id' => 1]);
-            $oldFrom = $setting->from;
-            $oldTo = $setting->to;
-            $oldMultiplier = $setting->multiplier;
-            $setting->game_type_id = 1;
-            if ($dd == 'auto') {
-                $setting->from = Input::get($league->id . '-from');
-                $setting->to = Input::get($league->id . '-to');
-                $setting->multiplier = Input::get($league->id . '-mul');
-                $setting->auto = 1;
-                $setting->save();
-                $pool = Pools::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $league->id, 'ppm' => 0]);
-                $pool->save();
-            } else if ($dd == 'fixed') {
-                $setting->from = Input::get($league->id . '-lt');
-                $setting->to = 0;
-                $setting->multiplier = Input::get($league->id . '-mul1');
-                $setting->auto = 2;
-                $setting->save();
-                $pool = Pools::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $league->id, 'ppm' => 0]);
-                $pool->save();
-            } else if ($dd == 'disabled') {
-                //$setting->delete();
-            }
-            $group = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 2)->first(['id']);
-            if ($group != NULL && $group->id != "" && ($oldMultiplier != $setting->multiplier || $oldFrom != $setting->from || $oldTo != $setting->to)) {
-                Updater::recalculateGroup($group->id, Auth::user()->id);
+            for($i = 1; $i < 5; $i ++) {
+                $dd = Input::get($league->id."-".$i."-opt");
+                if ($dd != '') {
+                    $setting = Settings::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $league->id, 'game_type_id' => $i]);
+                    $oldFrom = $setting->from;
+                    $oldTo = $setting->to;
+                    $oldMultiplier = $setting->multiplier;
+                    $setting->auto = $dd;
+                    if ($dd == '1') {
+                        $setting->from = Input::get($league->id . '-from-' . $i);
+                        $setting->to = Input::get($league->id . '-to-' . $i);
+                        $setting->multiplier = Input::get($league->id . '-mul-' . $i);
+                        $setting->save();
+                        $pool = Pools::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $league->id, 'ppm' => 0]);
+                        $pool->save();
+                    } else if ($dd == '2') {
+                        $setting->from = Input::get($league->id . '-gt-' . $i);
+                        $setting->to = 0;
+                        $setting->multiplier = Input::get($league->id . '-mult-' . $i);
+                        $setting->save();
+                        $pool = Pools::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $league->id, 'ppm' => 0]);
+                        $pool->save();
+                    } else if ($dd == '0') {
+                        //$setting->delete();
+                    }
+                    $group = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 2)->first(['id']);
+                    if ($group != NULL && $group->id != "" && ($oldMultiplier != $setting->multiplier || $oldFrom != $setting->from || $oldTo != $setting->to)) {
+                        Updater::recalculateGroup($group->id, Auth::user()->id);
+                    }
+                }
             }
         }
         $ppm = Input::get('ppm');

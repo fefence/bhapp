@@ -174,7 +174,8 @@ class Updater {
 				$game = Games::firstOrCreate(['user_id' => $user_id, 'match_id' => $match->id, 'groups_id' => $match->groups_id, 'game_type_id' => 1, 'bookmaker_id' => 1, 'standings_id' =>$st_id]);
 				$game->bet = $bpm;
 				$game->bsf = $bsfpm;
-				// $game->odds = 3;
+                if ($game->odds == null)
+                    $game->odds = 3;
 				$game->save();
 				$game->income = $game->odds * $game->bet;
 				$game->save();
@@ -184,7 +185,8 @@ class Updater {
 				$game = Games::firstOrCreate(['user_id' => $user_id, 'match_id' => $match->id, 'groups_id' => $match->groups_id, 'game_type_id' => 1, 'bookmaker_id' => 1, 'standings_id' =>$st_id]);
 				$game->bet = $bpm;
 				$game->bsf = $bsfpm;
-				// $game->odds = 3;
+				if ($game->odds == null)
+                    $game->odds = 3;
 				$game->special = 1;
 				$game->save();
 
