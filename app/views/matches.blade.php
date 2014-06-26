@@ -5,7 +5,7 @@
 <?php
 if (isset($group)) {
     $list = array('PPS' => URL::route("home"));
-    $active = $league->country."/".$league->fullName;
+    $active = $league->country.":".$league->fullName;
 } else {
     $list = array();
     $active = "PPM";

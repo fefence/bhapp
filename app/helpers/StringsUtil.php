@@ -6,10 +6,6 @@ class StringsUtil
     public static function calculateHeading($fromdate, $todate, $league_details_id)
     {
         $league = "";
-        if ($league_details_id != '') {
-            $l = LeagueDetails::find($league_details_id);
-            $league = " for ".$l->country."/".$l->fullName;
-        }
         if ($fromdate == $todate && $fromdate == date('Y-m-d', time())) {
             $big = "Today's matches".$league;
             $small = date('d M (D)', time());

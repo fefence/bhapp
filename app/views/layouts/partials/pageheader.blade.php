@@ -1,3 +1,6 @@
+@if(Session::get('message') != null)
+{{Session::get('message')}}  <br>
+@endif
 <div class="row">
 	<div class="col-xs-6 noPadding">
 	<!-- main content -->

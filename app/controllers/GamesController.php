@@ -39,19 +39,19 @@ class GamesController extends \BaseController
     public function confirmGame($game_id, $game_type_id)
     {
         Games::confirmGame($game_id, $game_type_id);
-        return Redirect::back();
+        return Redirect::back()->with('message', 'Bet confirmed');
     }
 
     public function deleteGame($game_id, $game_type_id)
     {
         Games::deleteGame($game_id, $game_type_id);
-        return Redirect::back();
+        return Redirect::back()->with('message', 'Bet removed');
     }
 
     public function addGame($groups_id, $standings_id, $match_id)
     {
         Games::addGame($groups_id, $standings_id, Auth::user()->id, $match_id);
-        return Redirect::back();
+        return Redirect::back()->with('message', 'New game added');
     }
 
     public static function confirmAllGames($group_id, $fromdate = "", $todate = "") {
@@ -75,16 +75,38 @@ class GamesController extends \BaseController
         foreach($data as $game) {
             Games::confirmGame($game->id, $game->game_type_id);
         }
-        return Redirect::back();
+        return Redirect::back()->with("message", "All games confirmed");
+    }
+
+    public static function recalculateGroup($group_id) {
+        $data = Games::join('match', 'match.id' , '=', 'games.match_id')
+            ->where('games.groups_id', '=', $group_id)
+            ->where('user_id', '=', Auth::user()->id)
+            ->where('resultShort', '=', '-')
+            ->where('confirmed', '=', 0)
+            ->select(DB::raw('games.*'))
+            ->get();
+        Parser::parseMatchOddsForGames($data);
+
+        $league_details_id = Groups::find($group_id)->league_details_id;
+        $pool = Pools::where('user_id', '=', Auth::user()->id)->where('league_details_id', '=', $league_details_id)->first();
+        $bsfpm = $pool->amount / count($data);
+        $setting = Settings::where('user_id', '=', Auth::user()->id)->where('league_details_id', '=', $league_details_id)->first();
+        $betpm = $bsfpm * $setting->multiplier;
+        foreach($data as $game) {
+            $game->bsf = $bsfpm;
+            $game->bet = $betpm;
+            $game->income = $betpm * $game->odds;
+            $game->save();
+        }
+        return Redirect::back()->with('message', 'BSF recalculated');
     }
 
     public function getMatchOddsForGames($groups_id)
     {
         $games = Games::getGamesForGroupUser($groups_id, Auth::user()->id);
-//        return $games;
         Parser::parseMatchOddsForGames($games);
-//        return $games;
-        return Redirect::back();
+        return Redirect::back()->with('message', 'Odds retrieved');
     }
 
     public function saveTable()

@@ -107,21 +107,7 @@
                 <th style="width: 10%;text-align: center;">Amount</th>
                 <th style="width: 10%;text-align: center;">Action</th>
             </tr>
-            @foreach($ppspools as $ppspool)
-            <tr>
-                <td><p class="text-center">{{$ppspool->country}} :: {{$ppspool->fullName}}</p></td>
-                <td><p class="text-center">{{$ppspool->profit}} €</p></td>
-                <td><p class="text-center">{{$ppspool->account}} €</p></td>
-                <td><p class="text-center">{{$ppspool->in_transit}} €</p></td>
-                <td class="f">
-                    <form method="post">
-                        <input type="text" class="transitvalue" name="amount">
-                        <input type="hidden" name="id" value="{{$ppspool->id}}">
-                    </form>
-                </td>
-                <td><button class="btn btn-sm btn-warning insertbtn" type="button">+</button><button class="btn btn-sm btn-primary getbtn" type="button">-</button></td>
-            </tr>
-            @endforeach
+<!--           TODO free play stuff-->
         </table>
     </div>
 

@@ -63,7 +63,7 @@ class SettingsController extends BaseController
                 Updater::addPPMMatchForUser($arr[0], $arr[1], Auth::user()->id);
             }
         }
-        return Redirect::back();
+        return Redirect::back()->with('message', "Settings saved");
     }
 
     private static function createOperationalGroup($league_details_id, $round)
@@ -94,6 +94,6 @@ class SettingsController extends BaseController
                 SettingsController::createOperationalGroup($id, $round);
             }
         }
-        return Redirect::back();
+        return Redirect::back()->with("message", "League added");
     }
 }

@@ -27,7 +27,7 @@ class PoolsController extends \BaseController
         $main->in_transit = $main->in_transit + $amount;
         $pool->save();
         $main->save();
-        return Redirect::back();
+        return Redirect::back()->with("message", $amount. "€ removed from pool");
     }
 
     public function poolsInsert()
@@ -40,6 +40,6 @@ class PoolsController extends \BaseController
         $main->in_transit = $main->in_transit - $amount;
         $pool->save();
         $main->save();
-        return Redirect::back();
+        return Redirect::back()->with("message", $amount. "€ added to pool");
     }
 }
