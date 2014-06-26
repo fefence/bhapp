@@ -27,12 +27,6 @@ class PoolsController extends \BaseController
         $main->in_transit = $main->in_transit + $amount;
         $pool->save();
         $main->save();
-
-        if ($pool->ppm == 0) {
-            $groups_id = Groups::where('league_details_id', '=', $pool->league_details_id)->where('state', '=', 2)->first(['id'])->id;
-            Updater::recalculateGroup($groups_id, Auth::user()->id);
-        } else {
-        }
         return Redirect::back();
     }
 

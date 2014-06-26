@@ -7,7 +7,7 @@
 	</ol>
 	<div class="pull-right">
 		@if(isset($group))
-        <a href="/recalc/{{$group}}">recalc</a> |
+<!--        <a href="/recalc/{{$group}}">recalc</a> |-->
         <a href="/confirmall/{{$group}}{{$tail}}">confirm all</a> |
         <a href="/groupodds/{{$group}}">refresh odds</a> |
 		@endif
