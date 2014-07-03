@@ -1,6 +1,6 @@
 <?php
 Route::get('/boo', function(){
-//	return Updater::getPPMMatches();
+	return Parser::parseLeagueSeries(13);
 //   	return Updater::updatePPM();
     return Updater::update();
 });
