@@ -1,8 +1,8 @@
 <?php
 Route::get('/boo', function(){
 //	return Updater::getPPMMatches();
-   	return Updater::updatePPM();
-    //return Updater::update();
+//   	return Updater::updatePPM();
+    return Updater::update();
 });
 
 //details views
