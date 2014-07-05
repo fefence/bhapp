@@ -138,17 +138,16 @@ class Updater {
 					if ($count->count() < $from) {
 						$teams = Standings::where('league_details_id', '=', $gr->league_details_id)
 						->where('streak', '>=', $i - 1)->lists('team', 'id');
-
 						break 1;
 					} else {
 						$teams = Standings::where('league_details_id', '=', $gr->league_details_id)
 						->where('streak', '>=', $i)->lists('team', 'id');
-
 					}
 					break 1;
 				}
 			}
 		}
+//        return $teams;
 		$pool = User::find($user_id)->pools()->where('league_details_id', '=', $gr->league_details_id)->first();
 		$bsfpm = $pool->amount / count($teams);
 		$bpm = $pool->amount * $setting->multiplier / count($teams);
@@ -179,7 +178,7 @@ class Updater {
 				$game->save();
 				$game->income = $game->odds * $game->bet;
 				$game->save();
-
+//                print_r($game);
 			} else if (count($matches) > 1) {
 				$match = $matches[0];
 				$game = Games::firstOrCreate(['user_id' => $user_id, 'match_id' => $match->id, 'groups_id' => $match->groups_id, 'game_type_id' => 1, 'bookmaker_id' => 1, 'standings_id' =>$st_id]);

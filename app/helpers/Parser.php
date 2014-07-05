@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Eloquent;
+
 class Parser
 {
 
@@ -65,13 +66,48 @@ class Parser
         $rows = $nodes->item(4)->getElementsByTagName('tbody')->item(0)->getElementsByTagName("tr");
         foreach ($rows as $row) {
             $cols = $row->getElementsByTagName('td');
-            $place = $cols->item(0)->nodeValue;
-            $team = $cols->item(1)->nodeValue;
-            $streak = $cols->item(6)->nodeValue;
+            $place = trim($cols->item(0)->nodeValue);
+            $team = trim($cols->item(1)->nodeValue);
+            $streak = trim($cols->item(6)->nodeValue);
             $stand = Standings::firstOrNew(['league_details_id' => $league_details_id, 'team' => $team]);
             $stand->streak = $streak;
             $stand->place = explode(".", $place)[0];
             $stand->save();
+        }
+
+    }
+
+    public static function parseLeagueSeriesUSA($league_details_id)
+    {
+        $baseUrl = "http://www.betexplorer.com/soccer/";
+        $league = LeagueDetails::find($league_details_id);
+        $url = $baseUrl . $league->country . "/" . $league->fullName . "/";
+
+        if (Parser::get_http_response_code($url) != "200") {
+            return "Wrong league stats url! --> $url";
+        }
+        $data = file_get_contents($url);
+
+        $dom = new domDocument;
+
+        @$dom->loadHTML($data);
+        $dom->preserveWhiteSpace = false;
+
+        $finder = new DomXPath($dom);
+        $classname = "stats-table result-table";
+        $nodes = $finder->query("//*[contains(@class, '$classname')]");
+        for ($a = 8; $a <= 9; $a++) {
+            $rows = $nodes->item($a)->getElementsByTagName('tbody')->item(0)->getElementsByTagName("tr");
+            foreach ($rows as $row) {
+                $cols = $row->getElementsByTagName('td');
+                $place = trim($cols->item(0)->nodeValue);
+                $team = trim($cols->item(1)->nodeValue);
+                $streak = trim($cols->item(6)->nodeValue);
+                $stand = Standings::firstOrNew(['league_details_id' => $league_details_id, 'team' => $team]);
+                $stand->streak = $streak;
+                $stand->place = explode(".", $place)[0];
+                $stand->save();
+            }
         }
 
     }
@@ -147,7 +183,7 @@ class Parser
         }
         $curr = $current->matches()->orderBy('matchDate')->get();
         $firstOfNext = $next->matches()->orderBy('matchDate')->first();
-        foreach($curr as $m) {
+        foreach ($curr as $m) {
             if ($m->matchDate > $firstOfNext->matchDate) {
                 $m->groups_id = 0;
                 $m->save();
@@ -187,9 +223,11 @@ class Parser
         $home = "";
         $away = "";
         $id = "";
-        $group = $current;
-        $gr = 0;
-        $first = '';
+        $first = true;
+        $cfrom = '';
+        $cto = '';
+        $nfrom = '';
+        $nto = '';
         foreach ($rows as $row) {
             $cols = $row->getElementsByTagName('td');
             if ($cols->length > 0) {
@@ -209,48 +247,54 @@ class Parser
                     $home = explode(' - ', $cols->item(1)->nodeValue)[0];
                     $away = explode(' - ', $cols->item(1)->nodeValue)[1];
                 }
-                if ($first == '') {
-                    $dw = date( "w", strtotime($date));
+                if ($first) {
+                    $dw = date("w", strtotime($date));
+                    $week_num = date("W", strtotime($date));
                     if ($dw >= 2 && $dw <= 5) {
-                        $first = "mid";
+                        $cfrom = date('Y-m-d', strtotime(date('Y') . '-W' . $week_num . '-' . 2));
+                        $cto = date('Y-m-d', strtotime(date('Y') . '-W' . $week_num . '-' . 5));
+                        $nfrom = date('Y-m-d', strtotime(date('Y') . '-W' . $week_num . '-' . 6));
+                        $nto = date('Y-m-d', strtotime(date('Y') . '-W' . ($week_num + 1) . '-' . 1));
                     } else {
-                        $first = "reg";
+                        $cfrom = date('Y-m-d', strtotime(date('Y') . '-W' . $week_num . '-' . 6));
+                        $cto = date('Y-m-d', strtotime(date('Y') . '-W' . ($week_num + 1) . '-' . 1));
+                        $nfrom = date('Y-m-d', strtotime(date('Y') . '-W' . ($week_num + 1) . '-' . 2));
+                        $nto = date('Y-m-d', strtotime(date('Y') . '-W' . ($week_num + 1) . '-' . 5));
                     }
-                } elseif ($first == 'mid') {
-                    $dw = date( "w", strtotime($date));
-                    if ($dw >= 2 && $dw <= 5) {
-//                        $first = "mid";
-                    } else {
-                        $first = "reg";
-                    }
-                } elseif ($first == 'reg') {
+                    $first = false;
+                } else {
 
                 }
-                //$attrs = $col->getAttribute("data-odd");
+                if ($date > $nto) {
+                    if ($next->matches()->count() == 0) {
+                        $dw = date("w", strtotime($date));
+                        $week_num = date("W", strtotime($date));
+                        if ($dw >= 2 && $dw <= 5) {
+                            $nfrom = date('Y-m-d', strtotime(date('Y') . '-W' . $week_num . '-' . 2));
+                            $nto = date('Y-m-d', strtotime(date('Y') . '-W' . $week_num . '-' . 5));
+                        } else {
+                            $nfrom = date('Y-m-d', strtotime(date('Y') . '-W' . $week_num . '-' . 6));
+                            $nto = date('Y-m-d', strtotime(date('Y') . '-W' . ($week_num + 1) . '-' . 1));
+                        }
+                    }
+                }
                 $match = Match::firstOrNew(array('id' => $id));
+                if ($date >= $cfrom && $date <= $cto) {
+//                    echo "$date $cfrom $cto<br>";
+                    $match->groups_id = $current->id;
+                } else if ($date >= $nfrom && $date <= $nto) {
+//                    echo "$date $nfrom $nto<br>";
+                    $match->groups_id = $next->id;
+                }
                 $match->home = $home;
                 $match->away = $away;
                 $match->matchTime = $time;
                 $match->matchDate = $date;
-                $match->groups_id = $group->id;
+
                 $match->save();
 
-                // return $match;
             }
         }
-        $curr = $current->matches()->orderBy('matchDate')->get();
-        $firstOfNext = $next->matches()->orderBy('matchDate')->first();
-        foreach($curr as $m) {
-            if ($m->matchDate > $firstOfNext->matchDate) {
-                $m->groups_id = 0;
-                $m->save();
-            }
-        }
-//        $datetime = $group->matches()->orderBy('matchDate', 'desc')->orderBy('matchTime', 'desc')->take(1)->get(['matchDate', 'matchTime'])[0];
-//        // return $datetime;
-//        $group->update_time = date('Y-M-d H:i:s', strtotime("$datetime->matchDate.' '.$datetime->matchTime + 2 hours"));
-//        // return $group->update_time;
-//        $group->save();
     }
 
     public static function parseMatchesFromSummary($current)
@@ -274,7 +318,7 @@ class Parser
         $rows = $table->getElementsByTagName("tr");
 
         $ids = array();
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $cols = $row->getElementsByTagName('td');
             if ($cols->length > 0) {
                 $a = $cols->item(1)->getElementsByTagName('a');

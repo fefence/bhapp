@@ -1,12 +1,6 @@
 <?php
 Route::get('/boo', function(){
-    $dw = date( "w", time());
-    if ($dw >= 2 && $dw <= 5) {
-        return "mid";
-    } else {
-        return "reg";
-    }
-    return $dw;
+    return Parser::parseLeagueSeriesUSA(112);
 });
 
 //details views

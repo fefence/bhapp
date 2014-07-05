@@ -15,8 +15,8 @@ class SettingsController extends BaseController
 //        return Input::all();
         $leagues = LeagueDetails::get(['id']);
         foreach ($leagues as $league) {
-            for($i = 1; $i < 5; $i ++) {
-                $dd = Input::get($league->id."-".$i."-opt");
+            for ($i = 1; $i < 5; $i++) {
+                $dd = Input::get($league->id . "-" . $i . "-opt");
                 if ($dd != '') {
                     $setting = Settings::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $league->id, 'game_type_id' => $i]);
                     $oldFrom = $setting->from;
@@ -73,8 +73,11 @@ class SettingsController extends BaseController
         $next = Groups::firstOrNew(['league_details_id' => $league_details_id, 'round' => ($round + 1), 'state' => 3]);
         $next->save();
         Parser::parseLeagueSeries($league_details_id);
-        Parser::parseMatchesForGroup($current, $next);
-
+        if ($league_details_id == 112) {
+            Parser::parseMatchesForUSA($current, $next);
+        } else {
+            Parser::parseMatchesForGroup($current, $next);
+        }
     }
 
     public function addLeaguesToPlay()
@@ -87,13 +90,11 @@ class SettingsController extends BaseController
     public function saveLeagues()
     {
         $ids = Input::get('ids');
-//        return $ids;
         $notIn = Groups::where('state', '=', 2)->lists('league_details_id');
         foreach ($ids as $id) {
             if (!in_array($id, $notIn)) {
                 $round = Input::get('v-' . $id);
-//                return $round;
-                 return SettingsController::createOperationalGroup($id, $round);
+                SettingsController::createOperationalGroup($id, $round);
             }
         }
         return Redirect::back()->with("message", "League added");

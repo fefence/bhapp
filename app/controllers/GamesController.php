@@ -7,8 +7,10 @@ class GamesController extends \BaseController
         $pool = Pools::getPoolForUserLeague(Auth::user()->id, $league_details_id);
         $gr = Groups::getCurrentGroupId($league_details_id);
         $games = User::find(Auth::user()->id)->games()->where('groups_id', '=', $gr->id)->lists('standings_id');
+        if (count($games) == 0) {
+            $games = [-1];
+        }
         $standings = Standings::whereNotIn('id', $games)->lists('team');
-//        $matches = Groups::find($gr->id)->matches()->get(['id']);
         $count = array();
 
         if ($fromdate == '' && $todate == '') {
