@@ -1,11 +1,12 @@
 <?php
 Route::get('/boo', function(){
-//    Parser::parseLeagueSeries(24);
-    $summary = Parser::parseMatchesFromSummary(Groups::find(75));
-    $group = Groups::find(75)->matches()->lists('id');
-    return array_diff($group, $summary);
-//   	return Updater::updatePPM();
-    return Updater::update();
+    $dw = date( "w", time());
+    if ($dw >= 2 && $dw <= 5) {
+        return "mid";
+    } else {
+        return "reg";
+    }
+    return $dw;
 });
 
 //details views

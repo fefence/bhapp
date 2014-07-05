@@ -6,6 +6,12 @@
 	<li class="active">{{array_get($elements, 'active')}}</li>
 	</ol>
 	<div class="pull-right">
+        @if(Session::get('message') != null)
+        <span id="flash">
+        {{Session::get('message')}}
+        </span>
+        @endif
+
 		@if(isset($group))
         @if($disable)
         recalc |
@@ -24,3 +30,9 @@
 		<span>{{ Auth::user()->name }} | <a href="/settings">settings</a> | <a href="/logout">log out</a></span>
 	</div>
 </div>
+
+<script>
+    setTimeout(function() {
+        $('#flash').fadeOut('fast');
+    }, 2000);
+</script>

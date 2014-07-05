@@ -62,6 +62,9 @@ class GamesController extends \BaseController
             ->where('user_id', '=', Auth::user()->id)
             ->where('confirmed', '=', 1)
             ->lists('match_id');
+        if (count($matches) == 0) {
+            $matches = [-1];
+        }
         if ($fromdate == '' && $todate == '') {
             $data = Games::where('groups_id', '=', $group_id)
                 ->where('user_id', '=', Auth::user()->id)

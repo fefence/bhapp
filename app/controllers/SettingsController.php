@@ -70,11 +70,11 @@ class SettingsController extends BaseController
     {
         $current = Groups::firstOrNew(['league_details_id' => $league_details_id, 'round' => $round, 'state' => 2]);
         $current->save();
-        // return $current;
         $next = Groups::firstOrNew(['league_details_id' => $league_details_id, 'round' => ($round + 1), 'state' => 3]);
         $next->save();
+        Parser::parseLeagueSeries($league_details_id);
         Parser::parseMatchesForGroup($current, $next);
-        Parser::parseLeagueSeries($current);
+
     }
 
     public function addLeaguesToPlay()
@@ -87,11 +87,13 @@ class SettingsController extends BaseController
     public function saveLeagues()
     {
         $ids = Input::get('ids');
+//        return $ids;
         $notIn = Groups::where('state', '=', 2)->lists('league_details_id');
         foreach ($ids as $id) {
             if (!in_array($id, $notIn)) {
                 $round = Input::get('v-' . $id);
-                SettingsController::createOperationalGroup($id, $round);
+//                return $round;
+                 return SettingsController::createOperationalGroup($id, $round);
             }
         }
         return Redirect::back()->with("message", "League added");
