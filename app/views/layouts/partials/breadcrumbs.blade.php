@@ -7,9 +7,7 @@
 	</ol>
 	<div class="pull-right">
         @if(Session::get('message') != null)
-        <span id="flash">
-        {{Session::get('message')}}
-        </span>
+        <span id="flash" class="bg-success text-success">{{Session::get('message')}}</span>
         @endif
 
 		@if(isset($group))
@@ -34,5 +32,5 @@
 <script>
     setTimeout(function() {
         $('#flash').fadeOut('fast');
-    }, 1500);
+    }, 1000);
 </script>
