@@ -58,10 +58,15 @@ class GamesController extends \BaseController
     }
 
     public static function confirmAllGames($group_id, $fromdate = "", $todate = "") {
+        $matches = Games::where('groups_id', '=', $group_id)
+            ->where('user_id', '=', Auth::user()->id)
+            ->where('confirmed', '=', 1)
+            ->lists('match_id');
         if ($fromdate == '' && $todate == '') {
             $data = Games::where('groups_id', '=', $group_id)
                 ->where('user_id', '=', Auth::user()->id)
                 ->where('confirmed', '=', 0)
+                ->whereNotIn('match_id', $matches)
                 ->get(['games.id', 'game_type_id']);
 
         } else {
@@ -71,6 +76,7 @@ class GamesController extends \BaseController
                 ->where('user_id', '=', Auth::user()->id)
                 ->where('matchDate', '>=', $fromdate)
                 ->where('matchDate', '<=', $todate)
+                ->whereNotIn('match_id', $matches)
                 ->where('confirmed', '=', 0)
                 ->get(['games.id', 'game_type_id']);
 
