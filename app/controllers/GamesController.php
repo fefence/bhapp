@@ -22,18 +22,21 @@ class GamesController extends \BaseController
             $grey = Groups::getMatchesNotInGamesForDates($gr->id, $standings, $fromdate, $todate);
             $tail = "/".$fromdate."/".$todate;
         }
+        $disable = false;
         foreach($data as $g) {
             $match = Match::find($g->match_id);
             $count[$g->id] = count(Games::confirmedGamesForMatch($match, Auth::user()->id, $g->team));
+            if ($count[$g->id] > 0) {
+                $disable = true;
+            }
         }
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, $league_details_id);
         $arr = array();
         $arr[0] = $data;
         $arr[1] = $grey;
         $standings = Standings::where('league_details_id', '=', $league_details_id)->lists('place', 'team');
-
         $league = LeagueDetails::find($league_details_id);
-        return View::make('matches')->with(['tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $gr->id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "group/$league_details_id", 'big' => $big, 'small' => $small]);
+        return View::make('matches')->with(['tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $gr->id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "group/$league_details_id", 'big' => $big, 'small' => $small, 'disable' => $disable]);
     }
 
     public function confirmGame($game_id, $game_type_id)
@@ -99,6 +102,10 @@ class GamesController extends \BaseController
             $game->income = $betpm * $game->odds;
             $game->save();
         }
+
+        $pool = Pools::where('user_id', '=', Auth::user()->id)->where('league_details_id', '=', Groups::find($group_id)->league_details_id)->first();
+        $pool->current = Games::where('groups_id', '=', $group_id)->where('user_id', '=', Auth::user()->id)->sum('bsf');
+        $pool->save();
         return Redirect::back()->with('message', 'BSF recalculated');
     }
 
@@ -122,8 +129,15 @@ class GamesController extends \BaseController
         $col = Input::get('column');
         $bsf = "";
         if ($col == 10 || $col == '10') {
+            $bsf = $game->bsf;
             $game->bsf = $value;
             $game->save();
+            $league_details_id = Match::find($game->match_id)->league_details_id;
+            $pool = Pools::where('user_id', '=', $game->user_id)->where('league_details_id', '=', $league_details_id)->first();
+            $pool->current = $pool->current - $bsf + $value;
+            $pool->save();
+            $bsf = round($pool->current, 2);
+//            $bsf = $pool->current();
         }
         if ($col == 11 || $col == '11') {
             $game->bet = $value;

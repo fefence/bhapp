@@ -142,14 +142,11 @@ class Games extends Eloquent
         }
         $nGame = $game->replicate();
         $nGame->bsf = 0;
+        $nGame->bet = 0;
+        $nGame->income = 0;
         $nGame->save();
         $game->confirmed = 1;
         $game->save();
-        $m = Match::find($game->match_id);
-        $pool = Pools::where('user_id', '=', $game->user_id)->where('league_details_id', '=', $m->league_details_id)->first();
-        $pool->current = $pool->current + $game->bsf;
-        $pool->save();
-
     }
 
     public static function deleteGame($game_id, $game_type_id)
@@ -165,27 +162,26 @@ class Games extends Eloquent
             ->where('confirmed', '=', 0)
             ->first();
         $nGame->bsf = $nGame->bsf + $game->bsf;
+        $nGame->bet = $nGame->bet + $game->bet;
+        $nGame->income = $nGame->income + $game->income;
         $nGame->save();
-
-        $m = Match::find($game->match_id);
-        $pool = Pools::where('user_id', '=', $game->user_id)->where('league_details_id', '=', $m->league_details_id)->first();
-        $pool->current = $pool->current - $game->bsf;
-        $pool->save();
         $game->delete();
     }
 
-    public static function addGame($groups_id, $standings_id, $user_id, $match_id) {
+    public static function addGame($groups_id, $standings_id, $user_id, $match_id)
+    {
         $game = new Games;
         $game->user_id = $user_id;
         $game->bet = 0;
         $game->odds = 3;
         $game->match_id = $match_id;
         $game->game_type_id = 1;
-        $game->special= 0;
+        $game->special = 0;
         $game->standings_id = $standings_id;
         $game->groups_id = $groups_id;
         $game->save();
     }
+
     /**
      * @param $match
      * @return mixed

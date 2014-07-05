@@ -159,7 +159,6 @@ class Parser
 
         $league = LeagueDetails::findOrFail($current->league_details_id);
         $url = $baseUrl . $league->country . "/" . $league->fullName . "/" . $tail;
-
         if (Parser::get_http_response_code($url) != "200") {
             return "Wrong fixtures url! --> $url";
         }
@@ -174,9 +173,8 @@ class Parser
         $rows = $table->getElementsByTagName("tr");
 
         $ids = array();
-        $count = $current->matches()->count();
-        for ($i = 0; $i < $count; $i ++) {
-            $cols = $rows->item($i)->getElementsByTagName('td');
+        foreach($rows as $row) {
+            $cols = $row->getElementsByTagName('td');
             if ($cols->length > 0) {
                 $a = $cols->item(1)->getElementsByTagName('a');
                 foreach ($a as $link) {
@@ -198,5 +196,3 @@ class Parser
     }
 
 }
-
-?>

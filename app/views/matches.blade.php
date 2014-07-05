@@ -40,6 +40,7 @@ $i = 0;
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
     </tr>
     <tr>
         <th></th>
@@ -56,6 +57,7 @@ $i = 0;
         <th style="width:40px;">bet</th>
         <th style="width:40px;">odds</th>
         <th style="width:40px;">income</th>
+        <th style="width:40px;">profit</th>
         <th style="widows: 35;              px;"></th>
     </tr>
     </thead>
@@ -83,7 +85,13 @@ $i = 0;
             ({{$standings[$d->away]}})
         </td>
         <td>{{$d->streak}}</td>
-        <td>{{$d->homeGoals}}:{{$d->awayGoals}}</td>
+        <td>
+            @if ($d->resultShort != '-')
+            {{$d->homeGoals}}:{{$d->awayGoals}}
+            @else
+            -
+            @endif
+        </td>
         <td>{{$d->resultShort}}</td>
         <td class='editabledd warning'>{{$d->type}}</td>
         <td class='editabledd warning'>{{$d->bookmakerName}}</td>
@@ -91,6 +99,7 @@ $i = 0;
         <td class='editable warning' id="{{$d->game_type_id}}">{{$d->bet}}</td>
         <td class='editable warning' id="{{$d->game_type_id}}">{{$d->odds}}</td>
         <td>{{$d->income}}</td>
+        <td>{{$d->income - $d->bsf - $d->bet}}</td>
         <td><a href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}"> + <span
                     style='display: none;'>{{$d->match_id}}</span></a>({{ (array_key_exists($d->match_id,
             $count))?$count[$d->match_id]:$count[$d->id] }})
@@ -120,8 +129,15 @@ $i = 0;
             ({{$standings[$dd->away]}})
         </td>
         <td>{{$dd->streak}}</td>
-        <td>{{$dd->homeGoals}}:{{$dd->awayGoals}}</td>
+        <td>
+            @if ($dd->resultShort != '-')
+            {{$dd->homeGoals}}:{{$dd->awayGoals}}
+            @else
+            -
+            @endif
+        </td>
         <td>{{$dd->resultShort}}</td>
+        <td>-</td>
         <td>-</td>
         <td>-</td>
         <td>-</td>
@@ -265,16 +281,20 @@ $i = 0;
         oTable.$('td.editable').editable('/save', {
             "callback": function (sValue, y) {
                 var aPos = oTable.fnGetPosition(this);
+//                alert(sValue);
                 var arr = sValue.split("#");
                 oTable.fnUpdate(arr[0], aPos[0], 10);
                 oTable.fnUpdate(arr[1], aPos[0], 11);
                 oTable.fnUpdate(arr[2], aPos[0], 12);
                 oTable.fnUpdate(arr[3], aPos[0], 13);
+                oTable.fnUpdate(arr[3] - arr[0] - arr[1], aPos[0], 14);
+
                 if (arr[4] != "") {
-                    if (arr[4] != $("#pool").text()) {
-                        $("#crr").html("<strong>" + arr[4] + "</strong>");
+                    if (parseFloat(arr[4]) != parseFloat($("#pool").text())) {
+                        $("#curr").html(" <strong>(" + arr[4] + ")</strong>");
                     } else {
-                        $("#crr").html(arr[4]);
+//                        alert(arr[4]);
+                        $("#curr").html(" (" + $("#pool").text() + ")");
                     }
 
                 }

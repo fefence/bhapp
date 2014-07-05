@@ -7,7 +7,11 @@
 	</ol>
 	<div class="pull-right">
 		@if(isset($group))
+        @if($disable)
+        recalc |
+        @else
         <a href="/recalc/{{$group}}">recalc</a> |
+        @endif
         <a href="/confirmall/{{$group}}{{$tail}}">confirm all</a> |
         <a href="/groupodds/{{$group}}">refresh odds</a> |
 		@endif

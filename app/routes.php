@@ -1,6 +1,9 @@
 <?php
 Route::get('/boo', function(){
-	return Parser::parseLeagueSeries(13);
+//    Parser::parseLeagueSeries(24);
+    $summary = Parser::parseMatchesFromSummary(Groups::find(75));
+    $group = Groups::find(75)->matches()->lists('id');
+    return array_diff($group, $summary);
 //   	return Updater::updatePPM();
     return Updater::update();
 });
