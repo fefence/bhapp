@@ -34,5 +34,5 @@
 <script>
     setTimeout(function() {
         $('#flash').fadeOut('fast');
-    }, 2000);
+    }, 1500);
 </script>
