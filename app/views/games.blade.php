@@ -115,8 +115,6 @@
 	            oTable.fnUpdate( arr[3], aPos[0], 12 );
 	            oTable.fnUpdate( arr[4], aPos[0], 8 );
 	    
-	            //oTable.fnClearTable();
-            	//oTable.fnReloadAjax() ;
 	        },
 	        "submitdata": function ( value, settings ) {
 	            return {

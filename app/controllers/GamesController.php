@@ -102,9 +102,38 @@ class GamesController extends \BaseController
             ->get();
         Parser::parseMatchOddsForGames($data);
 
+        $gr = Groups::find($group_id);
+        $setting = Settings::where('user_id', '=', Auth::user()->id)
+            ->where('league_details_id', '=', $gr->league_details_id)
+            ->first(['from', 'to', 'multiplier', 'auto']);
+        $from = $setting->from;
+        $teams = array();
+        // return $gr;
+        if ($setting->auto == '2'){
+            $teams = Standings::where('league_details_id', '=', $gr->league_details_id)
+                ->where('streak', '>', $from)->lists('team', 'id');
+        } else if ($setting->auto == '1') {
+            $to = $setting->to;
+            for($i = 0; $i < 100; $i ++) {
+                $count = Standings::where('league_details_id', '=', $gr->league_details_id)
+                    ->where('streak', '>=', $i);
+                if ($count->count() <= $to){
+                    if ($count->count() < $from) {
+                        $teams = Standings::where('league_details_id', '=', $gr->league_details_id)
+                            ->where('streak', '>=', $i - 1)->lists('team', 'id');
+                        break 1;
+                    } else {
+                        $teams = Standings::where('league_details_id', '=', $gr->league_details_id)
+                            ->where('streak', '>=', $i)->lists('team', 'id');
+                    }
+                    break 1;
+                }
+            }
+        }
+
         $league_details_id = Groups::find($group_id)->league_details_id;
         $pool = Pools::where('user_id', '=', Auth::user()->id)->where('league_details_id', '=', $league_details_id)->first();
-        $bsfpm = $pool->amount / count($data);
+        $bsfpm = $pool->amount / count($teams);
         $setting = Settings::where('user_id', '=', Auth::user()->id)->where('league_details_id', '=', $league_details_id)->first();
         $betpm = $bsfpm * $setting->multiplier;
         foreach($data as $game) {

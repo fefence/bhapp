@@ -15,25 +15,7 @@
 	@include('layouts.partials.pageheader', array('calendar' => false, 'big' => "Add PPS leagues"))
 @stop
 @section('content')
-   <!--  {{Form::open(array('url' => '/saveleaguestoplay', 'method' => 'post'))}}
-    	{{Form::submit()}}<br>
 
-    @foreach($leagues as $league)
-    	{{Form::label($league->id, $league->country."/".$league->fullName)}}
-    	@if(array_key_exists($league->id, $toPlay))
-    		{{Form::checkbox("ids[]", $league->id, ['checked'])}} 
-    	@else
-    		{{Form::checkbox("ids[]", $league->id)}} 
-    	@endif
-    	@if(array_key_exists($league->id, $toPlay))
-    		{{Form::text($league->id, $toPlay[$league->id])}} 
-    	@else
-    		{{Form::text("", "")}}
-    	@endif
-    	 <br>
-    @endforeach
-
-    {{Form::close()}} -->
     <form method="post" action='/saveleaguestoplay'>
     	<input type="submit">
     	@foreach($leagues as $league)
