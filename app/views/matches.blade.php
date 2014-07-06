@@ -4,11 +4,11 @@
 <!-- breadcrumbs -->
 <?php
 if (isset($group)) {
-    $list = array('PPS' => URL::route("home"));
+    $list = array('pps' => URL::route("home"));
     $active = $league->country.":".$league->fullName;
 } else {
     $list = array();
-    $active = "PPM";
+    $active = "ppm";
 }
 $elements = array('active' => $active, 'list' => $list);
 $i = 0;
