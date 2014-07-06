@@ -3,7 +3,7 @@
 @section('breadcrumbs')
 	<!-- breadcrumbs -->
 	<?php
-		$list = array('Home' => URL::to("home"));
+		$list = array('ppm' => URL::to("home"));
 		$active = 'ppm';
 		$elements = array('active' => $active, 'list' => $list);
 	?>

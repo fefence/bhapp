@@ -4,7 +4,7 @@
 	<!-- breadcrumbs -->
 	
 	<?php
-		$list = array('Home' => URL::to("home"));
+		$list = array('pps' => URL::to("home"));
 		$active = 'add';
 		$elements = array('active' => $active, 'list' => $list);
 	?>

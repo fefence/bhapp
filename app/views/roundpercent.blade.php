@@ -4,7 +4,7 @@
 	<!-- breadcrumbs -->
 	
 	<?php
-		$list = array('Home' => URL::to("home"), 'countries' => URL::to('countries'));
+		$list = array('pps' => URL::to("home"), 'countries' => URL::to('countries'));
 		$active = 'draw stats';
 		$elements = array('active' => $active, 'list' => $list);
 	?>

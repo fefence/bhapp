@@ -2,7 +2,7 @@
 
 @section('breadcrumbs')
 <?php
-$list = array('home' => URL::to("home"));
+$list = array('pps' => URL::to("home"));
 $active = 'settings';
 $elements = array('active' => $active, 'list' => $list);
 ?>

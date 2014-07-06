@@ -3,7 +3,7 @@
 @section('breadcrumbs')
     <!-- breadcrumbs -->
     <?php
-      $list = array('home' => URL::to("home"), 
+      $list = array('pps' => URL::to("home"),
                     'countries' => URL::to('countries'), 
                     array_get($data, 'country') => "/".array_get($data, 'country'),
                     array_get($data, 'league') => "/".array_get($data, 'country')."/".array_get($data, 'league')."/archive");

@@ -4,7 +4,7 @@
 	<!-- breadcrumbs -->
 
 	<?php
-		$list = array('Home' => URL::to("home"), 'countries' => URL::to('countries'), $country => "/$country");
+		$list = array('pps' => URL::to("home"), 'countries' => URL::to('countries'), $country => "/$country");
 		$active = $league;
 		$elements = array('active' => $active, 'list' => $list);
 	?>

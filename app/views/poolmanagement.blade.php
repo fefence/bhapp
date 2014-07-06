@@ -3,8 +3,8 @@
 @section('breadcrumbs')
 	<!-- breadcrumbs -->
 	<?php
-		$list = array('Home' => URL::to("home"));
-		$active = 'Pool Management';
+		$list = array('pps' => URL::to("home"));
+		$active = 'pool';
 		$elements = array('active' => $active, 'list' => $list);
 	?>
 	@include('layouts.partials.breadcrumbs', array('elements' => $elements))
