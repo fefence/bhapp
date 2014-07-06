@@ -72,10 +72,11 @@ class SettingsController extends BaseController
         $current->save();
         $next = Groups::firstOrNew(['league_details_id' => $league_details_id, 'round' => ($round + 1), 'state' => 3]);
         $next->save();
-        Parser::parseLeagueSeries($league_details_id);
         if ($league_details_id == 112) {
             Parser::parseMatchesForUSA($current, $next);
+            Parser::parseLeagueSeriesUSA($league_details_id);
         } else {
+            Parser::parseLeagueSeries($league_details_id);
             Parser::parseMatchesForGroup($current, $next);
         }
     }
