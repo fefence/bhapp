@@ -9,10 +9,11 @@ class GroupController extends \BaseController
         $data = LeagueDetails::getLeaguesWithMatches($fromdate, $todate);
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, '');
         $res = array();
-        foreach($data as $league) {
+        foreach($data as $groups_id => $league_id) {
+            $league = LeagueDetails::find($league_id);
             $res[$league->id]['league'] = $league;
-            $prev_goup = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 1)->orderBy('round')->orderBy('id')->first();
-            $curr_group = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 2)->first();
+            $prev_goup = Groups::where('league_details_id', '=', $league->id)->where('id', '<', $groups_id)->orderBy('round')->orderBy('id')->first();
+            $curr_group = Groups::find($groups_id);
             $all = Games::where('user_id', '=', Auth::user()->id)->where('groups_id', '=', $curr_group->id)->where('confirmed', '=', 0)->count();
             $confirmed = Games::where('user_id', '=', Auth::user()->id)->where('groups_id', '=', $curr_group->id)->where('confirmed', '=', 1)->distinct('standings_id')->count('standings_id');
             $all_series = Standings::where('league_details_id', '=', $league->id)->count();

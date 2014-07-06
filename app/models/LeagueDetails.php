@@ -62,8 +62,9 @@ class LeagueDetails extends Eloquent
                 ->join('match', 'match.groups_id', '=', 'groups.id')
                 ->where('matchDate', '>=', $fromdate)
                 ->where('matchDate', '<=', $todate)
-                ->select('match.league_details_id as lids')
-                ->lists('lids');
+                ->select('match.league_details_id as lids', 'groups.id')
+                ->lists('lids', 'id');
+            return $ids;
             if (count($ids) > 0) {
                 $data = LeagueDetails::whereIn('id', $ids)->get(['country', 'fullName', 'id']);
                 return $data;

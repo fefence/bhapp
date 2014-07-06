@@ -20,8 +20,8 @@ class GamesController extends \BaseController
             list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
         } else {
             list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
-            $data = Groups::getGamesForGroupAndDates($gr->id, $fromdate, $todate);
-            $grey = Groups::getMatchesNotInGamesForDates($gr->id, $standings, $fromdate, $todate);
+            $data = Groups::getGamesForGroupAndDates($league_details_id, $fromdate, $todate);
+            $grey = Groups::getMatchesNotInGamesForDates($league_details_id, $standings, $fromdate, $todate);
             $tail = "/".$fromdate."/".$todate;
         }
         $disable = false;
