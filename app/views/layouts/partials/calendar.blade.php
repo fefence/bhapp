@@ -50,7 +50,7 @@ $(document).ready(function(){
 		var d = new Date(dp.datepicker('getDates')[0]);
 		var d1 = new Date(dp.datepicker('getDates')[1]);
 		if (d1 == 'Invalid Date') {
-            var $d1 = d;
+            d1 = d;
         }
 		// alert(dateFormat(date, 'yyyy-mm-dd'));
 		var curr_date = d.getDate();
