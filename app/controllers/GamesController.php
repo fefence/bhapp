@@ -140,6 +140,7 @@ class GamesController extends \BaseController
             $game->bsf = $bsfpm;
             $game->bet = $betpm;
             $game->income = $betpm * $game->odds;
+
             $game->save();
         }
 

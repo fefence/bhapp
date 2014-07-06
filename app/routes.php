@@ -1,6 +1,6 @@
 <?php
 Route::get('/boo', function(){
-    return Parser::parseLeagueSeriesUSA(112);
+    return LeagueDetails::getLeaguesWithMatches('2014-07-06', '2014-07-06');
 });
 
 //details views

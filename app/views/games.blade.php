@@ -20,20 +20,29 @@
 			<tr>
 				<th><input type="text" name="search_engine" class="search_init" placeholder="country"></th>
 				<th><input type="text" name="search_engine" class="search_init" placeholder="league"></th>
-				<th><input type="hidden"></th>
+                <th><input type="hidden"></th>
+                <th><input type="hidden"></th>
+                <th><input type="hidden"></th>
+                <th><input type="hidden"></th>
 			</tr>
 			<tr>
 				<th>country</th>
 				<th>league</th>
-				<th></th>
+                <th>bsf</th>
+                <th>conf</th>
+                <th>play</th>
+                <th></th>
 			</tr>
 		</thead>
 		<tbody>
-			@foreach($data as $d)
-				<tr class="{{$d->match_id}}">
-					<td>{{$d->country}}</td>
-					<td>{{$d->fullName}}</td>
-					<td><a href="/group/{{$d->id}}/{{isset($fromdate)?$fromdate.'/':''}}{{isset($todate)?$todate:''}}">GO</a></td>
+			@foreach($data as $id=>$d)
+				<tr class="{{$id}}">
+					<td>{{$d['league']->country}}</td>
+                    <td>{{$d['league']->fullName}}</td>
+                    <td>@if(isset($d['prev'])) {{$d['prev']}} @endif</td>
+                    <td>{{$d['conf']}}/{{$d['all']}}</td>
+                    <td>{{$d['all']}}/{{$d['playing']}}</td>
+					<td><a href="/group/{{$id}}/{{isset($fromdate)?$fromdate.'/':''}}{{isset($todate)?$todate:''}}">GO</a></td>
 				</tr>
 			@endforeach
 		</tbody>
