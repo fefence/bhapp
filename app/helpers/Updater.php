@@ -3,12 +3,13 @@
 class Updater {
 
 	public static function update() {
+        $log = "";
 		$time = time();
 		$allMatches = Updater::getAllMatchesForUpdate();
 		// return $allMatches;
 		foreach ($allMatches as $match) {
 			$match = Updater::updateDetails($match);
-			echo $match->resultShort.'<br>';
+			$log = $log.$match->home."-".$match->away.": ".$match->resultShort.'\n';
 			try {
 				$match->id;
 			} catch (ErrorException $e) {
@@ -23,11 +24,12 @@ class Updater {
 					}
 				}
 				if (Updater::isLastGameInGroup($match)) {
-					return Updater::updateGroup($match->groups_id);
+					$log = $log." new group created for league: ".$match->league_details_id;
+                    Updater::updateGroup($match->groups_id);
 				}
 			}
 		}
-		return (time() - $time);
+		return $log." ".(time() - $time);
 	}
 
 
