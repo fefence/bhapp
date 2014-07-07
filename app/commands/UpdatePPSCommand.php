@@ -38,7 +38,8 @@ class UpdatePPSCommand extends Command {
 	public function fire()
 	{
         $time = Updater::update();
-        $this->info($time." sec elapsed");
+        $date = date('Y-m-d H:i:s');
+        $this->info($date." : ".$time." sec elapsed");
 	}
 
 	/**
