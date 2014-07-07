@@ -48,8 +48,14 @@ class Updater {
 		$next = Groups::firstOrCreate(['league_details_id' => $gr->league_details_id, 'state' => 3, 'round' => ($current->round + 1)]);
 		// return $next;
 		// Parser::parseMatchesForGroup($next);
-		Parser::parseMatchesForGroup($current, $next);
-		Parser::parseLeagueSeries($current->league_details_id);
+
+        if ($gr->league_details_id == 112) {
+            Parser::parseLeagueSeriesUSA($current->league_details_id);
+            Parser::parseMatchesForUSA($current, $next);
+        } else {
+            Parser::parseMatchesForGroup($current, $next);
+            Parser::parseLeagueSeries($current->league_details_id);
+        }
 		$ids = Settings::where('league_details_id', '=', $current->league_details_id)->lists('user_id');
 		foreach ($ids as $id) {
 			Updater::recalculateGroup($current->id, $id);
