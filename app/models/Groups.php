@@ -22,6 +22,17 @@ class Groups extends Eloquent {
             ->first();
     }
 
+    public static function getGroupIdForDates($league_details_id, $fromdate, $todate) {
+        $m = Match::where('league_details_id', '=', $league_details_id)
+            ->where('matchDate', '>=', $fromdate)
+            ->where('matchDate', '<=', $todate)
+            ->first();
+        if ($m != null) {
+            return Groups::find($m->groups_id);
+        }
+        return null;
+    }
+
     public static function getGamesForGroup($group_id) {
         return Groups::find($group_id)->matches()
             ->join('games', 'games.match_id', '=', 'match.id')
@@ -77,9 +88,9 @@ class Groups extends Eloquent {
         return array($m1, $m2);
     }
 
-    public static function getMatchesNotInGamesForDates($groups_id, $standings, $fromdate, $todate)
+    public static function getMatchesNotInGamesForDates($league_detials_id, $standings, $fromdate, $todate)
     {
-        $m1 = Groups::find($groups_id)->matches()
+        $m1 = Match::where('match.league_details_id', '=', $league_detials_id)
             ->whereIn('home', $standings)
             ->where('matchDate', '>=', $fromdate)
             ->where('matchDate', '<=', $todate)
@@ -89,7 +100,7 @@ class Groups extends Eloquent {
             ->orderBy('streak')
             ->select(DB::raw("standings.id as standings_id, home, away, matchDate, matchTime, streak, team, place, match.id, resultShort, groups_id, homeGoals, awayGoals"))
             ->get();        // }
-        $m2 = Groups::find($groups_id)->matches()
+        $m2 = Match::where('match.league_details_id', '=', $league_detials_id)
             ->whereIn('away', $standings)
             ->where('matchDate', '>=', $fromdate)
             ->where('matchDate', '<=', $todate)
