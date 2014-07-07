@@ -70,7 +70,7 @@ class Updater {
 	public static function getAllMatchesForUpdate() {
 		date_default_timezone_set('Europe/Sofia');
 		$now = date('Y-m-d H:i:s');
-		$start = explode(' ', date( "Y-m-d H:i:s", strtotime( "$now - 2 hours" )));
+		$start = explode(' ', date( "Y-m-d H:i:s", strtotime( "$now - 2 days" )));
 		return Match::where(function($q) use ($start) {
 				$q->where('matchDate', '<', $start[0])
 					->orWhere(function($query) use ($start)
