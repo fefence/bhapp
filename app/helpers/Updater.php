@@ -133,7 +133,6 @@ class Updater {
 			->first(['from', 'to', 'multiplier', 'auto']);
 		$from = $setting->from;
 		$teams = array();
-		// return $gr;
 		if ($setting->auto == '2'){
 			$teams = Standings::where('league_details_id', '=', $gr->league_details_id)
 						->where('streak', '>', $from)->lists('team', 'id');
@@ -156,14 +155,20 @@ class Updater {
 			}
 		}
 //        return $teams;
-		$pool = User::find($user_id)->pools()->where('league_details_id', '=', $gr->league_details_id)->first();
-		$bsfpm = $pool->amount / count($teams);
-		$bpm = $pool->amount * $setting->multiplier / count($teams);
-		// $bsfpm = $pool;
-		$recalc = false;
+
 		if (count($teams) < Games::where('user_id', '=', $user_id)->where('groups_id', '=', $gr->id)->count()) {
 			Games::where('user_id', '=', $user_id)->where('groups_id', '=', $gr->id)->delete();
 		}
+        $pool = User::find($user_id)->pools()->where('league_details_id', '=', $gr->league_details_id)->first();
+        if (count($teams) > 0) {
+        $bsfpm = $pool->amount / count($teams);
+        $bpm = $pool->amount * $setting->multiplier / count($teams);
+        // $bsfpm = $pool;
+        } else {
+            $bsfpm = $pool->amount;
+            $bpm = $pool->amount * $setting->multiplier;
+        }
+        $recalc = false;
 		foreach ($teams as $st_id => $team) {
 			$matches = $gr->matches()->where(function ($query) use ($team) {
 	             $query->where('home', '=', $team)

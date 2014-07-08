@@ -125,7 +125,6 @@ class GamesController extends \BaseController
             ->first(['from', 'to', 'multiplier', 'auto']);
         $from = $setting->from;
         $teams = array();
-        // return $gr;
         if ($setting->auto == '2') {
             $teams = Standings::where('league_details_id', '=', $gr->league_details_id)
                 ->where('streak', '>', $from)->lists('team', 'id');
@@ -148,9 +147,14 @@ class GamesController extends \BaseController
             }
         }
 
+//        return $setting;
         $league_details_id = Groups::find($group_id)->league_details_id;
         $pool = Pools::where('user_id', '=', Auth::user()->id)->where('league_details_id', '=', $league_details_id)->first();
-        $bsfpm = $pool->amount / count($teams);
+        if (count($teams) > 0) {
+            $bsfpm = $pool->amount / count($teams);
+        } else {
+            $bsfpm = $pool->amount;
+        }
         $setting = Settings::where('user_id', '=', Auth::user()->id)->where('league_details_id', '=', $league_details_id)->first();
         $betpm = $bsfpm * $setting->multiplier;
         foreach ($data as $game) {

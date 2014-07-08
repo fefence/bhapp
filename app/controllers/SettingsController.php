@@ -41,6 +41,7 @@ class SettingsController extends BaseController
                         //$setting->delete();
                     }
                     $group = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 2)->first(['id']);
+//                    return "boo";
                     if ($group != NULL && $group->id != "" && ($oldMultiplier != $setting->multiplier || $oldFrom != $setting->from || $oldTo != $setting->to)) {
                         Updater::recalculateGroup($group->id, Auth::user()->id);
                     }
