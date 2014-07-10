@@ -221,8 +221,6 @@ class Updater {
 		$game = PPM::firstOrNew(['user_id' => $user_id, 'game_type_id' => $game_type_id, 'country' => $team, 'series_id' => $series->id, 'match_id' => $series->end_match_id]);
 		$game->odds = 3;
 		$game->save();
-
-
 	}
 
 	public static function getPPMMatches() {

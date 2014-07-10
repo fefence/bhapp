@@ -74,7 +74,18 @@ class Parser
             $stand->place = explode(".", $place)[0];
             $stand->save();
         }
-
+        $gr_id = LeagueDetails::find($league_details_id)->id;
+        $str = Standings::where('league_details_id', '=', $league_details_id)
+            ->select(DB::raw('streak, count(*) as c'))
+            ->groupBy('streak')
+            ->get();
+        foreach($str as $s) {
+            $g = new GroupToStreaks();
+            $g->groups_id = $gr_id;
+            $g->streak_length = $s->streak;
+            $g->streak_count = $s->c;
+            $g->save();
+        }
     }
 
     public static function parseLeagueSeriesUSA($league_details_id)
@@ -109,7 +120,18 @@ class Parser
                 $stand->save();
             }
         }
-
+        $gr_id = LeagueDetails::find($league_details_id)->id;
+        $str = Standings::where('league_details_id', '=', $league_details_id)
+            ->select(DB::raw('streak, count(*) as c'))
+            ->groupBy('streak')
+            ->get();
+        foreach($str as $s) {
+            $g = new GroupToStreaks();
+            $g->groups_id = $gr_id;
+            $g->streak_length = $s->streak;
+            $g->streak_count = $s->c;
+            $g->save();
+        }
     }
 
     public static function parseMatchesForGroup($current, $next)

@@ -30,7 +30,8 @@
 				<th>league</th>
                 <th>bsf</th>
                 <th>conf</th>
-                <th>play</th>
+                <th>-</th>
+                <th>+</th>
                 <th></th>
 			</tr>
 		</thead>
@@ -41,7 +42,11 @@
                     <td>{{$d['league']->fullName}}</td>
                     <td>@if(isset($d['prev'])) {{$d['prev']}} @endif</td>
                     <td>{{$d['conf']}}/{{$d['all']}}</td>
-                    <td>{{$d['all']}}/{{$d['playing']}}</td>
+                        @foreach($d['filter'] as $filter=>$count)
+                    <td>
+                        {{$count}}
+                    </td>
+                        @endforeach
 					<td><a href="/group/{{$id}}/{{isset($fromdate)?$fromdate.'/':''}}{{isset($todate)?$todate:''}}">GO</a></td>
 				</tr>
 			@endforeach
