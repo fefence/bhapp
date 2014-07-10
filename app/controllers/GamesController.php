@@ -127,7 +127,7 @@ class GamesController extends \BaseController
         $teams = array();
         if ($setting->auto == '2') {
             $teams = Standings::where('league_details_id', '=', $gr->league_details_id)
-                ->where('streak', '>', $from)->lists('team', 'id');
+                ->where('streak', '>=', $from)->lists('team', 'id');
         } else if ($setting->auto == '1') {
             $to = $setting->to;
             for ($i = 0; $i < 100; $i++) {
