@@ -24,6 +24,7 @@
                 <th><input type="hidden"></th>
                 <th><input type="hidden"></th>
                 <th><input type="hidden"></th>
+                <th><input type="hidden"></th>
 			</tr>
 			<tr>
 				<th>country</th>
