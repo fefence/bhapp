@@ -2,8 +2,8 @@
 
 class SeriesController extends BaseController {
 
-	public function calculatePPMSeries() {
-		$leagues = LeagueDetails::where('id', '=', 69)->get();
+	public static function calculatePPMSeries() {
+		$leagues = LeagueDetails::where('ppm', '=', 1)->get();
 
 		foreach ($leagues as $league) {
 			$matches = Match::matchesForSeason($league->id, '2013-2014')->get(array('id', 'resultShort', 'home', 'away', 'matchDate', 'matchTime', 'homeGoals', 'awayGoals'));
@@ -24,7 +24,7 @@ class SeriesController extends BaseController {
 					$series->current_length = $series->current_length + 1;
 					$series->end_match_id = $match->id;
 					$series->league_details_id = $league->id;
-					if ($this->endSeries($match, $i)) {
+					if (SeriesController::endSeries($match, $i)) {
 						$series->active = 0;
 						$duplicate = Series::where('start_match_id', '=', $series->start_match_id)
 						->where('end_match_id', '=', $series->end_match_id)

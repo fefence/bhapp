@@ -1,6 +1,6 @@
 <?php
 Route::get('/boo', function(){
-    return Updater::update();
+    return SeriesController::calculatePPMSeries();
 //    return $str;
 });
 
