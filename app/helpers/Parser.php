@@ -63,7 +63,42 @@ class Parser
         $finder = new DomXPath($dom);
         $classname = "stats-table result-table";
         $nodes = $finder->query("//*[contains(@class, '$classname')]");
-        $rows = $nodes->item(4)->getElementsByTagName('tbody')->item(0)->getElementsByTagName("tr");
+        $table = $nodes->item(4);
+        if ($table != null) {
+            $rows = $table->getElementsByTagName('tbody')->item(0)->getElementsByTagName("tr");
+        } else {
+            $table = $nodes->item(0);
+            $rows = $table->getElementsByTagName('tbody')->item(0)->getElementsByTagName("tr");
+            foreach ($rows as $row) {
+                $cols = $row->getElementsByTagName('td');
+                $place = trim($cols->item(0)->nodeValue);
+                $team = trim($cols->item(1)->nodeValue);
+                $stand = Standings::firstOrNew(['league_details_id' => $league_details_id, 'team' => $team]);
+                $stand->streak = 0;
+                $stand->place = explode(".", $place)[0];
+                $stand->save();
+            }
+            $baseUrl = "http://www.betexplorer.com/soccer/";
+            $league = LeagueDetails::find($league_details_id);
+            $url = $baseUrl . $league->country . "/" . $league->fullName . "-2013-2014/";
+
+            if (Parser::get_http_response_code($url) != "200") {
+                return "Wrong league stats url! --> $url";
+            }
+            $data = file_get_contents($url);
+
+            $dom = new domDocument;
+
+            @$dom->loadHTML($data);
+            $dom->preserveWhiteSpace = false;
+
+            $finder = new DomXPath($dom);
+            $classname = "stats-table result-table";
+            $nodes = $finder->query("//*[contains(@class, '$classname')]");
+            $table = $nodes->item(4);
+            $rows = $table->getElementsByTagName('tbody')->item(0)->getElementsByTagName("tr");
+        }
+
         foreach ($rows as $row) {
             $cols = $row->getElementsByTagName('td');
             $place = trim($cols->item(0)->nodeValue);
@@ -74,18 +109,72 @@ class Parser
             $stand->place = explode(".", $place)[0];
             $stand->save();
         }
-        $gr_id = LeagueDetails::find($league_details_id)->id;
-        $str = Standings::where('league_details_id', '=', $league_details_id)
-            ->select(DB::raw('streak, count(*) as c'))
-            ->groupBy('streak')
-            ->get();
-        foreach($str as $s) {
-            $g = new GroupToStreaks();
-            $g->groups_id = $gr_id;
-            $g->streak_length = $s->streak;
-            $g->streak_count = $s->c;
-            $g->save();
+
+    }
+
+    public static function parseLeagueStandings($league_details_id)
+    {
+        $baseUrl = "http://www.betexplorer.com/soccer/";
+        $league = LeagueDetails::find($league_details_id);
+        $url = $baseUrl . $league->country . "/" . $league->fullName . "/";
+
+        if (Parser::get_http_response_code($url) != "200") {
+            return "Wrong league stats url! --> $url";
         }
+        $data = file_get_contents($url);
+
+        $dom = new domDocument;
+
+        @$dom->loadHTML($data);
+        $dom->preserveWhiteSpace = false;
+
+        $finder = new DomXPath($dom);
+        $classname = "stats-table result-table";
+        $nodes = $finder->query("//*[contains(@class, '$classname')]");
+        $table = $nodes->item(4);
+        if ($table != null) {
+            $rows = $table->getElementsByTagName('tbody')->item(0)->getElementsByTagName("tr");
+        } else {
+            $table = $nodes->item(0);
+            $rows = $table->getElementsByTagName('tbody')->item(0)->getElementsByTagName("tr");
+            foreach ($rows as $row) {
+                $cols = $row->getElementsByTagName('td');
+                $place = trim($cols->item(0)->nodeValue);
+                $team = trim($cols->item(1)->nodeValue);
+                $stand = Standings::firstOrNew(['league_details_id' => $league_details_id, 'team' => $team]);
+                $stand->place = explode(".", $place)[0];
+                $stand->save();
+            }
+            $baseUrl = "http://www.betexplorer.com/soccer/";
+            $league = LeagueDetails::find($league_details_id);
+            $url = $baseUrl . $league->country . "/" . $league->fullName . "-2013-2014/";
+
+            if (Parser::get_http_response_code($url) != "200") {
+                return "Wrong league stats url! --> $url";
+            }
+            $data = file_get_contents($url);
+
+            $dom = new domDocument;
+
+            @$dom->loadHTML($data);
+            $dom->preserveWhiteSpace = false;
+
+            $finder = new DomXPath($dom);
+            $classname = "stats-table result-table";
+            $nodes = $finder->query("//*[contains(@class, '$classname')]");
+            $table = $nodes->item(4);
+            $rows = $table->getElementsByTagName('tbody')->item(0)->getElementsByTagName("tr");
+        }
+
+        foreach ($rows as $row) {
+            $cols = $row->getElementsByTagName('td');
+            $place = trim($cols->item(0)->nodeValue);
+            $team = trim($cols->item(1)->nodeValue);
+            $stand = Standings::firstOrNew(['league_details_id' => $league_details_id, 'team' => $team]);
+            $stand->place = explode(".", $place)[0];
+            $stand->save();
+        }
+
     }
 
     public static function parseLeagueSeriesUSA($league_details_id)
@@ -120,17 +209,37 @@ class Parser
                 $stand->save();
             }
         }
-        $gr_id = LeagueDetails::find($league_details_id)->id;
-        $str = Standings::where('league_details_id', '=', $league_details_id)
-            ->select(DB::raw('streak, count(*) as c'))
-            ->groupBy('streak')
-            ->get();
-        foreach($str as $s) {
-            $g = new GroupToStreaks();
-            $g->groups_id = $gr_id;
-            $g->streak_length = $s->streak;
-            $g->streak_count = $s->c;
-            $g->save();
+    }
+
+    public static function parseLeagueStandingsUSA($league_details_id)
+    {
+        $baseUrl = "http://www.betexplorer.com/soccer/";
+        $league = LeagueDetails::find($league_details_id);
+        $url = $baseUrl . $league->country . "/" . $league->fullName . "/";
+
+        if (Parser::get_http_response_code($url) != "200") {
+            return "Wrong league stats url! --> $url";
+        }
+        $data = file_get_contents($url);
+
+        $dom = new domDocument;
+
+        @$dom->loadHTML($data);
+        $dom->preserveWhiteSpace = false;
+
+        $finder = new DomXPath($dom);
+        $classname = "stats-table result-table";
+        $nodes = $finder->query("//*[contains(@class, '$classname')]");
+        for ($a = 8; $a <= 9; $a++) {
+            $rows = $nodes->item($a)->getElementsByTagName('tbody')->item(0)->getElementsByTagName("tr");
+            foreach ($rows as $row) {
+                $cols = $row->getElementsByTagName('td');
+                $place = trim($cols->item(0)->nodeValue);
+                $team = trim($cols->item(1)->nodeValue);
+                $stand = Standings::firstOrNew(['league_details_id' => $league_details_id, 'team' => $team]);
+                $stand->place = explode(".", $place)[0];
+                $stand->save();
+            }
         }
     }
 
@@ -198,6 +307,8 @@ class Parser
                 $match->matchTime = $time;
                 $match->matchDate = $date;
                 $match->groups_id = $group->id;
+                $match->resultShort = '-';
+                $match->league_details_id = $current->league_details_id;
                 $match->save();
 
                 // return $match;
@@ -312,6 +423,8 @@ class Parser
                 $match->away = $away;
                 $match->matchTime = $time;
                 $match->matchDate = $date;
+                $match->resultShort = '-';
+                $match->league_details_id = $current->league_details_id;
 
                 $match->save();
 

@@ -1,20 +1,6 @@
 <?php
 Route::get('/boo', function(){
-    $league_details_ids = Groups::distinct('league_details_id')->get(['league_details_id']);
-    foreach($league_details_ids as $l) {
-        $gr_id = Groups::where('league_details_id', '=', $l->league_details_id)->where('state', '=', 2)->first()->id;
-        $str = Standings::where('league_details_id', '=', $l->league_details_id)
-            ->select(DB::raw('streak, count(*) as c'))
-            ->groupBy('streak')
-            ->get();
-        foreach($str as $s) {
-            $g = new GroupToStreaks();
-            $g->groups_id = $gr_id;
-            $g->streak_length = $s->streak;
-            $g->streak_count = $s->c;
-            $g->save();
-        }
-    }
+    return Updater::update();
 //    return $str;
 });
 

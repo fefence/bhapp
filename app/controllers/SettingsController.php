@@ -41,7 +41,7 @@ class SettingsController extends BaseController
                         //$setting->delete();
                     }
                     $group = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 2)->first(['id']);
-//                    return "boo";
+//                    return $group;
                     if ($group != NULL && $group->id != "" && ($oldMultiplier != $setting->multiplier || $oldFrom != $setting->from || $oldTo != $setting->to)) {
                         Updater::recalculateGroup($group->id, Auth::user()->id);
                     }
@@ -79,6 +79,17 @@ class SettingsController extends BaseController
         } else {
             Parser::parseLeagueSeries($league_details_id);
             Parser::parseMatchesForGroup($current, $next);
+        }
+        $str = Standings::where('league_details_id', '=', $league_details_id)
+            ->select(DB::raw('streak, count(*) as c'))
+            ->groupBy('streak')
+            ->get();
+        foreach($str as $s) {
+            $g = new GroupToStreaks();
+            $g->groups_id = $current->id;
+            $g->streak_length = $s->streak;
+            $g->streak_count = $s->c;
+            $g->save();
         }
     }
 

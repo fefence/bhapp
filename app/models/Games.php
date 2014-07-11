@@ -125,9 +125,9 @@ class Games extends Eloquent
                     $game->save();
                 }
             }
-            if ($recalc) {
-                Games::recalculate($setting->league_details_id, $setting->multiplier, $pool->amount, $user_id);
-            }
+//            if ($recalc) {
+//                Games::recalculate($setting->league_details_id, $setting->multiplier, $pool->amount, $user_id);
+//            }
 
         }
     }

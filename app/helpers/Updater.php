@@ -17,6 +17,19 @@ class Updater {
 			}
 			if ($match->groups_id != 0) {
 				$games = Updater::getAllGamesForMatch($match->id);
+                $streaksHome = Standings::where('league_details_id', '=', $match->league_details_id)
+                    ->where('team', '=', $match->home)
+                    ->first();
+                $streaksAway = Standings::where('league_details_id', '=', $match->league_details_id)
+                    ->where('team', '=', $match->away)
+                    ->first();
+                if ($match->resultShort == 'D') {
+                    $streaksHome->streak = 0;
+                    $streaksAway->streak = 0;
+                } else {
+                    $streaksHome->streak = $streaksHome->streak + 1;
+                    $streaksAway->streak = $streaksAway->streak + 1;
+                }
 				foreach ($games as $game) {
 					Updater::updatePool($game, $match->resultShort);
 					if ($game->special == 1) {
@@ -52,11 +65,23 @@ class Updater {
 		// Parser::parseMatchesForGroup($next);
 
         if ($gr->league_details_id == 112) {
-            Parser::parseLeagueSeriesUSA($current->league_details_id);
+            Parser::parseLeagueStandingsUSA($current->league_details_id);
             Parser::parseMatchesForUSA($current, $next);
         } else {
             Parser::parseMatchesForGroup($current, $next);
-            Parser::parseLeagueSeries($current->league_details_id);
+            Parser::parseLeagueStandings($current->league_details_id);
+        }
+
+        $str = Standings::where('league_details_id', '=', $gr->league_details_id)
+            ->select(DB::raw('streak, count(*) as c'))
+            ->groupBy('streak')
+            ->get();
+        foreach($str as $s) {
+            $g = new GroupToStreaks();
+            $g->groups_id = $gr->id;
+            $g->streak_length = $s->streak;
+            $g->streak_count = $s->c;
+            $g->save();
         }
 		$ids = Settings::where('league_details_id', '=', $current->league_details_id)->lists('user_id');
 		foreach ($ids as $id) {
@@ -168,7 +193,7 @@ class Updater {
             $bsfpm = $pool->amount;
             $bpm = $pool->amount * $setting->multiplier;
         }
-        $recalc = false;
+//        $recalc = false;
 		foreach ($teams as $st_id => $team) {
 			$matches = $gr->matches()->where(function ($query) use ($team) {
 	             $query->where('home', '=', $team)
@@ -179,7 +204,7 @@ class Updater {
 			->orderBy('matchTime')
 	        ->get();
 	        if (count($matches) == 0) {
-	        	$recalc = true;
+//	        	$recalc = true;
 	        } else if (count($matches) == 1) {
 	        	$match = $matches[0];
 				//TODO: add setting based bookmaker && special match check
@@ -206,9 +231,9 @@ class Updater {
 				$game->save();
 			}
 		}
-		if ($recalc) {
-			Games::recalculate($gr->id, $setting->multiplier, $pool->amount, $user_id);
-		}
+//		if ($recalc) {
+//			Games::recalculate($gr->id, $setting->multiplier, $pool->amount, $user_id);
+//		}
 	}
 
 	public static function addPPMMatchForUser($league_details_id, $game_type_id, $user_id) {
@@ -238,7 +263,7 @@ class Updater {
         $matches = self::getPPMMatches();
         foreach($matches as $match) {
             $match = self::updateDetails($match);
-            Parser::parseLeagueSeries($match->league_details_id);
+            Parser::parseLeagueStandings($match->league_details_id);
             if ($match->resultShort != '-') {
                 for ($i = 5; $i < 9; $i++) {
                     $serie = Series::where('end_match_id', '=', $match->id)

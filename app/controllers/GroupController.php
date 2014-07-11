@@ -9,6 +9,7 @@ class GroupController extends \BaseController
         $data = LeagueDetails::getLeaguesWithMatches($fromdate, $todate);
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, '');
         $res = array();
+//        return $data;
         foreach($data as $groups_id => $league_id) {
             $league = LeagueDetails::find($league_id);
             $res[$league->id]['league'] = $league;
@@ -21,7 +22,7 @@ class GroupController extends \BaseController
 
             $settings = Settings::where('user_id', '=', Auth::user()->id)->where('league_details_id', '=', $league_id)->first();
             if ($settings->auto == 2) {
-                $current = GroupToStreaks::where('groups_id', '=', $groups_id)->where('streak_length', '>=', $settings->from)->sum('streak_count');
+//                $current = GroupToStreaks::where('groups_id', '=', $groups_id)->where('streak_length', '>=', $settings->from)->sum('streak_count');
                 $plus = GroupToStreaks::where('groups_id', '=', $groups_id)->where('streak_length', '>=', ($settings->from + 1))->sum('streak_count');
                 $minus = GroupToStreaks::where('groups_id', '=', $groups_id)->where('streak_length', '>=', ($settings->from - 1))->sum('streak_count');
                 $res[$league->id]['filter'][$settings->from - 1] = $minus;
@@ -40,7 +41,7 @@ class GroupController extends \BaseController
                             $res[$league->id]['filter'][$i + 1] = $plus;
                             break 1;
                         } else {
-                            $current = GroupToStreaks::where('groups_id', '=', $groups_id)->where('streak_length', '>=', ($i - 1))->sum('streak_count');
+//                            $current = GroupToStreaks::where('groups_id', '=', $groups_id)->where('streak_length', '>=', ($i - 1))->sum('streak_count');
                             $plus = GroupToStreaks::where('groups_id', '=', $groups_id)->where('streak_length', '>=', $i)->sum('streak_count');
                             $minus = GroupToStreaks::where('groups_id', '=', $groups_id)->where('streak_length', '>=', ($i - 2))->sum('streak_count');
                             $res[$league->id]['filter'][$i - 2] = $minus;
