@@ -203,6 +203,7 @@ class Updater {
 	        ->orderBy('matchDate')
 			->orderBy('matchTime')
 	        ->get();
+//            return $matches;
 	        if (count($matches) == 0) {
 //	        	$recalc = true;
 	        } else if (count($matches) == 1) {

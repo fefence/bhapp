@@ -104,10 +104,12 @@ class Parser
             $place = trim($cols->item(0)->nodeValue);
             $team = trim($cols->item(1)->nodeValue);
             $streak = trim($cols->item(6)->nodeValue);
-            $stand = Standings::firstOrNew(['league_details_id' => $league_details_id, 'team' => $team]);
-            $stand->streak = $streak;
-            $stand->place = explode(".", $place)[0];
-            $stand->save();
+            $stand = Standings::where('league_details_id', '=', $league_details_id)->where('team', '=', $team)->first();
+            if ($stand != null) {
+                $stand->streak = $streak;
+//                $stand->place = explode(".", $place)[0];
+                $stand->save();
+            }
         }
 
     }
@@ -308,6 +310,8 @@ class Parser
                 $match->matchDate = $date;
                 $match->groups_id = $group->id;
                 $match->resultShort = '-';
+                $match->round = $group->round;
+                $match->season = '2014-2015';
                 $match->league_details_id = $current->league_details_id;
                 $match->save();
 
