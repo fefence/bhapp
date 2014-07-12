@@ -1,6 +1,6 @@
 <?php
-Route::get('/boo', function(){
-    return SeriesController::calculatePPMSeries();
+Route::get('/boo/{id}', function($id){
+    return SeriesController::calculatePPMSeries($id);
 //    return $str;
 });
 
