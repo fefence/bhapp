@@ -46,8 +46,8 @@ class Parser
 
     public static function parseLeagueSeries($league_details_id)
     {
-        $baseUrl = "http://www.betexplorer.com/soccer/";
         $league = LeagueDetails::find($league_details_id);
+        $baseUrl = "http://www.betexplorer.com/soccer/";
         $url = $baseUrl . $league->country . "/" . $league->fullName . "/";
 
         if (Parser::get_http_response_code($url) != "200") {
