@@ -3,7 +3,7 @@
 class SeriesController extends BaseController {
 
 	public static function calculatePPMSeries() {
-		$leagues = LeagueDetails::where('id', '=', 6)->get();
+		$leagues = LeagueDetails::where('id', '=', 1)->get();
 
 		foreach ($leagues as $league) {
 			$matches = Match::matchesForSeasons($league->id, '2013-2014')->get(array('id', 'resultShort', 'home', 'away', 'matchDate', 'matchTime', 'homeGoals', 'awayGoals'));
