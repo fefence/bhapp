@@ -77,7 +77,13 @@ class Match extends Eloquent {
     	return Match::where('league_details_id', '=', $leagueId)->where('season', '=', $season)->orderBy('matchDate', 'ASC')->orderBy('matchTime', 'ASC');
 
     }
-    
+
+    public static function matchesForSeasons($leagueId, $season) {
+
+        return Match::where('league_details_ida', '=', $leagueId)->where('season', '>=', $season)->orderBy('matchDate', 'ASC')->orderBy('matchTime', 'ASC');
+
+    }
+
     private static function get_http_response_code($url) {
 	    $headers = get_headers($url);
 	    return substr($headers[0], 9, 3);

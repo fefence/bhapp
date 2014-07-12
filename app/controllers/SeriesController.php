@@ -6,7 +6,7 @@ class SeriesController extends BaseController {
 		$leagues = LeagueDetails::where('id', '=', 6)->get();
 
 		foreach ($leagues as $league) {
-			$matches = Match::matchesForSeason($league->id, '2013-2014')->get(array('id', 'resultShort', 'home', 'away', 'matchDate', 'matchTime', 'homeGoals', 'awayGoals'));
+			$matches = Match::matchesForSeasons($league->id, '2013-2014')->get(array('id', 'resultShort', 'home', 'away', 'matchDate', 'matchTime', 'homeGoals', 'awayGoals'));
 
 			foreach ($matches as $match) {
 				for($i = 5; $i < 9; $i ++) {
