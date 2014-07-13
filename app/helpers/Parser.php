@@ -47,6 +47,9 @@ class Parser
     public static function parseLeagueSeries($league_details_id)
     {
         $league = LeagueDetails::find($league_details_id);
+        if ($league->pps == 0) {
+            return Parser::parseLeagueStandings($league_details_id);
+        }
         $baseUrl = "http://www.betexplorer.com/soccer/";
         $url = $baseUrl . $league->country . "/" . $league->fullName . "/";
 
@@ -147,36 +150,8 @@ class Parser
                 $stand->place = explode(".", $place)[0];
                 $stand->save();
             }
-            $baseUrl = "http://www.betexplorer.com/soccer/";
-            $league = LeagueDetails::find($league_details_id);
-            $url = $baseUrl . $league->country . "/" . $league->fullName . "-2013-2014/";
 
-            if (Parser::get_http_response_code($url) != "200") {
-                return "Wrong league stats url! --> $url";
-            }
-            $data = file_get_contents($url);
-
-            $dom = new domDocument;
-
-            @$dom->loadHTML($data);
-            $dom->preserveWhiteSpace = false;
-
-            $finder = new DomXPath($dom);
-            $classname = "stats-table result-table";
-            $nodes = $finder->query("//*[contains(@class, '$classname')]");
-            $table = $nodes->item(4);
-            $rows = $table->getElementsByTagName('tbody')->item(0)->getElementsByTagName("tr");
         }
-
-        foreach ($rows as $row) {
-            $cols = $row->getElementsByTagName('td');
-            $place = trim($cols->item(0)->nodeValue);
-            $team = trim($cols->item(1)->nodeValue);
-            $stand = Standings::firstOrNew(['league_details_id' => $league_details_id, 'team' => $team]);
-            $stand->place = explode(".", $place)[0];
-            $stand->save();
-        }
-
     }
 
     public static function parseLeagueSeriesUSA($league_details_id)
