@@ -107,10 +107,10 @@ class Parser
             $place = trim($cols->item(0)->nodeValue);
             $team = trim($cols->item(1)->nodeValue);
             $streak = trim($cols->item(6)->nodeValue);
-            $stand = Standings::where('league_details_id', '=', $league_details_id)->where('team', '=', $team)->first();
+            $stand = Standings::firstOrNew(['league_details_id' => $league_details_id, 'team' => $team]);
             if ($stand != null) {
                 $stand->streak = $streak;
-//                $stand->place = explode(".", $place)[0];
+                $stand->place = explode(".", $place)[0];
                 $stand->save();
             }
         }
@@ -142,6 +142,7 @@ class Parser
         } else {
             $table = $nodes->item(0);
             $rows = $table->getElementsByTagName('tbody')->item(0)->getElementsByTagName("tr");
+        }
             foreach ($rows as $row) {
                 $cols = $row->getElementsByTagName('td');
                 $place = trim($cols->item(0)->nodeValue);
@@ -150,8 +151,6 @@ class Parser
                 $stand->place = explode(".", $place)[0];
                 $stand->save();
             }
-
-        }
     }
 
     public static function parseLeagueSeriesUSA($league_details_id)
@@ -446,6 +445,59 @@ class Parser
             }
         }
         return $ids;
+    }
+
+    public static function parseTeamMatches($team_id, $league_details_id)
+    {
+        $baseUrl = "http://www.betexplorer.com/soccer/";
+
+        $league = LeagueDetails::findOrFail($league_details_id);
+        $url = $baseUrl . $league->country . "/" . $league->fullName . "/teaminfo.php?team_id=" . $team_id;
+        if (Parser::get_http_response_code($url) != "200") {
+            return "Wrong fixtures url! --> $url";
+        }
+        $data = file_get_contents($url);
+
+        $dom = new domDocument;
+
+        @$dom->loadHTML($data);
+        $dom->preserveWhiteSpace = false;
+
+        $finder = new DomXPath($dom);
+        $classname = "result-table team-matches";
+        $nodes = $finder->query("//*[contains(@class, '$classname')]");
+        $rows = $nodes->item(0)->getElementsByTagName("tr");
+
+        $id = '';
+        foreach ($rows as $row) {
+            $cols = $row->getElementsByTagName('td');
+            if ($cols->length > 0) {
+                $a = $cols->item(7)->getElementsByTagName('a');
+                foreach ($a as $link) {
+                    $href = $link->getAttribute("href");
+                    $arr = explode("/", $href);
+                    $id = $arr[count($arr) - 2];
+                }
+                $home = $cols->item(2)->nodeValue;
+                $away = $cols->item(3)->nodeValue;
+                $datetmp = explode(".", $cols->item(8)->nodeValue);
+                $date = $datetmp[2] . "-" . $datetmp[1] . "-" . $datetmp[0];
+
+                if ($id != '') {
+                    $m = Match::firstOrNew(['id' => $id, 'home' => $home, 'away' => $away]);
+                    $m->matchDate = $date;
+                    $m->resultShort = '-';
+                    $m->league_details_id = $league_details_id;
+                    $m->save();
+                }
+            }
+        }
+        if ($league_details_id == 112) {
+            Parser::parseLeagueStandingsUSA($league_details_id);
+        } else {
+            Parser::parseLeagueStandings($league_details_id);
+        }
+        return $id;
     }
 
     private static function get_http_response_code($url)

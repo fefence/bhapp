@@ -1,8 +1,13 @@
 <?php
-Route::get('/boo/{id}', function($id){
-    return SeriesController::calculatePPMSeries($id);
+Route::get('/boo', function(){
+    return Parser::parseLeagueStandings(24);
 //    return $str;
 });
+
+//free views
+Route::get('/free/{from?}/{to?}', "FreeController@display");
+Route::get('/managefree', "FreeController@manage");
+Route::post('/saveteam', "FreeController@save");
 
 //details views
 Route::get('/details/ppm/{date}/{game}', "DetailsController@detailsPPM");

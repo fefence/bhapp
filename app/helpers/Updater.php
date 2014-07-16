@@ -251,6 +251,7 @@ class Updater {
 
 	public static function getPPMMatches() {
         $ids = Series::where('game_type_id', '>', 4)
+            ->where('game_type_id', '<', 9)
             ->where('active', '=', 1)
             ->lists('end_match_id');
 		return Match::whereIn('id', $ids)
