@@ -1,6 +1,6 @@
 <?php
 Route::get('/boo', function(){
-    return Parser::parseLeagueStandings(24);
+    return Parser::parseLeagueStandingsUSA(112);
 //    return $str;
 });
 

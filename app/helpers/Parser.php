@@ -212,7 +212,9 @@ class Parser
                 $cols = $row->getElementsByTagName('td');
                 $place = trim($cols->item(0)->nodeValue);
                 $team = trim($cols->item(1)->nodeValue);
+                $streak = trim($cols->item(6)->nodeValue);
                 $stand = Standings::firstOrNew(['league_details_id' => $league_details_id, 'team' => $team]);
+                $stand->streak = $streak;
                 $stand->place = explode(".", $place)[0];
                 $stand->save();
             }
