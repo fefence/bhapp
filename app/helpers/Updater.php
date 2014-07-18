@@ -65,11 +65,12 @@ class Updater {
 		// Parser::parseMatchesForGroup($next);
 
         if ($gr->league_details_id == 112) {
-            Parser::parseLeagueStandingsUSA($current->league_details_id);
+            Parser::parseLeagueSeriesUSA($current->league_details_id);
             Parser::parseMatchesForUSA($current, $next);
         } else {
+            Parser::parseLeagueSeries($current->league_details_id);
             Parser::parseMatchesForGroup($current, $next);
-            Parser::parseLeagueStandings($current->league_details_id);
+
         }
 
         $str = Standings::where('league_details_id', '=', $gr->league_details_id)

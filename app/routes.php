@@ -1,6 +1,12 @@
 <?php
 Route::get('/boo', function(){
-    return Parser::parseLeagueStandingsUSA(112);
+    $ids = Standings::distinct('league_details_id')->groupBy('league_details_id')->lists('league_details_id');
+    foreach($ids as $id) {
+        if ($id != 112) {
+            Parser::parseLeagueSeries($id);
+        }
+
+    }
 //    return $str;
 });
 
