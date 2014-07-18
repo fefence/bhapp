@@ -55,7 +55,9 @@ class LeagueDetails extends Eloquent
     public static function getLeaguesWithMatches($fromdate, $todate)
     {
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
-        $league_details_ids = Settings::where('user_id', '=', Auth::user()->id)->lists('league_details_id');
+        $league_details_ids = Settings::where('user_id', '=', Auth::user()->id)
+            ->where('game_type_id', '<', 5)
+            ->lists('league_details_id');
 
         if (count($league_details_ids) > 0) {
             $ids = Groups::whereIn('groups.league_details_id', $league_details_ids)

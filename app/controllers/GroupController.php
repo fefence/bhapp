@@ -19,7 +19,7 @@ class GroupController extends \BaseController
             $confirmed = Games::where('user_id', '=', Auth::user()->id)->where('groups_id', '=', $curr_group->id)->where('confirmed', '=', 1)->distinct('standings_id')->count('standings_id');
             $all_series = Standings::where('league_details_id', '=', $league->id)->count();
             $playing = $curr_group->matches()->count();
-
+            $res[$league->id]['filter'] = array();
             $settings = Settings::where('user_id', '=', Auth::user()->id)->where('league_details_id', '=', $league_id)->first();
             if ($settings->auto == 2) {
 //                $current = GroupToStreaks::where('groups_id', '=', $groups_id)->where('streak_length', '>=', $settings->from)->sum('streak_count');
