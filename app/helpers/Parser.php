@@ -495,9 +495,9 @@ class Parser
             }
         }
         if ($league_details_id == 112) {
-            Parser::parseLeagueStandingsUSA($league_details_id);
+            Parser::parseLeagueSeriesUSA($league_details_id);
         } else {
-            Parser::parseLeagueStandings($league_details_id);
+            Parser::parseLeagueSeries($league_details_id);
         }
         return $id;
     }

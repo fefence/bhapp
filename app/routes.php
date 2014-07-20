@@ -1,13 +1,14 @@
 <?php
 Route::get('/boo', function(){
-    $ids = Standings::distinct('league_details_id')->groupBy('league_details_id')->lists('league_details_id');
-    foreach($ids as $id) {
-        if ($id != 112) {
-            Parser::parseLeagueSeries($id);
-        }
-
-    }
-//    return $str;
+//    $ids = Standings::distinct('league_details_id')->groupBy('league_details_id')->lists('league_details_id');
+//    foreach($ids as $id) {
+//        if ($id != 112) {
+//            Parser::parseLeagueSeries($id);
+//        }
+//
+//    }
+    return Parser::parseTeamMatches("hAAizpbg", 35);
+    //    return $str;
 });
 
 //free views

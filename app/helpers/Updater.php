@@ -330,6 +330,31 @@ class Updater {
 
     }
 
+    public static function updateFree() {
+        $teams = FreeplayTeams::lists(['team']);
+        $now = date('Y-m-d H:i:s');
+        $start = explode(' ', date( "Y-m-d H:i:s", strtotime( "$now - 2 hours" )));
+        $matches = Match::where(function($q) use ($teams) {
+            $q->whereIn('home', $teams)
+                ->orWhereIn('away', $teams);
+        })
+            ->where(function($q) use ($start) {
+                $q->where('matchDate', '<', $start[0])
+                    ->orWhere(function($query) use ($start)
+                    {
+                        $query->where('matchDate', '=', $start[0])
+                            ->where('matchTime', '<=', $start[1]);
+                    });
+            })
+            ->where('resultShort', '=', '-')
+            ->where('state', '<>', 'canceled')
+            ->where('state', '<>', 'Awarded')
+            ->orderBy('matchDate')
+            ->orderBy('matchTime')
+            ->get();
+        return $matches;
+    }
+    
     public static function getNextPPMMatch($match)
     {
         return Match::where('league_details_id', '=', $match->league_details_id)

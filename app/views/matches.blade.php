@@ -199,7 +199,7 @@ $i = 0;
         var id = m[1];
 //		alert(id);
         // var d = aData[1].replace(/\//g, '-');
-        var promise = testAjax(team, id, aData[8]);
+        var promise = testAjax(team, id, aData[9]);
         promise.success(function (data) {
             text = data;
         });
@@ -300,7 +300,7 @@ $i = 0;
                 oTable.fnUpdate(arr[1], aPos[0], 12);
                 oTable.fnUpdate(arr[2], aPos[0], 13);
                 oTable.fnUpdate(arr[3], aPos[0], 14);
-                oTable.fnUpdate(arr[3] - arr[0] - arr[1], aPos[0], 14);
+                oTable.fnUpdate(arr[3] - arr[0] - arr[1], aPos[0], 15);
 
                 if (arr[4] != "") {
                     if (parseFloat(arr[4]) != parseFloat($("#pool").text())) {
