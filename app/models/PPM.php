@@ -18,6 +18,7 @@ class PPM extends Eloquent {
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
         $games = PPM::where('user_id', '=', Auth::user()->id)
             ->join('match', 'match.id', '=', 'ppm.match_id')
+            ->join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
             ->join('game_type', 'game_type.id', '=', 'ppm.game_type_id')
             ->join('bookmaker', 'bookmaker.id', '=', 'ppm.bookmaker_id')
             ->join('series', 'series.id', '=', 'ppm.series_id')
@@ -25,7 +26,7 @@ class PPM extends Eloquent {
             ->where('matchDate', '>=', $fromdate)
             ->where('matchDate', '<=', $todate)
             ->orderBy('game_type_id')
-            ->select(DB::raw("`game_type`.*, `match`.*, `bookmaker`.*, `ppm`.*, `ppm`.id as games_id, `series`.`current_length` as 'streak'"))
+            ->select(DB::raw("`game_type`.*, `match`.*, `bookmaker`.*, `ppm`.*, `ppm`.id as games_id, `series`.`current_length` as 'streak', `leagueDetails`.country"))
             ->get();
         return $games;
     }

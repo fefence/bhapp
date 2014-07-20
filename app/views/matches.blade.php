@@ -26,6 +26,9 @@ $i = 0;
     <thead>
     <tr>
         <th><input type="hidden"></th>
+        @if (isset($ppm) && $ppm)
+        <th><input type="hidden"></th>
+        @endif
         <th><input type="text" name="search_engine" class="search_init" placeholder="date"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="time"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="home"></th>
@@ -44,6 +47,9 @@ $i = 0;
     </tr>
     <tr>
         <th></th>
+        @if (isset($ppm) && $ppm)
+        <th></th>
+        @endif
         <th style="width:60px;">date</th>
         <th style="width:50px;">time</th>
         <th>home</th>
@@ -66,6 +72,9 @@ $i = 0;
     @if(isset($d->match_id))
     <tr class="{{$d->match_id}}" id="{{isset($d->games_id)?$d->games_id:''}}">
         <td class="center"><img class="clickable" src="/images/plus-small.png"></td>
+        @if (isset($ppm) && $ppm)
+        <td class="center"><img src="/images/{{strtoupper($d->country)}}.png"></td>
+        @endif
         <td>{{date('d M', strtotime($d->matchDate))}}</td>
         <td>{{substr($d->matchTime, 0, strlen($d->matchTime)-3)}}</td>
         <td>

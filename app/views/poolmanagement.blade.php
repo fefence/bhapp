@@ -16,24 +16,19 @@
 
 @section('content')
 	<div class="row">
-	    <div class="col-xs-3">
+	    <div class="col-xs-4">
 			<div class="alert alert-warning">
 				<p class="text-center">In Transit: {{$global->in_transit}} €</p>
 			</div>
 	    </div>
-	    <div class="col-xs-3">
+	    <div class="col-xs-4">
 			<div class="alert alert-danger">
 				<p class="text-center">Profit: {{$global->profit}} €</p>
 			</div>
 	    </div>
-        <div class="col-xs-3">
+        <div class="col-xs-4">
             <div class="alert alert-success">
                 <p class="text-center">Account State: {{$global->account}} €</p>
-            </div>
-        </div>
-        <div class="col-xs-3">
-            <div class="alert alert-info">
-                <p class="text-center">Legacy: {{$global->account}} €</p>
             </div>
         </div>
 	</div>

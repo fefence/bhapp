@@ -18,6 +18,7 @@ $elements = array('active' => $active, 'list' => $list);
 <table id="matches">
     <thead>
     <tr>
+        <th><input type="hidden"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="league"></th>
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
@@ -25,6 +26,7 @@ $elements = array('active' => $active, 'list' => $list);
         <th><input type="hidden"></th>
     </tr>
     <tr>
+        <th></th>
         <th>league</th>
         <th>bsf</th>
         <th>conf</th>
@@ -35,6 +37,7 @@ $elements = array('active' => $active, 'list' => $list);
     <tbody>
     @foreach($data as $id=>$d)
     <tr class="{{$id}}">
+        <td><img src="/images/{{strtoupper($d['league']->country)}}.png"> </td>
         <td><a href="/group/{{$id}}/{{isset($fromdate)?$fromdate.'/':''}}{{isset($todate)?$todate:''}}">{{$d['league']->country}} - {{$d['league']->fullName}}</a></td>
         <td>@if(isset($d['prev'])) {{$d['prev']}} @endif</td>
         <td>{{$d['conf']}}/{{$d['all']}}</td>
