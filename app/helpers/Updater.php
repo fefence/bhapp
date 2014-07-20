@@ -318,7 +318,7 @@ class Updater
                             foreach ($next_matches as $n) {
                                 $newgame = PPM::firstOrNew(['user_id' => $game->user_id, 'series_id' => $news->id, 'match_id' => $n->id, 'game_type_id' => $game->game_type_id, 'country' => $game->country, 'confirmed' => 0]);
                                 $newgame->bet = 0;
-                                $newgame->bsf = ($newgame->bsf + $game->bsf + $game->bet) / count($next_matches);
+                                $newgame->bsf = 0;
                                 $newgame->odds = 3;
                                 $newgame->current_length = $news->current_length;
                                 $newgame->income = 0;

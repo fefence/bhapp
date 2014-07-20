@@ -106,7 +106,7 @@ $i = 0;
         <td class='editable warning' id="{{$d->game_type_id}}">{{$d->bet}}</td>
         <td class='editable warning' id="{{$d->game_type_id}}">{{$d->odds}}</td>
         <td>{{$d->income}}</td>
-        <td>{{round($d->income - $d->bsf - $d->bet, 2, PHP_ROUND_HALF_UP)}}</td>
+        <td>{{round(($d->income - $d->bsf - $d->bet), 2, PHP_ROUND_HALF_UP)}}</td>
         <td><a href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}">+&nbsp<span style='display: none;'>{{$d->match_id}}</span></a>({{ (array_key_exists($d->match_id,
             $count))?$count[$d->match_id]:$count[$d->id] }})
         </td>
@@ -299,7 +299,8 @@ $i = 0;
                 oTable.fnUpdate(arr[1], aPos[0], 12);
                 oTable.fnUpdate(arr[2], aPos[0], 13);
                 oTable.fnUpdate(arr[3], aPos[0], 14);
-                oTable.fnUpdate(arr[3] - arr[0] - arr[1], aPos[0], 15);
+                var a = arr[3] - arr[0] - arr[1];
+                oTable.fnUpdate(a.toFixed(2), aPos[0], 15);
 
                 if (arr[4] != "") {
                     if (parseFloat(arr[4]) != parseFloat($("#pool").text())) {
