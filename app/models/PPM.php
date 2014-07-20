@@ -40,7 +40,7 @@ class PPM extends Eloquent {
             ->join('game_type', 'ppm.game_type_id', '=', 'game_type.id')
             ->where('type', '=', $type)
             ->where('confirmed', '=', 1)
-            ->get(['bookmakerName', 'type', 'bet', 'bsf', 'income', 'odds']);
+            ->get(['bookmakerName', 'type', 'bet', 'bsf', 'income', 'odds', 'ppm.id', 'ppm.game_type_id']);
         return $games;
     }
 

@@ -60,7 +60,7 @@ $i = 0;
         <th style="width:40px;">odds</th>
         <th style="width:40px;">income</th>
         <th style="width:40px;">profit</th>
-        <th style="widows: 35;              px;"></th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -107,8 +107,7 @@ $i = 0;
         <td class='editable warning' id="{{$d->game_type_id}}">{{$d->odds}}</td>
         <td>{{$d->income}}</td>
         <td>{{$d->income - $d->bsf - $d->bet}}</td>
-        <td><a href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}"> + <span
-                    style='display: none;'>{{$d->match_id}}</span></a>({{ (array_key_exists($d->match_id,
+        <td><a href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}">+&nbsp;<span style='display: none;'>{{$d->match_id}}</span></a>({{ (array_key_exists($d->match_id,
             $count))?$count[$d->match_id]:$count[$d->id] }})
         </td>
     </tr>
