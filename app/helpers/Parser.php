@@ -282,7 +282,8 @@ class Parser
                 $match = Match::firstOrNew(array('id' => $id));
                 $match->home = $home;
                 $match->away = $away;
-                $match->matchTime = $time;
+                $timestamp = strtotime($time) + 60*60;
+                $match->matchTime = date('H:i:s', $timestamp);
                 $match->matchDate = $date;
                 $match->groups_id = $group->id;
                 $match->resultShort = '-';
@@ -302,11 +303,6 @@ class Parser
                 $m->save();
             }
         }
-//        $datetime = $group->matches()->orderBy('matchDate', 'desc')->orderBy('matchTime', 'desc')->take(1)->get(['matchDate', 'matchTime'])[0];
-//        // return $datetime;
-//        $group->update_time = date('Y-M-d H:i:s', strtotime("$datetime->matchDate.' '.$datetime->matchTime + 2 hours"));
-//        // return $group->update_time;
-//        $group->save();
     }
 
     public static function parseMatchesForUSA($current, $next)
@@ -399,9 +395,11 @@ class Parser
 //                    echo "$date $nfrom $nto<br>";
                     $match->groups_id = $next->id;
                 }
+
                 $match->home = $home;
                 $match->away = $away;
-                $match->matchTime = $time;
+                $timestamp = strtotime($time) + 60*60;
+                $match->matchTime = date('H:i:s', $timestamp);
                 $match->matchDate = $date;
                 $match->resultShort = '-';
                 $match->league_details_id = $current->league_details_id;

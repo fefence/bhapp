@@ -182,8 +182,8 @@ class Match extends Eloquent {
 			} 
 		}
 
-		$match->matchTime = Match::parseTime($match->id);
-
+        $timestamp = strtotime(Match::parseTime($match->id)) + 60*60;
+        $match->matchTime = date('H:i:s', $timestamp);
 		$match->save();
 		if ($tables->length == 3) {
 			$class = $tables->item(2)->parentNode->getAttribute("class");

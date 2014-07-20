@@ -7,7 +7,8 @@ Route::get('/boo', function(){
 //        }
 //
 //    }
-    return Parser::parseTeamMatches("hAAizpbg", 35);
+    $match = Match::find("Qo275Aiq");
+    return Updater::updateDetails($match);
     //    return $str;
 });
 
