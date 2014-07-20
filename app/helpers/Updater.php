@@ -25,6 +25,7 @@ class Updater
                 $streaksAway = Standings::where('league_details_id', '=', $match->league_details_id)
                     ->where('team', '=', $match->away)
                     ->first();
+                echo $match->league_details_id;
                 if ($match->resultShort == 'D') {
                     $streaksHome->streak = 0;
                     $streaksAway->streak = 0;
