@@ -25,7 +25,7 @@ class PPM extends Eloquent {
             ->where('matchDate', '>=', $fromdate)
             ->where('matchDate', '<=', $todate)
             ->orderBy('game_type_id')
-            ->select(DB::raw("`game_type`.*, `match`.*, `bookmaker`.*, `ppm`.*, `ppm`.id as games_id, `series`.`current_length` as 'streak'"))
+            ->select(DB::raw("`game_type`.*, `match`.*, `bookmaker`.*, `ppm`.*, `ppm`.id as games_id, `ppm`.`current_length` as 'streak'"))
             ->get();
         return $games;
     }

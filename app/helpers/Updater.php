@@ -246,7 +246,8 @@ class Updater {
 			->first();
 		// return $series;
 		$game = PPM::firstOrNew(['user_id' => $user_id, 'game_type_id' => $game_type_id, 'country' => $team, 'series_id' => $series->id, 'match_id' => $series->end_match_id]);
-		$game->odds = 3;
+		$game->current_length = $series->current_length;
+        $game->odds = 3;
 		$game->save();
 	}
 
@@ -275,7 +276,7 @@ class Updater {
                         ->first();
                     $next_match = self::getNextPPMMatch($match);
                     $games = $match->ppm()->where('game_type_id', '=', $i)->get();
-                    if (SeriesController::endSeries($match, $i)) {
+                        if (SeriesController::endSeries($match, $i)) {
                         $news = $serie->replicate();
                         $news->current_length = 1;
                         $news->start_match_id = $next_match->id;
@@ -295,6 +296,7 @@ class Updater {
                             $newgame->bet = 0;
                             $newgame->bsf = $newgame->bsf + $game->bsf+$game->bet;
                             $newgame->odds = 3;
+                            $newgame->current_length = $news->current_length;
                             $newgame->income = 0;
                             $newgame->save();
                         }
@@ -310,6 +312,7 @@ class Updater {
                             $newgame->odds = 3;
                             $newgame->income = 0;
                             $newgame->confirmed = 0;
+                            $newgame->current_length = $serie->current_length;
                             $newgame->save();
                             if ($game->confirmed == 1) {
                                 $pool = Pools::where('user_id', '=', $game->user_id)->where('league_details_id', '=', $match->league_details_id)->where('ppm', '=', 1)->first();
