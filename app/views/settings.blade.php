@@ -41,7 +41,7 @@ $elements = array('active' => $active, 'list' => $list);
                     @foreach($leagues as $name=>$s)
 
                     <tr>
-                        <td><p class="text-center">{{$country}} :: {{$name}}</p></td>
+                        <td><p class="text-center"><img src="/images/{{strtoupper($country)}}.png"> {{$name}}</p></td>
                         @for ($i = 1; $i < 5; $i ++)
                         <td style="padding-left: 10px;">
                             <div class="radio">
@@ -91,7 +91,7 @@ $elements = array('active' => $active, 'list' => $list);
                     </tr>
                     @foreach($ppm as $country=>$s)
                     <tr>
-                        <td><p class="text-center">{{ $country }}</p></td>
+                        <td><p class="text-center"><img src="/images/{{strtoupper($country)}}.png">&nbsp;{{ $country }}</p></td>
                         @for($j = 5; $j < 9; $j ++)
                         <td><p class="text-center">
                                 <input name="ppm[]" class="activate_league_for_play" type="checkbox"

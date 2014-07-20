@@ -7,8 +7,7 @@ Route::get('/boo', function(){
 //        }
 //
 //    }
-    $match = Match::find("Qo275Aiq");
-    return Updater::updateDetails($match);
+    return Updater::updatePPM();
     //    return $str;
 });
 
