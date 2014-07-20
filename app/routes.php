@@ -3,6 +3,7 @@ Route::get('/boo', function(){
     $ids = Standings::distinct('league_details_id')->groupBy('league_details_id')->lists('league_details_id');
     foreach($ids as $id) {
         if ($id != 112) {
+            echo $id."<br>";
             Parser::parseLeagueSeries($id);
         } else {
             Parser::parseLeagueSeriesUSA(112);
