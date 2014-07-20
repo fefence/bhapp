@@ -23,7 +23,7 @@ Route::get('/details/{team}/{date}/{game}', "DetailsController@details");
 //pool management
 Route::post('/pools/get', "PoolsController@poolsGet");
 Route::post('/pools/insert', "PoolsController@poolsInsert");
-Route::get('/poolmanagement', "PoolsController@managePools");
+Route::get('/pool', "PoolsController@managePools");
 
 //leagues to play management
 Route::get('/addleagues', "SettingsController@addLeaguesToPlay");
