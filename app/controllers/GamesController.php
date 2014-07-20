@@ -190,7 +190,7 @@ class GamesController extends \BaseController
         $value = Input::get('value');
         $col = Input::get('column');
         $bsf = "";
-        if ($col == 10 || $col == '10') {
+        if ($col == 11 || $col == '11') {
             $bsf = $game->bsf;
             $game->bsf = $value;
             $game->save();
@@ -201,13 +201,13 @@ class GamesController extends \BaseController
             $bsf = round($pool->current, 2);
 //            $bsf = $pool->current();
         }
-        if ($col == 11 || $col == '11') {
+        if ($col == 12 || $col == '12') {
             $game->bet = $value;
             $game->income = $game->odds * $value;
             $game->save();
 
         }
-        if ($col == 12 || $col == '12') {
+        if ($col == 13 || $col == '13') {
             $game->odds = $value;
             $game->income = $value * $game->bet;
             $game->save();

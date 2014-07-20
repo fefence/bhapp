@@ -35,7 +35,7 @@ class Match extends Eloquent {
     public static function getMatchesForTeams($match)
     {
         $home = $match->home;
-        $matchesH = Match::matchesForSeason($match->league_details_id, $match->season)
+        $matchesH = Match::where('league_details_id', '=', $match->league_details_id)
             ->where(function ($query) use ($home) {
                 $query->where('home', '=', $home)
                     ->orWhere('away', '=', $home);
@@ -45,8 +45,7 @@ class Match extends Eloquent {
             ->take(10)
             ->get(['home', 'away', 'homeGoals', 'awayGoals', 'matchDate', 'resultShort']);
         $away = $match->away;
-        $matchesA = Match
-            ::matchesForSeason($match->league_details_id, $match->season)
+        $matchesA = Match::where('league_details_id', '=', $match->league_details_id)
             ->where(function ($query) use ($away) {
                 $query->where('home', '=', $away)
                     ->orWhere('away', '=', $away);

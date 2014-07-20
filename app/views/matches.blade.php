@@ -26,9 +26,7 @@ $i = 0;
     <thead>
     <tr>
         <th><input type="hidden"></th>
-        @if (isset($ppm) && $ppm)
         <th><input type="hidden"></th>
-        @endif
         <th><input type="text" name="search_engine" class="search_init" placeholder="date"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="time"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="home"></th>
@@ -47,9 +45,7 @@ $i = 0;
     </tr>
     <tr>
         <th></th>
-        @if (isset($ppm) && $ppm)
         <th></th>
-        @endif
         <th style="width:60px;">date</th>
         <th style="width:50px;">time</th>
         <th>home</th>
@@ -64,7 +60,7 @@ $i = 0;
         <th style="width:40px;">odds</th>
         <th style="width:40px;">income</th>
         <th style="width:40px;">profit</th>
-        <th style="width:40px;"></th>
+        <th style="widows: 35;              px;"></th>
     </tr>
     </thead>
     <tbody>
@@ -74,6 +70,8 @@ $i = 0;
         <td class="center"><img class="clickable" src="/images/plus-small.png"></td>
         @if (isset($ppm) && $ppm)
         <td class="center"><img src="/images/{{strtoupper($d->country)}}.png"></td>
+        @else
+        <td></td>
         @endif
         <td>{{date('d M', strtotime($d->matchDate))}}</td>
         <td>{{substr($d->matchTime, 0, strlen($d->matchTime)-3)}}</td>
@@ -118,7 +116,7 @@ $i = 0;
     @foreach($d as $dd)
     <tr id="no">
         <td class="center"><img class="clickable" src="/images/plus-small.png"></td>
-<!--        <td></td>-->
+        <td></td>
         <td>{{date('d M', strtotime($dd->matchDate))}}</td>
         <td>{{substr($dd->matchTime, 0, strlen($dd->matchTime)-3)}}</td>
         <td>
@@ -185,19 +183,19 @@ $i = 0;
         var text = '';
         var aData = oTable.fnGetData(nTr);
         var team = '';
-        if (aData[3].indexOf("<strong>") > -1) {
-            var re = new RegExp("<strong>(.*?)</strong>");
-            var m = re.exec(aData[3]);
-            team = m[1];
-        } else if (aData[4].indexOf("<strong>") > -1) {
+        if (aData[4].indexOf("<strong>") > -1) {
             var re = new RegExp("<strong>(.*?)</strong>");
             var m = re.exec(aData[4]);
+            team = m[1];
+        } else if (aData[5].indexOf("<strong>") > -1) {
+            var re = new RegExp("<strong>(.*?)</strong>");
+            var m = re.exec(aData[5]);
             team = m[1];
         } else {
             team = 'ppm';
         }
         var re = new RegExp('display: none;">(.*?)</span>');
-        var m = re.exec(aData[15]);
+        var m = re.exec(aData[16]);
         var id = m[1];
 //		alert(id);
         // var d = aData[1].replace(/\//g, '-');
@@ -210,7 +208,7 @@ $i = 0;
 
     function testAjax(team, mDate, game) {
         var url = "/details/" + team + "/" + mDate + "/" + game;
-        // alert(url);
+//        alert(url);
         return $.ajax({
             async: false,
             url: url
@@ -249,14 +247,20 @@ $i = 0;
             "iDisplayLength": 100,
             "bJQueryUI": true,
             "sDom": '<"top"i>t<"bottom"><"clear">',
-            "sPaginationType": "full_numbers"
+            "sPaginationType": "full_numbers",
+            "aoColumnDefs": [
+                { 'bSortable': false, 'aTargets': [ 0,1 ] }
+            ]
         });
 
         var oTable1 = $("#matches1").dataTable({
             "iDisplayLength": 100,
             "bJQueryUI": true,
             "sDom": '<"top"i>t<"bottom"><"clear">',
-            "sPaginationType": "full_numbers"
+            "sPaginationType": "full_numbers",
+            "aoColumnDefs": [
+                { 'bSortable': false, 'aTargets': [ 0,1 ] }
+            ]
         });
 
         $("thead input").keyup(function () {
@@ -292,10 +296,10 @@ $i = 0;
                 var aPos = oTable.fnGetPosition(this);
 //                alert(sValue);
                 var arr = sValue.split("#");
-                oTable.fnUpdate(arr[0], aPos[0], 10);
-                oTable.fnUpdate(arr[1], aPos[0], 11);
-                oTable.fnUpdate(arr[2], aPos[0], 12);
-                oTable.fnUpdate(arr[3], aPos[0], 13);
+                oTable.fnUpdate(arr[0], aPos[0], 11);
+                oTable.fnUpdate(arr[1], aPos[0], 12);
+                oTable.fnUpdate(arr[2], aPos[0], 13);
+                oTable.fnUpdate(arr[3], aPos[0], 14);
                 oTable.fnUpdate(arr[3] - arr[0] - arr[1], aPos[0], 14);
 
                 if (arr[4] != "") {

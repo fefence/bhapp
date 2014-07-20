@@ -3,8 +3,8 @@
 @section('content')
 <table class="table-bordered noMargin noPadding matchDetails">
 	<tr>
-		<th style="width: 26%;">PARAMETER last 10 matches</th>
-		<th style="width: 26%;">PARAMETER last 10 matches</th>
+		<th style="width: 26%;">{{$hometeam}} last 10 matches</th>
+		<th style="width: 26%;">{{$awayteam}} last 10 matches</th>
 		<th style="width: 26%;">head 2 head</th>
 		<th style="width: 22%;">betting history</th>
 	</tr>

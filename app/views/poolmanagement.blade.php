@@ -46,7 +46,7 @@
         </tr>
         @foreach($ppspools as $ppspool)
         <tr>
-            <td><p class="text-center">{{$ppspool->country}} :: {{$ppspool->displayName}}</p></td>
+            <td style="padding-left: 10px;"><p class="text-left"><img src="/images/{{strtoupper($ppspool->country)}}.png"> {{$ppspool->displayName}}</p></td>
             <td><p class="text-center">{{$ppspool->profit}} €</p></td>
             <td><p class="text-center">{{$ppspool->account}} €</p></td>
             <td><p class="text-center">{{$ppspool->amount}} €</p></td>
@@ -75,7 +75,7 @@
             </tr>
             @foreach($ppmpools as $ppmpool)
             <tr>
-                <td><p class="text-center">{{$ppmpool->country}} :: {{$ppmpool->displayName}}</p></td>
+                <td style="padding-left: 10px;"><p class="text-left"><img src="/images/{{strtoupper($ppmpool->country)}}.png"> {{$ppmpool->displayName}}</p></td>
                 <td><p class="text-center">{{$ppmpool->profit}} €</p></td>
                 <td><p class="text-center">{{$ppmpool->account}} €</p></td>
                 <td><p class="text-center">{{$ppmpool->amount}} €</p></td>
