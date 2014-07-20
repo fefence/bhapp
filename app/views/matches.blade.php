@@ -64,7 +64,7 @@ $i = 0;
         <th style="width:40px;">odds</th>
         <th style="width:40px;">income</th>
         <th style="width:40px;">profit</th>
-        <th style="widows: 35;              px;"></th>
+        <th style="width:40px;"></th>
     </tr>
     </thead>
     <tbody>
