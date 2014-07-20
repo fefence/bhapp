@@ -5,7 +5,7 @@
 <?php
 if (isset($group)) {
     $list = array('pps' => URL::route("home"));
-    $active = "<img src='/images/".$league->country.".png'> ".$league->displayName;
+    $active = "<img src='/images/".strtoupper($league->country).".png'> ".$league->displayName;
 } else {
     $list = array();
     $active = "ppm";
