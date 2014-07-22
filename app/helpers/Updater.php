@@ -25,7 +25,6 @@ class Updater
                 $streaksAway = Standings::where('league_details_id', '=', $match->league_details_id)
                     ->where('team', '=', $match->away)
                     ->first();
-                echo $match->league_details_id;
                 if ($match->resultShort == 'D') {
                     $streaksHome->streak = 0;
                     $streaksAway->streak = 0;
@@ -308,6 +307,7 @@ class Updater
                         $serie->active = 0;
                         $serie->save();
                         $news->end_match_id = $next_match->id;
+                        $news->current_length = $news->current_length + 1;
                         $news->save();
                         foreach ($games as $game) {
                             if ($game->confirmed == 1) {
@@ -318,7 +318,7 @@ class Updater
                             foreach ($next_matches as $n) {
                                 $newgame = PPM::firstOrNew(['user_id' => $game->user_id, 'series_id' => $news->id, 'match_id' => $n->id, 'game_type_id' => $game->game_type_id, 'country' => $game->country, 'confirmed' => 0]);
                                 $newgame->bet = 0;
-                                $newgame->bsf = 0;
+                                $newgame->bsf = ($newgame->bsf + $game->bsf + $game->bet) / count($next_matches);
                                 $newgame->odds = 3;
                                 $newgame->current_length = $news->current_length;
                                 $newgame->income = 0;
@@ -395,6 +395,12 @@ class Updater
 
     public static function getNextPPMMatch($match)
     {
+        $current = Groups::where('league_details_id', '=', $match->league_details_id)
+            ->where('state', '=', 2)->first();
+        $next = Groups::where('league_details_id', '=', $match->league_details_id)
+            ->where('state', '=', 2)->first();
+        Parser::parseMatchesForGroup($current, $next);
+        
         return Match::where('league_details_id', '=', $match->league_details_id)
             ->where('matchDate', '>=', $match->matchDate)
             ->where('resultShort', '=', '-')
