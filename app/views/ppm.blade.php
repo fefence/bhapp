@@ -3,13 +3,8 @@
 @section('breadcrumbs')
 <!-- breadcrumbs -->
 <?php
-if (isset($group)) {
-    $list = array('pps' => URL::route("home"));
-    $active = "<img src='/images/".strtoupper($league->country).".png'> ".$league->displayName;
-} else {
-    $list = array();
-    $active = "ppm";
-}
+$list = array('ppm' => URL::to("/ppm"));
+$active = '<img src="/images/'.strtoupper($country).'.png"> '.$country;
 $elements = array('active' => $active, 'list' => $list);
 $i = 0;
 ?>
@@ -17,7 +12,7 @@ $i = 0;
 @stop
 
 @section('pageHeader')
-@include('layouts.partials.pageheader', array('calendar' => true, 'big' => isset($big)?$big:"Matches", 'small' => isset($small)?$small:"some date here"))
+@include('layouts.partials.pageheader', array('calendar' => true, 'big' => $big, 'small' => $small))
 @stop
 
 @section('content')
@@ -25,7 +20,6 @@ $i = 0;
 <table id="matches{{$i}}" style="margin-bottom: 30px;">
     <thead>
     <tr>
-        <th><input type="hidden"></th>
         <th><input type="hidden"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="date"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="time"></th>
@@ -44,7 +38,6 @@ $i = 0;
         <th><input type="hidden"></th>
     </tr>
     <tr>
-        <th></th>
         <th></th>
         <th style="width:60px;">date</th>
         <th style="width:50px;">time</th>
@@ -68,11 +61,6 @@ $i = 0;
     @if(isset($d->match_id))
     <tr class="{{$d->match_id}}" id="{{isset($d->games_id)?$d->games_id:''}}">
         <td class="center"><img class="clickable" src="/images/plus-small.png"></td>
-        @if (isset($ppm) && $ppm)
-        <td class="center"><img src="/images/{{strtoupper($d->country)}}.png"></td>
-        @else
-        <td></td>
-        @endif
         <td>{{date('d M', strtotime($d->matchDate))}}</td>
         <td>{{substr($d->matchTime, 0, strlen($d->matchTime)-3)}}</td>
         <td><a href="/ppmseries/{{$d->series_id}}">{{$d->home}} ({{$standings[$d->home]}})</a></td>
@@ -93,7 +81,8 @@ $i = 0;
         <td class='editable warning' id="{{$d->game_type_id}}">{{$d->odds}}</td>
         <td>{{$d->income}}</td>
         <td>{{round(($d->income - $d->bsf - $d->bet), 2, PHP_ROUND_HALF_UP)}}</td>
-        <td><a href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}">+&nbsp<span style='display: none;'>{{$d->match_id}}</span></a>({{ (array_key_exists($d->match_id,
+        <td><a href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}">+&nbsp<span
+                    style='display: none;'>{{$d->match_id}}</span></a>({{ (array_key_exists($d->match_id,
             $count))?$count[$d->match_id]:$count[$d->id] }})
         </td>
     </tr>
@@ -136,7 +125,8 @@ $i = 0;
         <td>-</td>
         <td>-</td>
         <td>-</td>
-        <td><a href="/addgame/{{$dd->groups_id}}/{{$dd->standings_id}}/{{$dd->id}}">+</a> <span style='display: none;'>{{$dd->id}}</span></td>
+        <td><a href="/addgame/{{$dd->groups_id}}/{{$dd->standings_id}}/{{$dd->id}}">+</a> <span style='display: none;'>{{$dd->id}}</span>
+        </td>
     </tr>
     @endforeach
     @endif
@@ -145,7 +135,7 @@ $i = 0;
     </tbody>
 </table>
 <?php
-$i ++;
+$i++;
 ?>
 @endforeach
 <script type="text/javascript">
@@ -234,7 +224,7 @@ $(document).ready(function () {
         "sDom": '<"top"i>t<"bottom"><"clear">',
         "sPaginationType": "full_numbers",
         "aoColumnDefs": [
-            { 'bSortable': false, 'aTargets': [ 0,1 ] }
+            { 'bSortable': false, 'aTargets': [ 0, 1 ] }
         ]
     });
 
@@ -244,7 +234,7 @@ $(document).ready(function () {
         "sDom": '<"top"i>t<"bottom"><"clear">',
         "sPaginationType": "full_numbers",
         "aoColumnDefs": [
-            { 'bSortable': false, 'aTargets': [ 0,1 ] }
+            { 'bSortable': false, 'aTargets': [ 0, 1 ] }
         ]
     });
 

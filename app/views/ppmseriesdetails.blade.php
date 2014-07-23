@@ -4,16 +4,13 @@
 <!-- breadcrumbs -->
 
 <?php
-$list = array('ppm' => URL::to("ppm"));
-$active = 'series details';
+$list = array('ppm' => URL::to("ppm"), "<img src='/images/".strtoupper($league).".png'> ".$league => URL::to("ppm/country/$league"));
+$active = "details #$series";
 $elements = array('active' => $active, 'list' => $list);
 ?>
 @include('layouts.partials.breadcrumbs', array('elements' => $elements))
 @stop
 
-@section('pageHeader')
-@include('layouts.partials.pageheader', array('calendar' => false, 'big' => "<img src='/images/".strtoupper($league).".png'> ".$league, 'small' => ''))
-@stop
 
 @section('content')
 <table id="matches" style="margin-bottom: 30px;">

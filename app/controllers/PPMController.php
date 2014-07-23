@@ -3,11 +3,11 @@
 class PPMController extends \BaseController
 {
 
-    public function display($fromdate = "", $todate = "")
+    public function display($country= "", $fromdate = "", $todate = "")
     {
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, '');
-        $games = PPM::ppmForDates($fromdate, $todate);
+        $games = PPM::ppmForDatesCountry($fromdate, $todate, $country);
         $count = array();
         $league_ids = array();
         foreach ($games as $g) {
@@ -17,12 +17,20 @@ class PPMController extends \BaseController
         $datarr = array();
         $datarr[0] = $games;
         if (count($league_ids) > 0) {
-        $standings = Standings::whereIn('league_details_id', $league_ids)->lists('place', 'team');
+            $standings = Standings::whereIn('league_details_id', $league_ids)->lists('place', 'team');
         } else {
             $standings = array();
         }
 //        $datarr[1] = array();
-        return View::make('ppm')->with(['datarr' => $datarr, 'standings' => $standings, 'ppm' => true, 'league_details_id' => -1, 'fromdate' => $fromdate, 'todate' => $todate, 'count' => $count, 'big' => $big, 'small' => $small]);
+        return View::make('ppm')->with(['datarr' => $datarr, 'standings' => $standings, 'ppm' => true, 'league_details_id' => -1, 'fromdate' => $fromdate, 'todate' => $todate, 'count' => $count, 'big' => $big, 'small' => $small, 'country' => $country, 'base' => 'ppm/country/'.$country]);
+    }
+
+    public function displayCountries($fromdate = "", $todate = "")
+    {
+        list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
+        list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, '');
+        $leagues = PPM::ppmLeaguesForDates($fromdate, $todate);
+        return View::make('ppmcountries')->with(['data' => $leagues, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small]);
     }
 
     public function getOdds($fromdate = "", $todate = "")
@@ -67,7 +75,7 @@ class PPMController extends \BaseController
             }
         }
 
-        return View::make('ppmseriesdetails')->with(['games' => $data, 'league' => $country]);
+        return View::make('ppmseriesdetails')->with(['games' => $data, 'league' => $country, 'series' => $id]);
     }
 
 }

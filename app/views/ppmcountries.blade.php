@@ -4,7 +4,7 @@
 <!-- breadcrumbs -->
 <?php
 $list = array();
-$active = 'pps';
+$active = 'ppm';
 $elements = array('active' => $active, 'list' => $list);
 ?>
 @include('layouts.partials.breadcrumbs', array('elements' => $elements))
@@ -21,34 +21,25 @@ $elements = array('active' => $active, 'list' => $list);
         <th><input type="text" name="search_engine" class="search_init" placeholder="league"></th>
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
-        <th><input type="hidden"></th>
-        <th><input type="hidden"></th>
     </tr>
     <tr>
         <th>league</th>
         <th>bsf</th>
         <th>conf</th>
-        <th>-</th>
-        <th>+</th>
     </tr>
     </thead>
     <tbody>
     @foreach($data as $id=>$d)
     <tr class="{{$id}}">
-        <td><a href="/group/{{$id}}/{{isset($fromdate)?$fromdate.'/':''}}{{isset($todate)?$todate:''}}"><img src="/images/{{strtoupper($d['league']->country)}}.png"> {{$d['league']->displayName}}</a></td>
-        <td>@if(isset($d['prev'])) {{$d['prev']}} @endif</td>
-        <td>{{$d['conf']}}/{{$d['all']}}</td>
-        @foreach($d['filter'] as $filter=>$count)
-        <td>
-            {{$count}}
-        </td>
-        @endforeach
-
+        <td><a href="/ppm/country/{{$d->country}}/{{isset($fromdate)?$fromdate.'/':''}}{{isset($todate)?$todate:''}}"><img src="/images/{{strtoupper($d->country)}}.png"> {{$d->country}}</a></td>
+        <td></td>
+        <td></td>
     </tr>
     @endforeach
     </tbody>
 </table>
 <script type="text/javascript">
+
     $(document).ready(function () {
         var oTable = $("#matches").dataTable({
             "iDisplayLength": 100,
@@ -56,7 +47,6 @@ $elements = array('active' => $active, 'list' => $list);
             "sPaginationType": "full_numbers",
             "sDom": '<"top"i>t<"bottom"><"clear">'
         });
-
     });
 </script>
 @stop

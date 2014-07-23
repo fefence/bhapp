@@ -35,7 +35,8 @@ Route::get('/addleagues', "SettingsController@addLeaguesToPlay");
 Route::post('/saveleaguestoplay', "SettingsController@saveLeagues");
 
 //PPM views
-Route::get('/ppm/{from?}/{to?}', "PPMController@display");
+Route::get('/ppm/country/{country}/{from?}/{to?}', "PPMController@display");
+Route::get('/ppm/{from?}/{to?}', "PPMController@displayCountries");
 Route::get('/ppm/{from?}/{to?}/odds', "PPMController@getOdds");
 Route::get('/ppmseries/{id}', "PPMController@displaySeries");
 
