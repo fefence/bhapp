@@ -22,7 +22,7 @@ class PPMController extends \BaseController
             $standings = array();
         }
 //        $datarr[1] = array();
-        return View::make('matches')->with(['datarr' => $datarr, 'standings' => $standings, 'ppm' => true, 'league_details_id' => -1, 'fromdate' => $fromdate, 'todate' => $todate, 'count' => $count, 'big' => $big, 'small' => $small]);
+        return View::make('ppm')->with(['datarr' => $datarr, 'standings' => $standings, 'ppm' => true, 'league_details_id' => -1, 'fromdate' => $fromdate, 'todate' => $todate, 'count' => $count, 'big' => $big, 'small' => $small]);
     }
 
     public function getOdds($fromdate = "", $todate = "")
@@ -37,7 +37,37 @@ class PPMController extends \BaseController
             ->select([DB::raw('ppm.id as id, ppm.*')])
             ->get();
         Parser::parseMatchOddsForGames($games);
-        return Redirect::back();
+        return Redirect::back()->with('message', 'Odds refreshed');
+    }
+
+    public static function displaySeries($id) {
+//        return $id;
+        $country = Series::find($id)->team;
+        $games = PPM::where('series_id', '=', $id)
+            ->join('match', 'match.id', '=', 'ppm.match_id')
+            ->join('bookmaker', 'bookmaker.id', '=', 'bookmaker_id')
+            ->join('game_type', 'game_type.id', '=', 'game_type_id')
+            ->where('user_id', '=', Auth::user()->id)
+            ->orderBy('current_length')
+            ->get();
+        $data = array();
+        foreach($games as $game){
+            if ($game->confirmed == 0) {
+                $count = PPM::where('match_id', '=', $game->match_id)
+                    ->where('game_type_id', '=', $game->game_type_id)
+                    ->where('user_id', '=', $game->user_id)
+                    ->where('bookmaker_id', '=', $game->bookmaker_id)
+                    ->where('confirmed', '=', 1)
+                    ->count();
+                if ($count == 0) {
+                    array_push($data, $game);
+                }
+            } else {
+                array_push($data, $game);
+            }
+        }
+
+        return View::make('ppmseriesdetails')->with(['games' => $data, 'league' => $country]);
     }
 
 }

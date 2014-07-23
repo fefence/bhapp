@@ -18,6 +18,11 @@ class SettingsController extends BaseController
             for ($i = 1; $i < 5; $i++) {
                 $dd = Input::get($league->id . "-" . $i . "-opt");
                 if ($dd != '') {
+                    $gr = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 2)->first();
+                    $match_count = $gr->matches()->where('resultShort', '<>', '-')->count();
+                    if ($match_count > 0) {
+                        return Redirect::back()->with('error', $league->displayName." has more matches from the round");
+                    }
                     $setting = Settings::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $league->id, 'game_type_id' => $i]);
                     $oldFrom = $setting->from;
                     $oldTo = $setting->to;

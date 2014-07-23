@@ -313,6 +313,7 @@ class Updater
                             if ($game->confirmed == 1) {
                                 $pool = Pools::where('user_id', '=', $game->user_id)->where('league_details_id', '=', $match->league_details_id)->where('ppm', '=', 1)->first();
                                 $pool->income = $pool->income + $game->income;
+                                $pool->amount = 0;
                                 $pool->save();
                             }
                             foreach ($next_matches as $n) {
@@ -400,7 +401,7 @@ class Updater
         $next = Groups::where('league_details_id', '=', $match->league_details_id)
             ->where('state', '=', 2)->first();
         Parser::parseMatchesForGroup($current, $next);
-        
+
         return Match::where('league_details_id', '=', $match->league_details_id)
             ->where('matchDate', '>=', $match->matchDate)
             ->where('resultShort', '=', '-')
