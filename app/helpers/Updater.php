@@ -145,15 +145,11 @@ class Updater
         $pool = Pools::where('user_id', '=', $user_id)->where('league_details_id', '=', $league_details_id)->first();
         $main = CommonPools::where('user_id', '=', $user_id)->first();
         if ($resultShort == 'D') {
-            if ($game->special == 1) {
-                $pool->amount = $pool->amount - $game->bsf;
-            }
+            $pool->amount = $pool->amount - $game->bsf;
             $pool->income = $pool->income + $game->income;
             $main->income = $main->income + $game->income;
         } else {
-            if ($game->special == 1) {
-                $pool->amount = $pool->amount + $game->bet;
-            }
+            $pool->amount = $pool->amount + $game->bet;
         }
         $main->save();
         $pool->save();
@@ -268,19 +264,19 @@ class Updater
 
         $ppm_leagues = LeagueDetails::where('ppm', '=', 1)->lists('id');
         return Match::whereIn('league_details_id', $ppm_leagues)
-                ->where(function ($q) use ($start) {
+            ->where(function ($q) use ($start) {
                 $q->where('matchDate', '<', $start[0])
                     ->orWhere(function ($query) use ($start) {
                         $query->where('matchDate', '=', $start[0])
                             ->where('matchTime', '<=', $start[1]);
                     });
             })
-                ->where('resultShort', '=', '-')
-                ->where('state', '<>', 'canceled')
-                ->where('state', '<>', 'Awarded')
-                ->orderBy('matchDate')
-                ->orderBy('matchTime')
-                ->get();
+            ->where('resultShort', '=', '-')
+            ->where('state', '<>', 'canceled')
+            ->where('state', '<>', 'Awarded')
+            ->orderBy('matchDate')
+            ->orderBy('matchTime')
+            ->get();
     }
 
     public static function updatePPM()

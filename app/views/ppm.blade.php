@@ -157,18 +157,7 @@ $i++;
 function fnFormatDetails(oTable, nTr) {
     var text = '';
     var aData = oTable.fnGetData(nTr);
-    var team = '';
-    if (aData[4].indexOf("<strong>") > -1) {
-        var re = new RegExp("<strong>(.*?)</strong>");
-        var m = re.exec(aData[4]);
-        team = m[1];
-    } else if (aData[5].indexOf("<strong>") > -1) {
-        var re = new RegExp("<strong>(.*?)</strong>");
-        var m = re.exec(aData[5]);
-        team = m[1];
-    } else {
-        team = 'ppm';
-    }
+    var team = 'ppm';
     var re = new RegExp('display: none;">(.*?)</span>');
     var m = re.exec(aData[15]);
     var id = m[1];
@@ -271,12 +260,12 @@ $(document).ready(function () {
             var aPos = oTable.fnGetPosition(this);
 //                alert(sValue);
             var arr = sValue.split("#");
-            oTable.fnUpdate(arr[0], aPos[0], 11);
-            oTable.fnUpdate(arr[1], aPos[0], 12);
-            oTable.fnUpdate(arr[2], aPos[0], 13);
-            oTable.fnUpdate(arr[3], aPos[0], 14);
+            oTable.fnUpdate(arr[0], aPos[0], 10);
+            oTable.fnUpdate(arr[1], aPos[0], 11);
+            oTable.fnUpdate(arr[2], aPos[0], 12);
+            oTable.fnUpdate(arr[3], aPos[0], 13);
             var a = arr[3] - arr[0] - arr[1];
-            oTable.fnUpdate(a.toFixed(2), aPos[0], 15);
+            oTable.fnUpdate(a.toFixed(2), aPos[0], 14);
 
             if (arr[4] != "") {
                 if (parseFloat(arr[4]) != parseFloat($("#pool").text())) {

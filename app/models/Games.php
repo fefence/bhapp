@@ -141,9 +141,6 @@ class Games extends Eloquent
             $game = PPM::find($game_id);
         }
         $nGame = $game->replicate();
-        $nGame->bsf = 0;
-        $nGame->bet = 0;
-        $nGame->income = 0;
         $nGame->save();
         $game->confirmed = 1;
         $game->save();
@@ -153,23 +150,9 @@ class Games extends Eloquent
     {
         if ($game_type_id < 5) {
             $game = Games::find($game_id);
-            $nGame = Games::where('user_id', '=', $game->user_id)
-                ->where('match_id', '=', $game->match_id)
-                ->where('standings_id', '=', $game->standings_id)
-                ->where('confirmed', '=', 0)
-                ->first();
         } else if ($game_type_id >= 5 && $game_type_id < 9) {
             $game = PPM::find($game_id);
-            $nGame = PPM::where('user_id', '=', $game->user_id)
-                ->where('match_id', '=', $game->match_id)
-                ->where('series_id', '=', $game->series_id)
-                ->where('confirmed', '=', 0)
-                ->first();
         }
-        $nGame->bsf = $nGame->bsf + $game->bsf;
-        $nGame->bet = $nGame->bet + $game->bet;
-        $nGame->income = $nGame->income + $game->income;
-        $nGame->save();
         $game->delete();
     }
 

@@ -43,7 +43,8 @@ class Groups extends Eloquent {
             ->where('user_id', '=', Auth::user()->id)
             ->where('confirmed', '=', 0)
             ->orderBy('matchDate')
-            ->orderBy('matchTime')
+            ->orderBy('matchDate')
+            ->orderBy('home')
             ->orderBy('streak')
             ->get();
     }
@@ -61,6 +62,7 @@ class Groups extends Eloquent {
             ->where('confirmed', '=', 0)
             ->orderBy('matchDate')
             ->orderBy('matchTime')
+            ->orderBy('home')
             ->orderBy('streak')
             ->get();
     }
