@@ -29,11 +29,11 @@ $elements = array('active' => $active, 'list' => $list);
     </tr>
     </thead>
     <tbody>
-    @foreach($data as $id=>$d)
-    <tr class="{{$id}}">
+    @foreach($data as $d)
+    <tr>
         <td><a href="/ppm/country/{{$d->country}}/{{isset($fromdate)?$fromdate.'/':''}}{{isset($todate)?$todate:''}}"><img src="/images/{{strtoupper($d->country)}}.png"> {{$d->country}}</a></td>
         <td></td>
-        <td></td>
+        <td>{{$info[$d->country]['confirmed']}}/{{$info[$d->country]['all']}}</td>
     </tr>
     @endforeach
     </tbody>

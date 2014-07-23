@@ -170,11 +170,11 @@ function fnFormatDetails(oTable, nTr) {
         team = 'ppm';
     }
     var re = new RegExp('display: none;">(.*?)</span>');
-    var m = re.exec(aData[16]);
+    var m = re.exec(aData[15]);
     var id = m[1];
 //		alert(id);
     // var d = aData[1].replace(/\//g, '-');
-    var promise = testAjax(team, id, aData[9]);
+    var promise = testAjax(team, id, aData[8]);
     promise.success(function (data) {
         text = data;
     });

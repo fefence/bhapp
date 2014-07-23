@@ -30,7 +30,12 @@ class PPMController extends \BaseController
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, '');
         $leagues = PPM::ppmLeaguesForDates($fromdate, $todate);
-        return View::make('ppmcountries')->with(['data' => $leagues, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small]);
+        $info = array();
+        foreach($leagues as $league) {
+            $info[$league->country]['all'] = count(PPM::ppmForDatesCountry($fromdate, $todate, $league->country));
+            $info[$league->country]['confirmed'] = PPM::ppmConfirmedForLeague($fromdate, $todate, $league);
+        }
+        return View::make('ppmcountries')->with(['data' => $leagues, 'info' =>$info, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small]);
     }
 
     public function getOdds($fromdate = "", $todate = "")
