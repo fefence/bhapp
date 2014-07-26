@@ -12,7 +12,6 @@ class SettingsController extends BaseController
 
     public function saveSettings()
     {
-//        return Input::all();
         $leagues = LeagueDetails::get(['id']);
         foreach ($leagues as $league) {
             for ($i = 1; $i < 5; $i++) {
@@ -21,7 +20,8 @@ class SettingsController extends BaseController
                     $gr = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 2)->first();
                     $match_count = $gr->matches()->where('resultShort', '<>', '-')->count();
                     if ($match_count > 0) {
-                        return Redirect::back()->with('error', $league->displayName." has more matches from the round");
+//                        continue;
+//                        return Redirect::back()->with('error', $league->displayName." has more matches from the round");
                     }
                     $setting = Settings::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $league->id, 'game_type_id' => $i]);
                     $oldFrom = $setting->from;
@@ -33,42 +33,56 @@ class SettingsController extends BaseController
                         $setting->to = Input::get($league->id . '-to-' . $i);
                         $setting->multiplier = Input::get($league->id . '-mul-' . $i);
                         $setting->save();
-                        $pool = Pools::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $league->id, 'ppm' => 0]);
+                        $pool = Pools::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $setting->league_details_id, 'game_type_id' => $i]);
+//                        return $pool;
                         $pool->save();
+//                        return $pool;
                     } else if ($dd == '2') {
                         $setting->from = Input::get($league->id . '-gt-' . $i);
                         $setting->to = 0;
                         $setting->multiplier = Input::get($league->id . '-mult-' . $i);
                         $setting->save();
-                        $pool = Pools::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $league->id, 'ppm' => 0]);
+                        $pool = Pools::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $setting->league_details_id, 'game_type_id' => $i]);
                         $pool->save();
                     } else if ($dd == '0') {
-                        //$setting->delete();
+                        $pool = Pools::where('user_id', '=', Auth::user()->id)->where('league_details_id', '=', $setting->league_details_id)->where('game_type_id', '=', $i)->first();
+                        if ($pool != null) {
+                            if($pool->amount == 0 && $pool->income == 0 && $pool->profit == 0 && $pool->account == 0) {
+                                $pool->delete();
+                            }
+                        }
+                        $group = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 2)->first(['id']);
+                        Games::where('user_id', '=', Auth::user()->id)->where('groups_id', '=', $group->id)->where('confirmed', '=', 0)->delete();
+                        $setting->delete();
                     }
                     $group = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 2)->first(['id']);
-//                    return $group;
-                    if ($group != NULL && $group->id != "" && ($oldMultiplier != $setting->multiplier || $oldFrom != $setting->from || $oldTo != $setting->to)) {
+                    if ($dd != '0' && $group != NULL && $group->id != "" && ($oldMultiplier != $setting->multiplier || $oldFrom != $setting->from || $oldTo != $setting->to)) {
                         Updater::recalculateGroup($group->id, Auth::user()->id);
                     }
                 }
             }
         }
         $ppm = Input::get('ppm');
+        $enabled = array();
         if ($ppm != null && count($ppm) > 0) {
             foreach ($ppm as $p) {
                 $arr = explode("#", $p);
                 $setting = Settings::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $arr[0], 'game_type_id' => $arr[1]]);
-
                 $setting->from = 0;
                 $setting->to = 0;
                 $setting->multiplier = 0;
                 $setting->auto = 0;
                 $setting->save();
-                $pool = Pools::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $arr[0], 'ppm' => 1]);
+                $pool = Pools::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $arr[0], 'game_type_id' => $arr[1]]);
                 $pool->save();
                 Updater::addPPMMatchForUser($arr[0], $arr[1], Auth::user()->id);
+                if(!array_key_exists($arr[0], $enabled)) {
+                    $enabled[$arr[0]] = array();
+                }
+                array_push($enabled[$arr[0]], $arr[1]);
             }
         }
+//        return $enabled;
         return Redirect::back()->with('message', "Settings saved");
     }
 

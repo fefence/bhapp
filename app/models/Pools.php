@@ -24,20 +24,24 @@ class Pools extends Eloquent {
     public static function getPPSPoolsQForUser($user_id)
     {
         $ppmpoolsq = Pools::where('user_id', '=', $user_id)
-            ->where('pools.ppm', '=', 1)
+            ->where('pools.game_type_id', '>=', 1)
+            ->where('pools.game_type_id', '<=', 4)
             ->join('leagueDetails', 'leagueDetails.id', '=', 'pools.league_details_id')
+            ->join('game_type', 'game_type.id', '=', 'pools.game_type_id')
             ->orderBy('country')
-            ->select([DB::raw('pools.*, leagueDetails.displayName, leagueDetails.country')]);
+            ->select([DB::raw('pools.*, leagueDetails.displayName, leagueDetails.country, game_type.type')]);
         return $ppmpoolsq;
     }
 
     public static function getPPMPoolsQForUser($user_id)
     {
         $ppspoolsq = Pools::where('user_id', '=', $user_id)
-            ->where('pools.ppm', '=', 0)
+            ->where('pools.game_type_id', '>=', 5)
+            ->where('pools.game_type_id', '<=', 8)
+            ->join('game_type', 'game_type.id', '=', 'pools.game_type_id')
             ->join('leagueDetails', 'leagueDetails.id', '=', 'pools.league_details_id')
             ->orderBy('country')
-            ->select([DB::raw('pools.*, leagueDetails.displayName, leagueDetails.country')]);
+            ->select([DB::raw('pools.*, leagueDetails.displayName, leagueDetails.country, game_type.type')]);
         return $ppspoolsq;
     }
 }

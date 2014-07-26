@@ -142,24 +142,25 @@ class Updater
         } else {
             return;
         }
-        $pool = Pools::where('user_id', '=', $user_id)->where('league_details_id', '=', $league_details_id)->first();
+        $pool = Pools::where('user_id', '=', $user_id)->where('league_details_id', '=', $league_details_id)->where('game_type_id', '=', $game->game_type_id)->first();
         $main = CommonPools::where('user_id', '=', $user_id)->first();
         if ($resultShort == 'D') {
             $pool->amount = $pool->amount - $game->bsf;
             $pool->income = $pool->income + $game->income;
             $main->income = $main->income + $game->income;
-        } else {
+        } else if ($resultShort == 'A' || $resultShort == 'H'){
             $pool->amount = $pool->amount + $game->bet;
         }
         $main->save();
         $pool->save();
     }
 
-    public static function recalculateGroup($groups_id, $user_id)
+    public static function recalculateGroup($groups_id, $user_id, $game_type_id)
     {
         $gr = Groups::find($groups_id);
         $setting = Settings::where('user_id', '=', $user_id)
             ->where('league_details_id', '=', $gr->league_details_id)
+            ->where('game_type_id', '=', $game_type_id)
             ->first(['from', 'to', 'multiplier', 'auto']);
         $from = $setting->from;
         $teams = array();
@@ -189,7 +190,9 @@ class Updater
         if (count($teams) < Games::where('user_id', '=', $user_id)->where('groups_id', '=', $gr->id)->count()) {
             Games::where('user_id', '=', $user_id)->where('groups_id', '=', $gr->id)->delete();
         }
-        $pool = User::find($user_id)->pools()->where('league_details_id', '=', $gr->league_details_id)->first();
+        $pool = User::find($user_id)->pools()->where('league_details_id', '=', $gr->league_details_id)
+            ->where('game_type_id', '=', $game_type_id)
+            ->first();
         if (count($teams) > 0) {
             $bsfpm = $pool->amount / count($teams);
             $bpm = $pool->amount * $setting->multiplier / count($teams);
@@ -214,7 +217,7 @@ class Updater
             } else if (count($matches) == 1) {
                 $match = $matches[0];
                 //TODO: add setting based bookmaker && special match check
-                $game = Games::firstOrCreate(['user_id' => $user_id, 'match_id' => $match->id, 'groups_id' => $match->groups_id, 'game_type_id' => 1, 'bookmaker_id' => 1, 'standings_id' => $st_id]);
+                $game = Games::firstOrCreate(['user_id' => $user_id, 'match_id' => $match->id, 'groups_id' => $match->groups_id, 'game_type_id' => $game_type_id, 'bookmaker_id' => 1, 'standings_id' => $st_id]);
                 $game->bet = $bpm;
                 $game->bsf = $bsfpm;
                 if ($game->odds == null)
@@ -225,7 +228,7 @@ class Updater
 //                print_r($game);
             } else if (count($matches) > 1) {
                 $match = $matches[0];
-                $game = Games::firstOrCreate(['user_id' => $user_id, 'match_id' => $match->id, 'groups_id' => $match->groups_id, 'game_type_id' => 1, 'bookmaker_id' => 1, 'standings_id' => $st_id]);
+                $game = Games::firstOrCreate(['user_id' => $user_id, 'match_id' => $match->id, 'groups_id' => $match->groups_id, 'game_type_id' => $game_type_id, 'bookmaker_id' => 1, 'standings_id' => $st_id]);
                 $game->bet = $bpm;
                 $game->bsf = $bsfpm;
                 if ($game->odds == null)
@@ -307,7 +310,10 @@ class Updater
                         $news->save();
                         foreach ($games as $game) {
                             if ($game->confirmed == 1) {
-                                $pool = Pools::where('user_id', '=', $game->user_id)->where('league_details_id', '=', $match->league_details_id)->where('ppm', '=', 1)->first();
+                                $pool = Pools::where('user_id', '=', $game->user_id)
+                                    ->where('league_details_id', '=', $match->league_details_id)
+                                    ->where('game_type_id', '=', $i)
+                                    ->first();
                                 $pool->income = $pool->income + $game->income;
                                 $pool->amount = 0;
                                 $pool->save();
@@ -315,7 +321,7 @@ class Updater
                             foreach ($next_matches as $n) {
                                 $newgame = PPM::firstOrNew(['user_id' => $game->user_id, 'series_id' => $news->id, 'match_id' => $n->id, 'game_type_id' => $game->game_type_id, 'country' => $game->country, 'confirmed' => 0]);
                                 $newgame->bet = 0;
-                                $newgame->bsf = ($newgame->bsf + $game->bsf + $game->bet) / count($next_matches);
+                                $newgame->bsf = 0;
                                 $newgame->odds = 3;
                                 $newgame->current_length = $news->current_length;
                                 $newgame->income = 0;
@@ -331,15 +337,19 @@ class Updater
                             foreach ($next_matches as $n) {
                                 $newgame = PPM::firstOrNew(['user_id' => $game->user_id, 'series_id' => $serie->id, 'match_id' => $n->id, 'game_type_id' => $game->game_type_id, 'country' => $game->country, 'confirmed' => 0]);
                                 $newgame->bet = 0;
-                                $newgame->bsf = ($newgame->bsf + $game->bsf + $game->bet) / count($next_matches);
+                                if ($game->confirmed) {
+                                    $newgame->bsf = ($newgame->bsf + $game->bsf + $game->bet) / count($next_matches);
+                                }
                                 $newgame->odds = 3;
                                 $newgame->income = 0;
-                                $newgame->confirmed = 0;
                                 $newgame->current_length = $serie->current_length;
                                 $newgame->save();
                             }
                             if ($game->confirmed == 1) {
-                                $pool = Pools::where('user_id', '=', $game->user_id)->where('league_details_id', '=', $match->league_details_id)->where('ppm', '=', 1)->first();
+                                $pool = Pools::where('user_id', '=', $game->user_id)
+                                    ->where('game_type_id', '=', $i)
+                                    ->where('league_details_id', '=', $match->league_details_id)
+                                    ->first();
                                 $pool->amount = $pool->amount + $game->bet;
                                 $pool->save();
                             }

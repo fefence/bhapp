@@ -6,10 +6,10 @@ class PoolsController extends \BaseController
     public function managePools()
     {
         $user_id = Auth::user()->id;
-        $ppspoolsq = Pools::getPPMPoolsQForUser($user_id);
+        $ppspoolsq = Pools::getPPSPoolsQForUser($user_id);
         $ppspools = $ppspoolsq->get();
         $ppstotal = $ppspoolsq->select(DB::raw("sum(profit) as profit, sum(account) as account, sum(amount) as amount"))->first();
-        $ppmpoolsq = Pools::getPPSPoolsQForUser($user_id);
+        $ppmpoolsq = Pools::getPPMPoolsQForUser($user_id);
         $ppmpools = $ppmpoolsq->get();
         $ppmtotal = $ppmpoolsq->select(DB::raw("sum(profit) as profit, sum(account) as account, sum(amount) as amount"))->first();
 
