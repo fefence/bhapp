@@ -335,24 +335,26 @@ class Updater
 
                         foreach ($games as $game) {
                             foreach ($next_matches as $n) {
+                                $pool = Pools::where('user_id', '=', $game->user_id)
+                                    ->where('game_type_id', '=', $i)
+                                    ->where('league_details_id', '=', $match->league_details_id)
+                                    ->first();
+                                if ($game->confirmed == 1) {
+                                    $pool->amount = $pool->amount + $game->bet;
+                                    $pool->save();
+                                }
                                 $newgame = PPM::firstOrNew(['user_id' => $game->user_id, 'series_id' => $serie->id, 'match_id' => $n->id, 'game_type_id' => $game->game_type_id, 'country' => $game->country, 'confirmed' => 0]);
                                 $newgame->bet = 0;
+
                                 if ($game->confirmed) {
-                                    $newgame->bsf = ($newgame->bsf + $game->bsf + $game->bet) / count($next_matches);
+                                    $newgame->bsf = ($pool->amount) / count($next_matches);
                                 }
                                 $newgame->odds = 3;
                                 $newgame->income = 0;
                                 $newgame->current_length = $serie->current_length;
                                 $newgame->save();
                             }
-                            if ($game->confirmed == 1) {
-                                $pool = Pools::where('user_id', '=', $game->user_id)
-                                    ->where('game_type_id', '=', $i)
-                                    ->where('league_details_id', '=', $match->league_details_id)
-                                    ->first();
-                                $pool->amount = $pool->amount + $game->bet;
-                                $pool->save();
-                            }
+
                         }
                     }
 
