@@ -148,7 +148,7 @@ class Updater
             $pool->amount = $pool->amount - $game->bsf;
             $pool->income = $pool->income + $game->income;
             $main->income = $main->income + $game->income;
-        } else if ($resultShort == 'A' || $resultShort == 'H'){
+        } else if ($resultShort == 'A' || $resultShort == 'H') {
             $pool->amount = $pool->amount + $game->bet;
         }
         $main->save();
@@ -314,6 +314,7 @@ class Updater
                                     ->where('game_type_id', '=', $i)
                                     ->first();
                                 $pool->income = $pool->income + $game->income;
+                                $pool->profit = $pool->income - $pool->amount;
                                 $pool->amount = 0;
                                 $pool->save();
                             }

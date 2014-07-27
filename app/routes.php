@@ -11,7 +11,7 @@ Route::get('/boo', function(){
 //
 //    }
 //    return Parser::parseLeagueSeries(31);
-//    return Updater::getNextPPMMatches(Match::find("KWyutKLB"));
+//    return Updater::getPPMMatches();
     return Updater::updatePPM();
     //    return $str;
 });
