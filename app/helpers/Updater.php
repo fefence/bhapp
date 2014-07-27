@@ -306,7 +306,6 @@ class Updater
                         $serie->active = 0;
                         $serie->save();
                         $news->end_match_id = $next_match->id;
-                        $news->current_length = $news->current_length + 1;
                         $news->save();
                         foreach ($games as $game) {
                             if ($game->confirmed == 1) {
