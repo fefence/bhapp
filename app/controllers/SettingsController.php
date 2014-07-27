@@ -52,12 +52,12 @@ class SettingsController extends BaseController
                             }
                         }
                         $group = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 2)->first(['id']);
-                        Games::where('user_id', '=', Auth::user()->id)->where('groups_id', '=', $group->id)->where('confirmed', '=', 0)->delete();
+                        Games::where('user_id', '=', Auth::user()->id)->where('groups_id', '=', $group->id)->where('confirmed', '=', 0)->where('game_type_id', '=', $i)->delete();
                         $setting->delete();
                     }
                     $group = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 2)->first(['id']);
                     if ($dd != '0' && $group != NULL && $group->id != "" && ($oldMultiplier != $setting->multiplier || $oldFrom != $setting->from || $oldTo != $setting->to)) {
-                        Updater::recalculateGroup($group->id, Auth::user()->id);
+                        Updater::recalculateGroup($group->id, Auth::user()->id, $i);
                     }
                 }
             }
