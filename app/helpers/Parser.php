@@ -506,5 +506,21 @@ class Parser
         return substr($headers[0], 9, 3);
     }
 
+    public static function parseLivescoreForMatch($dom) {
+        $rows = $dom->getElementById('parts')->getElementsByTagName('tr');
+        foreach($rows as $row) {
+            $cols = $row->getElementsByTagName('td');
+            foreach($cols as $col) {
+                $spans = $col->getElementsByTagName('span');
+                foreach($spans as $span) {
+                    $attr = $span->getAttribute('class');
+                    echo $attr." ";
+                }
+                echo $col->nodeValue." ";
+            }
+            echo "<br>";
+        }
+
+    }
 
 }

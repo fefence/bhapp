@@ -34,9 +34,9 @@ class Updater
                 }
                 foreach ($games as $game) {
                     Updater::updatePool($game, $match->resultShort);
-                    if ($game->special == 1) {
-                        Updater::recalculateGroup($match->groups_id, $game->user_id);
-                    }
+//                    if ($game->special == 1) {
+//                        Updater::recalculateGroup($match->groups_id, $game->user_id, $game->game_type_id);
+//                    }
                 }
                 if (Updater::isLastGameInGroup($match)) {
                     $log = $log . " new group created for league: " . $match->league_details_id;
@@ -89,7 +89,7 @@ class Updater
         }
         $ids = Settings::where('league_details_id', '=', $current->league_details_id)->lists('user_id');
         foreach ($ids as $id) {
-            Updater::recalculateGroup($current->id, $id);
+            Updater::recalculateGroup($current->id, $id, 1);
         }
     }
 
@@ -147,6 +147,7 @@ class Updater
         if ($resultShort == 'D') {
             $pool->amount = $pool->amount - $game->bsf;
             $pool->income = $pool->income + $game->income;
+            $pool->account = $pool->account + $game->income;
             $main->income = $main->income + $game->income;
         } else if ($resultShort == 'A' || $resultShort == 'H') {
             $pool->amount = $pool->amount + $game->bet;
@@ -314,7 +315,8 @@ class Updater
                                     ->where('game_type_id', '=', $i)
                                     ->first();
                                 $pool->income = $pool->income + $game->income;
-                                $pool->profit = $pool->income - $pool->amount;
+                                $pool->profit = $pool->profit + $game->income - $game->bsf;
+                                $pool->account = $pool->account + $game->income;
                                 $pool->amount = 0;
                                 $pool->save();
                             }

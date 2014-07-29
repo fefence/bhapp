@@ -135,11 +135,20 @@ class Games extends Eloquent
 
     public static function confirmGame($game_id, $game_type_id)
     {
+
         if ($game_type_id < 5) {
             $game = Games::find($game_id);
         } else if ($game_type_id >= 5 && $game_type_id < 9) {
             $game = PPM::find($game_id);
         }
+        $league = Match::find($game->match_id);
+        $pool = Pools::where('user_id', '=', $game->user_id)
+            ->where('league_details_id', '=', $league->league_details_id)
+            ->where('game_type_id', '=', $game_type_id)
+            ->first();
+        $pool->account = $pool->account - $game->bet;
+        $pool->save();
+
         $nGame = $game->replicate();
         $nGame->save();
         $game->confirmed = 1;
@@ -153,6 +162,13 @@ class Games extends Eloquent
         } else if ($game_type_id >= 5 && $game_type_id < 9) {
             $game = PPM::find($game_id);
         }
+        $league = Match::find($game->match_id);
+        $pool = Pools::where('user_id', '=', $game->user_id)
+            ->where('league_details_id', '=', $league->league_details_id)
+            ->where('game_type_id', '=', $game_type_id)
+            ->first();
+        $pool->account = $pool->account - $game->bet;
+        $pool->save();
         $game->delete();
     }
 

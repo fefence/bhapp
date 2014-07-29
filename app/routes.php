@@ -12,7 +12,7 @@ Route::get('/boo', function(){
 //    }
 //    return Parser::parseLeagueSeries(31);
 //    return Updater::getPPMMatches();
-    return Updater::updatePPM();
+    return FreeController::test();
     //    return $str;
 });
 
@@ -41,7 +41,8 @@ Route::get('/ppm/{from?}/{to?}/odds', "PPMController@getOdds");
 Route::get('/ppmseries/{id}', "PPMController@displaySeries");
 
 //livescore
-Route::get('/livescore/{from?}/{to?}', "LivescoreController@livescore");
+Route::get('/livescore', "LivescoreController@livescore");
+Route::get('/livescorematch/{match_id}', "LivescoreController@matchScore");
 
 //Groups views
 Route::get('/group/{id?}/{fromdate?}/{todate?}', 'GamesController@getGamesForGroup');
