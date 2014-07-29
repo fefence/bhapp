@@ -29,6 +29,7 @@ class Pools extends Eloquent {
             ->join('leagueDetails', 'leagueDetails.id', '=', 'pools.league_details_id')
             ->join('game_type', 'game_type.id', '=', 'pools.game_type_id')
             ->orderBy('country')
+            ->orderBy('game_type_id')
             ->select([DB::raw('pools.*, leagueDetails.displayName, leagueDetails.country, game_type.type')]);
         return $ppmpoolsq;
     }
@@ -41,6 +42,7 @@ class Pools extends Eloquent {
             ->join('game_type', 'game_type.id', '=', 'pools.game_type_id')
             ->join('leagueDetails', 'leagueDetails.id', '=', 'pools.league_details_id')
             ->orderBy('country')
+            ->orderBy('game_type_id')
             ->select([DB::raw('pools.*, leagueDetails.displayName, leagueDetails.country, game_type.type')]);
         return $ppspoolsq;
     }
