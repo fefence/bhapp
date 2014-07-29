@@ -109,11 +109,11 @@ class SettingsController extends BaseController
                     $aLog->save();
                 }
 //                $setting = Settings::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $arr[0], 'game_type_id' => $arr[1]]);
-//                $setting->from = 0;
-//                $setting->to = 0;
-//                $setting->multiplier = 0;
-//                $setting->auto = 0;
-//                $setting->save();
+                $setting->from = 0;
+                $setting->to = 0;
+                $setting->multiplier = 0;
+                $setting->auto = 0;
+                $setting->save();
                 $pool = Pools::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $arr[0], 'game_type_id' => $arr[1]]);
                 $pool->save();
                 Updater::addPPMMatchForUser($arr[0], $arr[1], Auth::user()->id);
@@ -121,6 +121,44 @@ class SettingsController extends BaseController
                     $enabled[$arr[0]] = array();
                 }
                 array_push($enabled[$arr[0]], $arr[1]);
+            }
+        }
+
+        $ppmSettings = Settings::where('game_type_id', '>=', 5)
+            ->where('game_type_id', '<=', 8)
+            ->where('user_id', '=', Auth::user()->id)
+            ->get();
+
+//        return $enabled;
+        foreach($ppmSettings as $s) {
+            if (!array_key_exists($s->league_details_id, $enabled) || (array_key_exists($s->league_details_id, $enabled) && !in_array($s->game_type_id, $enabled[$s->league_details_id]))){
+//                return $enabled[$s->league_details_id];
+//                echo $s->league_details_id." ".$s->game_type_id;
+//                echo ""
+                $p = Pools::where('user_id', '=', Auth::user()->id)
+                    ->where('league_details_id', '=', $s->league_details_id)
+                    ->where('game_type_id', '=', $s->game_type_id)
+                    ->first();
+                if ($p != null && $p->amount == 0 && $p->income == 0 && $p->profit == 0 && $p->account == 0) {
+                    $p->delete();
+                }
+                $todelete = PPM::join('match', 'match.id', '=', 'ppm.match_id')
+                    ->where('resultShort', '=', '-')
+                    ->where('league_details_id', '=', $s->league_details_id)
+                    ->where('game_type_id', '=', $s->game_type_id)
+                    ->where('user_id', '=', $s->user_id)
+                    ->select('ppm.*')
+                    ->get();
+                foreach($todelete as $d) {
+                    $d->delete();
+                }
+                $aLog = new ActionLog;
+                $aLog->type = "settings";
+                $aLog->action = "disable ppm league";
+                $aLog->amount = $s->game_type_id;
+                $aLog->element_id = $s->league_details_id;
+                $aLog->save();
+                $s->delete();
             }
         }
 //        return $enabled;
