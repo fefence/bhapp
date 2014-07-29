@@ -32,6 +32,12 @@ class PoolsController extends \BaseController
         $log->amount = $amount;
         $log->action = "-";
         $log->save();
+        $aLog = new ActionLog;
+        $aLog->type = "pools";
+        $aLog->action = "-";
+        $aLog->amount = $amount;
+        $aLog->element_id = $pool->id;
+        $aLog->save();
         if ($pool->game_type_id >= 5 && $pool->game_type_id <= 8) {
             $ppms = PPM::join('match', 'match.id', '=', 'ppm.match_id')
                 ->where('resultShort', '=', '-')
@@ -64,6 +70,12 @@ class PoolsController extends \BaseController
         $log->amount = $amount;
         $log->action = "+";
         $log->save();
+        $aLog = new ActionLog;
+        $aLog->type = "pools";
+        $aLog->action = "+";
+        $aLog->amount = $amount;
+        $aLog->element_id = $pool->id;
+        $aLog->save();
         if ($pool->game_type_id >= 5 && $pool->game_type_id <= 8) {
             $ppms = PPM::join('match', 'match.id', '=', 'ppm.match_id')
                 ->where('resultShort', '=', '-')

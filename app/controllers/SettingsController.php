@@ -50,6 +50,12 @@ class SettingsController extends BaseController
                             if($pool->amount == 0 && $pool->income == 0 && $pool->profit == 0 && $pool->account == 0) {
                                 $pool->delete();
                             }
+                            $aLog = new ActionLog;
+                            $aLog->type = "settings";
+                            $aLog->action = "disable";
+                            $aLog->amount = 0;
+                            $aLog->element_id = $setting->id;
+                            $aLog->save();
                         }
                         $group = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 2)->first(['id']);
                         Games::where('user_id', '=', Auth::user()->id)->where('groups_id', '=', $group->id)->where('confirmed', '=', 0)->where('game_type_id', '=', $i)->delete();
@@ -58,6 +64,30 @@ class SettingsController extends BaseController
                     $group = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 2)->first(['id']);
                     if ($dd != '0' && $group != NULL && $group->id != "" && ($oldMultiplier != $setting->multiplier || $oldFrom != $setting->from || $oldTo != $setting->to)) {
                         Updater::recalculateGroup($group->id, Auth::user()->id, $i);
+                        if ($oldMultiplier != $setting->multiplier) {
+                            $aLog = new ActionLog;
+                            $aLog->type = "settings";
+                            $aLog->action = "change multiplier";
+                            $aLog->amount = $setting->multiplier;
+                            $aLog->element_id = $setting->id;
+                            $aLog->save();
+                        }
+                        if ($oldFrom != $setting->from) {
+                            $aLog = new ActionLog;
+                            $aLog->type = "settings";
+                            $aLog->action = "change from";
+                            $aLog->amount = $setting->from;
+                            $aLog->element_id = $setting->id;
+                            $aLog->save();
+                        }
+                        if ($oldTo != $setting->to) {
+                            $aLog = new ActionLog;
+                            $aLog->type = "settings";
+                            $aLog->action = "change to";
+                            $aLog->amount = $setting->to;
+                            $aLog->element_id = $setting->id;
+                            $aLog->save();
+                        }
                     }
                 }
             }
@@ -67,12 +97,23 @@ class SettingsController extends BaseController
         if ($ppm != null && count($ppm) > 0) {
             foreach ($ppm as $p) {
                 $arr = explode("#", $p);
-                $setting = Settings::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $arr[0], 'game_type_id' => $arr[1]]);
-                $setting->from = 0;
-                $setting->to = 0;
-                $setting->multiplier = 0;
-                $setting->auto = 0;
-                $setting->save();
+                $setting = Settings::where('user_id', '=', Auth::user()->id)->where('league_details_id', '=', $arr[0])->where('game_type_id', '=', $arr[1])->first();
+                if ($setting == null) {
+                    $setting = new Settings(['user_id' => Auth::user()->id, 'league_details_id' => $arr[0], 'game_type_id' => $arr[1]]);
+                    $setting->save();
+                    $aLog = new ActionLog;
+                    $aLog->type = "settings";
+                    $aLog->action = "add ppm league";
+                    $aLog->amount = $arr[0];
+                    $aLog->element_id = $setting->id;
+                    $aLog->save();
+                }
+//                $setting = Settings::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $arr[0], 'game_type_id' => $arr[1]]);
+//                $setting->from = 0;
+//                $setting->to = 0;
+//                $setting->multiplier = 0;
+//                $setting->auto = 0;
+//                $setting->save();
                 $pool = Pools::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $arr[0], 'game_type_id' => $arr[1]]);
                 $pool->save();
                 Updater::addPPMMatchForUser($arr[0], $arr[1], Auth::user()->id);

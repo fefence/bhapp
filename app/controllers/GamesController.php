@@ -199,6 +199,13 @@ class GamesController extends \BaseController
             $pool->current = $pool->current - $bsf + $value;
             $pool->save();
             $bsf = round($pool->current, 2);
+
+            $aLog = new ActionLog;
+            $aLog->type = "pps";
+            $aLog->action = "change bsf";
+            $aLog->amount = $value;
+            $aLog->element_id = $game->id;
+            $aLog->save();
 //            $bsf = $pool->current();
         }
         if ($col == 11 || $col == '11') {

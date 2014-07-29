@@ -76,7 +76,7 @@ $i = 0;
         <td>{{$d->resultShort}}</td>
         <td class='editabledd warning'>{{$d->type}}</td>
         <td class='editabledd warning'>{{$d->bookmakerName}}</td>
-        <td class='editable warning' id="{{$d->game_type_id}}">{{$d->bsf}}</td>
+        <td>{{$d->bsf}}</td>
         <td class='editable warning' id="{{$d->game_type_id}}">{{$d->bet}}</td>
         <td class='editable warning' id="{{$d->game_type_id}}">{{$d->odds}}</td>
         <td>{{$d->income}}</td>
