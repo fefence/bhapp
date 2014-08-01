@@ -12,6 +12,10 @@ Route::get('/boo', function(){
 //    }
 //    return Parser::parseLeagueSeries(31);
 //    return Updater::getPPMMatches();
+    $current = Groups::find(102);
+    $next = Groups::find(135);
+    Parser::parseMatchesForGroup($current, $next);
+
     return FreeController::test();
     //    return $str;
 });

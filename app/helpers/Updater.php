@@ -266,6 +266,7 @@ class Updater
         $now = date('Y-m-d H:i:s');
         $start = explode(' ', date("Y-m-d H:i:s", strtotime("$now - 2 hours")));
 
+
         $ppm_leagues = LeagueDetails::where('ppm', '=', 1)->lists('id');
         return Match::whereIn('league_details_id', $ppm_leagues)
             ->where(function ($q) use ($start) {
