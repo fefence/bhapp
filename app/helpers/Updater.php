@@ -50,13 +50,13 @@ class Updater
 
     public static function updateGroup($groups_id)
     {
-        $matches = Match::where('groups_id', '=', $groups_id)->get(['id', 'resultShort']);
-        foreach ($matches as $match) {
-            $games = Games::where('match_id', '=', $match->id)->get();
-            foreach ($games as $game) {
-                Updater::updatePool($game, $match->resultShort);
-            }
-        }
+//        $matches = Match::where('groups_id', '=', $groups_id)->get(['id', 'resultShort']);
+////        foreach ($matches as $match) {
+////            $games = Games::where('match_id', '=', $match->id)->get();
+////            foreach ($games as $game) {
+////                Updater::updatePool($game, $match->resultShort);
+////            }
+////        }
         $gr = Groups::find($groups_id);
         $current = Groups::firstOrCreate(['league_details_id' => $gr->league_details_id, 'state' => 3, 'round' => ($gr->round + 1)]);
         $gr->state = 1;
