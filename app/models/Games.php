@@ -181,7 +181,7 @@ class Games extends Eloquent
             ->where('league_details_id', '=', $league->league_details_id)
             ->where('game_type_id', '=', $game_type_id)
             ->first();
-        $pool->account = $pool->account - $game->bet;
+        $pool->account = $pool->account + $game->bet;
         $pool->save();
         $game->delete();
     }

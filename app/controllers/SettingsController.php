@@ -175,7 +175,7 @@ class SettingsController extends BaseController
             Parser::parseMatchesForUSA($current, $next);
             Parser::parseLeagueSeriesUSA($league_details_id);
         } else {
-            Parser::parseLeagueSeries($league_details_id);
+            return Parser::parseLeagueSeries($league_details_id);
             Parser::parseMatchesForGroup($current, $next);
         }
         $str = Standings::where('league_details_id', '=', $league_details_id)
@@ -205,7 +205,7 @@ class SettingsController extends BaseController
         foreach ($ids as $id) {
             if (!in_array($id, $notIn)) {
                 $round = Input::get('v-' . $id);
-                SettingsController::createOperationalGroup($id, $round);
+                 return SettingsController::createOperationalGroup($id, $round);
             }
         }
         return Redirect::back()->with("message", "League added");

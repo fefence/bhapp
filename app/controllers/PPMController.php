@@ -35,7 +35,7 @@ class PPMController extends \BaseController
             $info[$league->country]['all'] = count(PPM::ppmForDatesCountry($fromdate, $todate, $league->country));
             $info[$league->country]['confirmed'] = PPM::ppmConfirmedForLeague($fromdate, $todate, $league);
         }
-        return View::make('ppmcountries')->with(['data' => $leagues, 'info' =>$info, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small]);
+        return View::make('ppmcountries')->with(['data' => $leagues, 'info' =>$info, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small, 'all_link' => "ppmflat/$fromdate/$todate"]);
     }
 
     public function getOdds($fromdate = "", $todate = "")
@@ -81,6 +81,21 @@ class PPMController extends \BaseController
         }
 
         return View::make('ppmseriesdetails')->with(['games' => $data, 'league' => $country, 'series' => $id]);
+    }
+
+    public static function displayFlatView($fromdate = '', $todate = '') {
+        list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
+        $leagues = Settings::where('user_id', '=', Auth::user()->id)
+            ->where('game_type_id', '>=', 5)
+            ->where('game_type_id', '<=', 8)
+            ->lists('league_details_id');
+        $matches = Match::where('matchDate', '<=', $todate)
+            ->where('matchDate', '>=', $fromdate)
+            ->whereIn('league_details_id', $leagues)
+            ->join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
+            ->orderBy('matchTime')
+            ->get();
+        return View::make('flat')->with(['matches' => $matches]);
     }
 
 }
