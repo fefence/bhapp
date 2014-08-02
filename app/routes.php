@@ -1,27 +1,6 @@
 <?php
 Route::get('/boo', function(){
-//    $ids = Standings::distinct('league_details_id')->groupBy('league_details_id')->lists('league_details_id');
-//    foreach($ids as $id) {
-//        if ($id != 112) {
-//            echo $id."<br>";
-//            Parser::parseLeagueSeries($id);
-//        } else {
-//            Parser::parseLeagueSeriesUSA(112);
-//        }
-//
-//    }
-//    return Parser::parseLeagueSeries(31);
-//    return Updater::getPPMMatches();
-    $current = Groups::find(171);
-    $next = Groups::find(172);
-    Parser::parseMatchesForGroup($current, $next);
 
-    $current = Groups::find(174);
-    $next = Groups::find(175);
-    Parser::parseMatchesForGroup($current, $next);
-
-//    return FreeController::test();
-    //    return $str;
 });
 
 //free views

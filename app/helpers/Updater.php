@@ -103,7 +103,7 @@ class Updater
     {
         date_default_timezone_set('Europe/Sofia');
         $now = date('Y-m-d H:i:s');
-        $start = explode(' ', date("Y-m-d H:i:s", strtotime("$now - 2 hours")));
+        $start = explode(' ', date("Y-m-d H:i:s", strtotime("$now - 100 minutes")));
         return Match::where(function ($q) use ($start) {
             $q->where('matchDate', '<', $start[0])
                 ->orWhere(function ($query) use ($start) {
@@ -264,8 +264,7 @@ class Updater
     {
         date_default_timezone_set('Europe/Sofia');
         $now = date('Y-m-d H:i:s');
-        $start = explode(' ', date("Y-m-d H:i:s", strtotime("$now - 2 hours")));
-
+        $start = explode(' ', date("Y-m-d H:i:s", strtotime("$now - 100 minutes")));
 
         $ppm_leagues = LeagueDetails::where('ppm', '=', 1)->lists('id');
         return Match::whereIn('league_details_id', $ppm_leagues)
