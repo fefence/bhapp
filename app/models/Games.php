@@ -153,6 +153,10 @@ class Games extends Eloquent
             ->where('league_details_id', '=', $league->league_details_id)
             ->where('game_type_id', '=', $game_type_id)
             ->first();
+        $main = CommonPools::where('user_id', '=', $game->user_id)->first();
+
+        $main->account = $main->account - $game->bet;
+        $main->save();
         $pool->account = $pool->account - $game->bet;
         $pool->save();
 
@@ -181,6 +185,8 @@ class Games extends Eloquent
             ->where('league_details_id', '=', $league->league_details_id)
             ->where('game_type_id', '=', $game_type_id)
             ->first();
+        $main = CommonPools::where('user_id', '=', $game->user_id)->first();
+        $main->account = $main->account + $game->bet;
         $pool->account = $pool->account + $game->bet;
         $pool->save();
         $game->delete();

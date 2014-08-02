@@ -26,14 +26,13 @@
                 <li class="dropdown">
                 </li>
                 @if(isset($pool))
-                <li><p class="navbar-text"><span class="text-default">P: <span id="pool">{{$pool->amount}}</span><span
-                                id="curr"> {{($pool->current != $pool->amount)?"(<strong>$pool->current</strong>)":"($pool->current)"}}</span> </span>
+                <li><p class="navbar-text"><span class="text-default">A: <span id="pool">{{$pool->account}}</span> </span>
                     </p></li>
-                <li><p class="navbar-text"><span class="text-default">I: {{$pool->income}}</span></p></li>
+                <li><p class="navbar-text"><span class="text-default">P: {{$pool->amount}}</span></p></li>
                 @endif
                 @if(isset($global))
-                <li><p class="navbar-text"><span class="text-success">{{$global->in_transit}}</span></p></li>
-                <li><p class="navbar-text"><span class="text-success">{{$global->income}}</span></p></li>
+                <li><p class="navbar-text"><span class="text-success">{{$global->amount}}</span></p></li>
+                <li><p class="navbar-text"><span class="text-success">{{$global->account}}</span></p></li>
                 @endif
             </ul>
         </div>

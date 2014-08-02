@@ -12,7 +12,10 @@ class LivescoreController extends \BaseController
 //        return $ids;
         $pps = Games::where('user_id', '=', Auth::user()->id)->lists('match_id');
         $matches = Match::where('matchDate', '=', $today)
-            ->whereIn('id', $ids)
+            ->where(function($query) use ($ids, $pps){
+                $query->whereIn('id', $ids)
+                    ->orWhereIn('id', $pps);
+            })
             ->orderBy('matchTime')
             ->get();
 //        return $matches;
@@ -41,7 +44,8 @@ class LivescoreController extends \BaseController
         $dom = new DOMDocument;
         $dom->preserveWhiteSpace = FALSE;
         @$dom->loadHTML($html);
+
         return Parser::parseLivescoreForMatch($dom);
-//        return $html;
+        return $html;
     }
 }

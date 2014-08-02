@@ -146,11 +146,14 @@ class Updater
         $main = CommonPools::where('user_id', '=', $user_id)->first();
         if ($resultShort == 'D') {
             $pool->amount = $pool->amount - $game->bsf;
-            $pool->income = $pool->income + $game->income;
+//            $pool->income = $pool->income + $game->income;
             $pool->account = $pool->account + $game->income;
-            $main->income = $main->income + $game->income;
+//            $main->income = $main->income + $game->income;
+            $main->account = $main->account + $game->income;
+            $main->amount = $main->amount - $game->bsf;
         } else if ($resultShort == 'A' || $resultShort == 'H') {
             $pool->amount = $pool->amount + $game->bet;
+            $main->amount = $main->amount + $game->bet;
         }
         $main->save();
         $pool->save();
@@ -314,11 +317,16 @@ class Updater
                                     ->where('league_details_id', '=', $match->league_details_id)
                                     ->where('game_type_id', '=', $i)
                                     ->first();
-                                $pool->income = $pool->income + $game->income;
+//                                $pool->income = $pool->income + $game->income;
                                 $pool->profit = $pool->profit + $game->income - $game->bsf;
                                 $pool->account = $pool->account + $game->income;
+                                $main = CommonPools::where('user_id', '=', $game->user_id)->first();
+                                $main->profit = + $game->income - $game->bsf;
+                                $main->account = $main->account + $game->income;
+                                $main->amount = $main->amount = $pool->amount;
                                 $pool->amount = 0;
                                 $pool->save();
+                                $main->save();
                             }
                             foreach ($next_matches as $n) {
                                 $newgame = PPM::firstOrNew(['user_id' => $game->user_id, 'series_id' => $news->id, 'match_id' => $n->id, 'game_type_id' => $game->game_type_id, 'country' => $game->country, 'confirmed' => 0]);
@@ -344,6 +352,9 @@ class Updater
                                 if ($game->confirmed == 1) {
                                     $pool->amount = $pool->amount + $game->bet;
                                     $pool->save();
+                                    $main = CommonPools::where('user_id', '=', $game->user_id)->first();
+                                    $main->amount = $main->amount + $game->bet;
+                                    $main->save();
                                 }
                                 $newgame = PPM::firstOrNew(['user_id' => $game->user_id, 'series_id' => $serie->id, 'match_id' => $n->id, 'game_type_id' => $game->game_type_id, 'country' => $game->country, 'confirmed' => 0]);
                                 $newgame->bet = 0;
