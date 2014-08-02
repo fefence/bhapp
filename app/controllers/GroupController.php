@@ -16,7 +16,20 @@ class GroupController extends \BaseController
             $prev_goup = Groups::where('league_details_id', '=', $league->id)->where('id', '<', $groups_id)->orderBy('round')->orderBy('id')->first();
             $curr_group = Groups::find($groups_id);
             $all = Games::where('user_id', '=', Auth::user()->id)->where('groups_id', '=', $curr_group->id)->where('confirmed', '=', 0)->count();
-            $confirmed = Games::where('user_id', '=', Auth::user()->id)->where('groups_id', '=', $curr_group->id)->where('confirmed', '=', 1)->distinct('standings_id')->count('standings_id');
+            $today = Games::where('user_id', '=', Auth::user()->id)
+                ->where('games.groups_id', '=', $curr_group->id)
+                ->where('confirmed', '=', 0)
+                ->join('match', 'match.id', '=', 'games.match_id')
+                ->where('matchDate', '>=', $fromdate)
+                ->where('matchDate', '<=', $todate)
+                ->count();
+            $confirmed = Games::where('user_id', '=', Auth::user()->id)
+                ->where('games.groups_id', '=', $curr_group->id)
+                ->where('confirmed', '=', 1)
+                ->join('match', 'match.id', '=', 'games.match_id')
+                ->where('matchDate', '>=', $fromdate)
+                ->where('matchDate', '<=', $todate)
+                ->count();
             $all_series = Standings::where('league_details_id', '=', $league->id)->count();
             $playing = $curr_group->matches()->count();
             $res[$league->id]['filter'] = array();
@@ -56,6 +69,7 @@ class GroupController extends \BaseController
 //                return $confirmed;
             $res[$league->id]['all'] = $all;
             $res[$league->id]['conf'] = $confirmed;
+            $res[$league->id]['today'] = $today;
             $res[$league->id]['all_series'] = $all_series;
             $res[$league->id]['playing'] = $playing * 2;
             if ($prev_goup) {
