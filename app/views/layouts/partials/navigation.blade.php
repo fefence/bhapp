@@ -31,8 +31,8 @@
                 <li><p class="navbar-text"><span class="text-default">P: {{$pool->amount}}</span></p></li>
                 @endif
                 @if(isset($global))
-                <li><p class="navbar-text"><span class="text-success">{{$global->amount}}</span></p></li>
                 <li><p class="navbar-text"><span class="text-success">{{$global->account}}</span></p></li>
+                <li><p class="navbar-text"><span class="text-success">{{$global->amount}}</span></p></li>
                 @endif
             </ul>
         </div>
