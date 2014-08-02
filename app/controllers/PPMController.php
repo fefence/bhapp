@@ -94,8 +94,25 @@ class PPMController extends \BaseController
             ->whereIn('league_details_id', $leagues)
             ->join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
             ->orderBy('matchTime')
+            ->select('leagueDetails.country', 'match.*')
             ->get();
-        return View::make('flat')->with(['matches' => $matches]);
+        $res = array();
+        foreach($matches as $m) {
+            $all = $m->ppm()->where('user_id', '=', Auth::user()->id)
+                ->count();
+            $conf = $m->ppm()->where('user_id', '=', Auth::user()->id)
+                ->where('confirmed', '=', 1)
+                ->count();
+            $res[$m->id] = array();
+            $res[$m->id]['match'] = $m;
+            $res[$m->id]['all'] = $all - $conf;
+            $res[$m->id]['conf'] = $conf;
+            if ($all == 0) {
+                $res[$m->id]['all'] = '-';
+                $res[$m->id]['conf'] = '-';
+            }
+        }
+        return View::make('flat')->with(['matches' => $res]);
     }
 
 }

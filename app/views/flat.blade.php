@@ -26,6 +26,7 @@
         <th><input type="text" name="search_engine" class="search_init" placeholder="away"></th>
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
     </tr>
     <tr>
         <td></td>
@@ -33,26 +34,28 @@
         <th style="width:50px;">time</th>
         <th>home</th>
         <th>away</th>
+        <th></th>
         <th>res</th>
         <th>res</th>
     </tr>
     </thead>
     <tbody>
-    @foreach($matches as $d)
+    @foreach($matches as $key => $d)
     <tr>
-        <td><img src="/images/{{strtoupper($d->country)}}.png"></td>
-        <td>{{date('d M', strtotime($d->matchDate))}}</td>
-        <td>{{substr($d->matchTime, 0, strlen($d->matchTime)-3)}}</td>
-        <td>{{$d->home}}</td>
-        <td>{{$d->away}}</td>
+        <td><img src="/images/{{strtoupper($d['match']->country)}}.png"></td>
+        <td>{{date('d M', strtotime($d['match']->matchDate))}}</td>
+        <td>{{substr($d['match']->matchTime, 0, strlen($d['match']->matchTime)-3)}}</td>
+        <td>{{$d['match']->home}}</td>
+        <td>{{$d['match']->away}}</td>
+        <td>{{$d['conf']}}/{{$d['all']}}</td>
         <td>
-            @if ($d->resultShort != '-')
-            {{$d->homeGoals}}:{{$d->awayGoals}}
+            @if ($d['match']->resultShort != '-')
+            {{$d['match']->homeGoals}}:{{$d['match']->awayGoals}}
             @else
             -
             @endif
         </td>
-        <td>{{$d->resultShort}}</td>
+        <td>{{$d['match']->resultShort}}</td>
     </tr>
     @endforeach
     </tbody>
