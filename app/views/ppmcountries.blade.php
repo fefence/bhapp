@@ -33,7 +33,12 @@ $elements = array('active' => $active, 'list' => $list);
     <tr>
         <td><a href="/ppm/country/{{$d->country}}/{{isset($fromdate)?$fromdate.'/':''}}{{isset($todate)?$todate:''}}"><img src="/images/{{strtoupper($d->country)}}.png"> {{$d->country}}</a></td>
         <td></td>
-        <td>{{$info[$d->country]['confirmed']}}/{{$info[$d->country]['all']}}</td>
+        <td>@if ($info[$d->country]['confirmed'] != $info[$d->country]['all'])
+            <span class="text-danger"><strong>{{$info[$d->country]['confirmed']}}/{{$info[$d->country]['all']}}</strong></span>
+            @else
+            {{$info[$d->country]['confirmed']}}/{{$info[$d->country]['all']}}
+            @endif
+        </td>
     </tr>
     @endforeach
     </tbody>
