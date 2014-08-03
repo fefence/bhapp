@@ -37,18 +37,12 @@ $elements = array('active' => $active, 'list' => $list);
     <tr class="{{$id}}">
         <td><a href="/group/{{$id}}"><img src="/images/{{strtoupper($d['league']->country)}}.png"> {{$d['league']->displayName}}</a>&nbsp;(<a href="/group/{{$id}}/{{isset($fromdate)?$fromdate.'/':''}}{{isset($todate)?$todate:''}}">today</a>)</td>
         <td>@if(isset($d['prev'])) {{$d['prev']}} @endif</td>
-        <td>@if ($d['conf'] != $d['today'])
-            <span class="text-danger"><strong>{{$d['conf']}}/{{$d['today']}} ({{$d['all']}})</strong></span>
-            @else
-            {{$d['conf']}}/{{$d['today']}} ({{$d['all']}})
-            @endif
-        </td>
+        <td>@include('layouts.partials.xofy', ['x' => $d['conf'], 'y' => $d['today']])</td>
         @foreach($d['filter'] as $filter=>$count)
         <td>
             {{$count}}
         </td>
         @endforeach
-
     </tr>
     @endforeach
     </tbody>

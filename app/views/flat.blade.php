@@ -47,12 +47,7 @@
         <td>{{substr($d['match']->matchTime, 0, strlen($d['match']->matchTime)-3)}}</td>
         <td>{{$d['match']->home}}</td>
         <td>{{$d['match']->away}}</td>
-        <td>@if ($d['conf'] != $d['all'])
-            <span class="text-danger"><strong>{{$d['conf']}}/{{$d['all']}}</strong></span>
-            @else
-            {{$d['conf']}}/{{$d['all']}}
-            @endif
-        </td>
+        <td>@include('layouts.partials.xofy', ['x' => $d['conf'], 'y' => $d['all']])</td>
         <td>
             @if ($d['match']->resultShort != '-')
             {{$d['match']->homeGoals}}:{{$d['match']->awayGoals}}
