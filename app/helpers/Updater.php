@@ -317,11 +317,10 @@ class Updater
                                     ->where('league_details_id', '=', $match->league_details_id)
                                     ->where('game_type_id', '=', $i)
                                     ->first();
-//                                $pool->income = $pool->income + $game->income;
                                 $pool->profit = $pool->profit + $game->income - $game->bsf;
                                 $pool->account = $pool->account + $game->income;
                                 $main = CommonPools::where('user_id', '=', $game->user_id)->first();
-                                $main->profit = + $game->income - $game->bsf;
+                                $main->profit = +$game->income - $game->bsf;
                                 $main->account = $main->account + $game->income;
                                 $main->amount = $main->amount = $pool->amount;
                                 $pool->amount = 0;
@@ -344,30 +343,30 @@ class Updater
                         $serie->save();
 
                         foreach ($games as $game) {
-                            foreach ($next_matches as $n) {
-                                $pool = Pools::where('user_id', '=', $game->user_id)
-                                    ->where('game_type_id', '=', $i)
-                                    ->where('league_details_id', '=', $match->league_details_id)
-                                    ->first();
-                                if ($game->confirmed == 1) {
-                                    $pool->amount = $pool->amount + $game->bet;
-                                    $pool->save();
-                                    $main = CommonPools::where('user_id', '=', $game->user_id)->first();
-                                    $main->amount = $main->amount + $game->bet;
-                                    $main->save();
-                                }
-                                $newgame = PPM::firstOrNew(['user_id' => $game->user_id, 'series_id' => $serie->id, 'match_id' => $n->id, 'game_type_id' => $game->game_type_id, 'country' => $game->country, 'confirmed' => 0]);
-                                $newgame->bet = 0;
+                            $pool = Pools::where('user_id', '=', $game->user_id)
+                                ->where('game_type_id', '=', $i)
+                                ->where('league_details_id', '=', $match->league_details_id)
+                                ->first();
+                            if ($game->confirmed == 1) {
+                                $pool->amount = $pool->amount + $game->bet;
+                                $pool->save();
+                                $main = CommonPools::where('user_id', '=', $game->user_id)->first();
+                                $main->amount = $main->amount + $game->bet;
+                                $main->save();
+                            }
 
-                                if ($game->confirmed) {
-                                    $newgame->bsf = ($pool->amount) / count($next_matches);
-                                }
+                        }
+                        $settings = Settings::where('game_type_id', '=', $i)->where('league_details_id', '=', $serie->league_details_id)->get();
+                        foreach ($settings as $sett) {
+                            foreach ($next_matches as $n) {
+                                $newgame = PPM::firstOrNew(['user_id' => $sett->user_id, 'series_id' => $serie->id, 'match_id' => $n->id, 'game_type_id' => $i, 'country' => $serie->team, 'confirmed' => 0]);
+                                $newgame->bet = 0;
+                                $newgame->bsf = ($pool->amount) / count($next_matches);
                                 $newgame->odds = 3;
                                 $newgame->income = 0;
                                 $newgame->current_length = $serie->current_length;
                                 $newgame->save();
                             }
-
                         }
                     }
 

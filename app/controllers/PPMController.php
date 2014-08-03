@@ -61,7 +61,7 @@ class PPMController extends \BaseController
             ->join('bookmaker', 'bookmaker.id', '=', 'bookmaker_id')
             ->join('game_type', 'game_type.id', '=', 'game_type_id')
             ->where('user_id', '=', Auth::user()->id)
-            ->orderBy('current_length')
+            ->orderBy('current_length', 'desc')
             ->get();
         $data = array();
         foreach($games as $game){
