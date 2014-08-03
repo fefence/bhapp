@@ -358,6 +358,7 @@ class Updater
                         }
                         $settings = Settings::where('game_type_id', '=', $i)->where('league_details_id', '=', $serie->league_details_id)->get();
                         foreach ($settings as $sett) {
+                            $pool = Pools::where('user_id', '=', $sett->user_id)->where('league_details_id', '=', $sett->league_details_id)->where('game_type_id', '=', $sett->game_type_id)->first();
                             foreach ($next_matches as $n) {
                                 $newgame = PPM::firstOrNew(['user_id' => $sett->user_id, 'series_id' => $serie->id, 'match_id' => $n->id, 'game_type_id' => $i, 'country' => $serie->team, 'confirmed' => 0]);
                                 $newgame->bet = 0;
