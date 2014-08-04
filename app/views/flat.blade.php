@@ -12,7 +12,7 @@
 @stop
 
 @section('pageHeader')
-	@include('layouts.partials.pageheader', array('calendar' => true, 'big' => '', 'small' => ''))
+	@include('layouts.partials.pageheader', array('calendar' => true, 'big' => $big, 'small' => $small))
 @stop
 
 @section('content')

@@ -22,12 +22,12 @@
 			</div>
 	    </div>
 	    <div class="col-xs-4">
-			<div class="alert alert-success">
+			<div class="alert alert-danger">
 				<p class="text-center">Profit: {{$global->profit}} €</p>
 			</div>
 	    </div>
         <div class="col-xs-4">
-            <div class="alert alert-info">
+            <div class="alert alert-success">
                 <p class="text-center">Account State: {{$global->account}} €</p>
             </div>
         </div>

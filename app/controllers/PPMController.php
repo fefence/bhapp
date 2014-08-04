@@ -112,7 +112,8 @@ class PPMController extends \BaseController
                 $res[$m->id]['conf'] = '-';
             }
         }
-        return View::make('flat')->with(['matches' => $res]);
+        list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, -1);
+        return View::make('flat')->with(['matches' => $res, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small]);
     }
 
 }
