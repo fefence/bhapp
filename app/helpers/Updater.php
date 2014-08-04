@@ -265,31 +265,53 @@ class Updater
 
     public static function getPPMMatches()
     {
-        date_default_timezone_set('Europe/Sofia');
-        $now = date('Y-m-d H:i:s');
-        $start = explode(' ', date("Y-m-d H:i:s", strtotime("$now - 100 minutes")));
 
-        $ppm_leagues = LeagueDetails::where('ppm', '=', 1)->lists('id');
-        return Match::whereIn('league_details_id', $ppm_leagues)
-            ->where(function ($q) use ($start) {
-                $q->where('matchDate', '<', $start[0])
-                    ->orWhere(function ($query) use ($start) {
-                        $query->where('matchDate', '=', $start[0])
-                            ->where('matchTime', '<=', $start[1]);
-                    });
-            })
-            ->where('resultShort', '=', '-')
-            ->where('state', '<>', 'canceled')
-            ->where('state', '<>', 'Awarded')
-            ->orderBy('matchDate')
-            ->orderBy('matchTime')
-            ->get();
+        $ids = Series::where('game_type_id', '>', 4)
+                ->where('game_type_id', '<', 9)
+                ->where('active', '=', 1)
+                ->lists('end_match_id');
+ 		$matches = Match::whereIn('id', $ids)
+//                ->where('resultShort', '=', '-')
+               ->get();
+        $res = array();
+        foreach($matches as $m) {
+            $all = Match::where('league_details_id', '=', $m->league_details_id)
+//                ->where('resultShort', '=', '-')
+                ->where('season', '=', $m->season)
+                ->where('matchDate', '=', $m->matchDate)
+                ->where('matchTime', '=', $m->matchTime)
+                ->get();
+            foreach($all as $match) {
+                array_push($res, $match);
+            }
+        }
+        return $res;
+//        date_default_timezone_set('Europe/Sofia');
+//        $now = date('Y-m-d H:i:s');
+//        $start = explode(' ', date("Y-m-d H:i:s", strtotime("$now - 100 minutes")));
+//
+//        $ppm_leagues = LeagueDetails::where('ppm', '=', 1)->lists('id');
+//        return Match::whereIn('league_details_id', $ppm_leagues)
+//            ->where(function ($q) use ($start) {
+//                $q->where('matchDate', '<', $start[0])
+//                    ->orWhere(function ($query) use ($start) {
+//                        $query->where('matchDate', '=', $start[0])
+//                            ->where('matchTime', '<=', $start[1]);
+//                    });
+//            })
+//            ->where('resultShort', '=', '-')
+//            ->where('state', '<>', 'canceled')
+//            ->where('state', '<>', 'Awarded')
+//            ->orderBy('matchDate')
+//            ->orderBy('matchTime')
+//            ->get();
     }
 
     public static function updatePPM()
     {
         $time = time();
         $matches = self::getPPMMatches();
+//        return $matches;
         foreach ($matches as $match) {
             $match = self::updateDetails($match);
             Parser::parseLeagueStandings($match->league_details_id);
@@ -299,8 +321,14 @@ class Updater
                         ->where('active', '=', 1)
                         ->where('game_type_id', '=', $i)
                         ->first();
+//                    print_r($serie);
+//                    dd($serie);
                     $next_matches = self::getNextPPMMatches($match);
+                    if ($next_matches == null) {
+                        continue;
+                    }
                     $next_match = self::getNextPPMMatch($match);
+//                    return $next_matches;
                     $games = $match->ppm()->where('game_type_id', '=', $i)->get();
                     if (SeriesController::endSeries($match, $i)) {
                         $news = $serie->replicate();
@@ -317,12 +345,11 @@ class Updater
                                     ->where('league_details_id', '=', $match->league_details_id)
                                     ->where('game_type_id', '=', $i)
                                     ->first();
-                                $pool->profit = $pool->profit + $game->income - $game->bsf;
+                                $pool->profit = $pool->profit + $game->income - $game->bsf - $game->bet;
                                 $pool->account = $pool->account + $game->income;
                                 $main = CommonPools::where('user_id', '=', $game->user_id)->first();
-                                $main->profit = +$game->income - $game->bsf;
+                                $main->profit = $main->profit + $game->income - $game->bsf - $game->bet;
                                 $main->account = $main->account + $game->income;
-                                $main->amount = $main->amount = $pool->amount;
                                 $pool->amount = 0;
                                 $pool->save();
                                 $main->save();
@@ -358,6 +385,7 @@ class Updater
                         }
                         $settings = Settings::where('game_type_id', '=', $i)->where('league_details_id', '=', $serie->league_details_id)->get();
                         foreach ($settings as $sett) {
+//                            print_r($sett);
                             $pool = Pools::where('user_id', '=', $sett->user_id)->where('league_details_id', '=', $sett->league_details_id)->where('game_type_id', '=', $sett->game_type_id)->first();
                             foreach ($next_matches as $n) {
                                 $newgame = PPM::firstOrNew(['user_id' => $sett->user_id, 'series_id' => $serie->id, 'match_id' => $n->id, 'game_type_id' => $i, 'country' => $serie->team, 'confirmed' => 0]);
@@ -367,6 +395,7 @@ class Updater
                                 $newgame->income = 0;
                                 $newgame->current_length = $serie->current_length;
                                 $newgame->save();
+//                                print_r($newgame);
                             }
                         }
                     }
@@ -407,8 +436,12 @@ class Updater
     public static function getNextPPMMatches($match)
     {
         $next = self::getNextPPMMatch($match);
+//        return $next;
+        if($next == null) {
+            return null;
+        }
         return Match::where('league_details_id', '=', $match->league_details_id)
-            ->where('resultShort', '=', '-')
+//            ->where('resultShort', '=', '-')
             ->where('season', '=', $match->season)
             ->where('matchDate', '=', $next->matchDate)
             ->where('matchTime', '=', $next->matchTime)
@@ -420,12 +453,20 @@ class Updater
         $current = Groups::where('league_details_id', '=', $match->league_details_id)
             ->where('state', '=', 2)->first();
         $next = Groups::where('league_details_id', '=', $match->league_details_id)
-            ->where('state', '=', 2)->first();
-        Parser::parseMatchesForGroup($current, $next);
+            ->where('state', '=', 3)->first();
+        if ($next != null && $current != null) {
+            Parser::parseMatchesForGroup($current, $next);
+        }
 
         return Match::where('league_details_id', '=', $match->league_details_id)
-            ->where('matchDate', '>=', $match->matchDate)
-            ->where('resultShort', '=', '-')
+            ->where(function ($q) use ($match) {
+                $q->where('matchDate', '>', $match->matchDate)
+                    ->orWhere(function ($query) use ($match) {
+                        $query->where('matchDate', '=', $match->matchDate)
+                            ->where('matchTime', '>', $match->matchTime);
+                    });
+            })
+//            ->where('resultShort', '=', '-')
             ->where('season', '=', $match->season)
             ->orderBy('matchDate')
             ->orderBy('matchTime')
