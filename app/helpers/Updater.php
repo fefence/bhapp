@@ -64,14 +64,14 @@ class Updater
         $current->state = 2;
         $current->save();
         $next = Groups::firstOrCreate(['league_details_id' => $gr->league_details_id, 'state' => 3, 'round' => ($current->round + 1)]);
-        // return $next;
+//         return $current;
         // Parser::parseMatchesForGroup($next);
 
         if ($gr->league_details_id == 112) {
-            Parser::parseLeagueSeriesUSA($current->league_details_id);
+//            Parser::parseLeagueSeriesUSA($current->league_details_id);
             Parser::parseMatchesForUSA($current, $next);
         } else {
-            Parser::parseLeagueSeries($current->league_details_id);
+//            Parser::parseLeagueSeries($current->league_details_id);
             Parser::parseMatchesForGroup($current, $next);
 
         }

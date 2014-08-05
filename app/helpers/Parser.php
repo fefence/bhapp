@@ -226,7 +226,7 @@ class Parser
         $baseUrl = "http://www.betexplorer.com/soccer/";
         $tail = "fixtures/";
 
-        return $current;
+//        return $current;
         $league = LeagueDetails::findOrFail($current->league_details_id);
         $url = $baseUrl . $league->country . "/" . $league->fullName . "/" . $tail;
 

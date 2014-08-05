@@ -1,10 +1,10 @@
 <?php
 Route::get('/boo', function(){
-//    return Updater::getPPMMatches();
+//    return Updater::updatePPM();
 //    $gr = Groups::where('league_details_id', '=', 69)->where('state', '=', 2)->first();
 //    $gr1 = Groups::where('league_details_id', '=', 69)->where('state', '=', 3)->first();
 //    return Parser::parseMatchesForGroup($gr, $gr1);
-    return Updater::updatePPM();
+//    return Updater::updateGroup(106);
 //    return Updater::getNextPPMMatch(Match::find("6wTAnq0P"));
 //    return Parser::parseTeamMatches("http://www.betexplorer.com/soccer/poland/ekstraklasa/teaminfo.php?team_id=lIDaZJTc");
 });
