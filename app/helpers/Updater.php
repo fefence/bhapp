@@ -87,7 +87,7 @@ class Updater
             $g->streak_count = $s->c;
             $g->save();
         }
-        $ids = Settings::where('league_details_id', '=', $current->league_details_id)->lists('user_id');
+        $ids = Settings::where('league_details_id', '=', $current->league_details_id)->where('game_type_id', '<=', 4)->lists('user_id');
         foreach ($ids as $id) {
             Updater::recalculateGroup($current->id, $id, 1);
         }
@@ -314,6 +314,9 @@ class Updater
 //        return $matches;
         foreach ($matches as $match) {
             $match = self::updateDetails($match);
+            if (Updater::isLastGameInGroup($match)) {
+                Updater::updateGroup($match->groups_id);
+            }
             Parser::parseLeagueStandings($match->league_details_id);
             if ($match->resultShort != '-') {
                 for ($i = 5; $i < 9; $i++) {

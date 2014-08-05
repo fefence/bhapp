@@ -226,6 +226,7 @@ class Parser
         $baseUrl = "http://www.betexplorer.com/soccer/";
         $tail = "fixtures/";
 
+        return $current;
         $league = LeagueDetails::findOrFail($current->league_details_id);
         $url = $baseUrl . $league->country . "/" . $league->fullName . "/" . $tail;
 
@@ -447,12 +448,12 @@ class Parser
         return $ids;
     }
 
-    public static function parseTeamMatches($team_id, $league_details_id)
+    public static function parseTeamMatches($url)
     {
-        $baseUrl = "http://www.betexplorer.com/soccer/";
-
-        $league = LeagueDetails::findOrFail($league_details_id);
-        $url = $baseUrl . $league->country . "/" . $league->fullName . "/teaminfo.php?team_id=" . $team_id;
+//        $baseUrl = "http://www.betexplorer.com/soccer/";
+//
+//        $league = LeagueDetails::findOrFail($league_details_id);
+//        $url = $baseUrl . $league->country . "/" . $league->fullName . "/teaminfo.php?team_id=" . $team_id;
         if (Parser::get_http_response_code($url) != "200") {
             return "Wrong fixtures url! --> $url";
         }
@@ -471,7 +472,13 @@ class Parser
         $id = '';
         foreach ($rows as $row) {
             $cols = $row->getElementsByTagName('td');
-            if ($cols->length > 0) {
+//            $i = 0;
+//         foreach($cols as $col) {
+//             echo $i." ".$col->nodeValue." ";
+//             $i++;
+//         }
+//            echo "<br>";
+            if ($cols->length > 8) {
                 $a = $cols->item(7)->getElementsByTagName('a');
                 foreach ($a as $link) {
                     $href = $link->getAttribute("href");
@@ -487,16 +494,21 @@ class Parser
                     $m = Match::firstOrNew(['id' => $id, 'home' => $home, 'away' => $away]);
                     $m->matchDate = $date;
                     $m->resultShort = '-';
-                    $m->league_details_id = $league_details_id;
+//                    $m->league_details_id = $league_details_id;
                     $m->save();
                 }
             }
         }
-        if ($league_details_id == 112) {
-            Parser::parseLeagueSeriesUSA($league_details_id);
-        } else {
-            Parser::parseLeagueSeries($league_details_id);
-        }
+
+        $finder1 = new DomXPath($dom);
+        $classname1 = "bg-white";
+        $nodes1 = $finder1->query("//*[contains(@class, '$classname1')]");
+        print_r($nodes1->item(0)->nodeValue);
+//        if ($league_details_id == 112) {
+//            Parser::parseLeagueSeriesUSA($league_details_id);
+//        } else {
+//            Parser::parseLeagueSeries($league_details_id);
+//        }
         return $id;
     }
 

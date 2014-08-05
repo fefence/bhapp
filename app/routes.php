@@ -4,9 +4,9 @@ Route::get('/boo', function(){
 //    $gr = Groups::where('league_details_id', '=', 69)->where('state', '=', 2)->first();
 //    $gr1 = Groups::where('league_details_id', '=', 69)->where('state', '=', 3)->first();
 //    return Parser::parseMatchesForGroup($gr, $gr1);
-//    return Updater::update();
-//    return Updater::getNextPPMMatch(Match::find("6wTAnq0P"));
     return Updater::updatePPM();
+//    return Updater::getNextPPMMatch(Match::find("6wTAnq0P"));
+//    return Parser::parseTeamMatches("http://www.betexplorer.com/soccer/poland/ekstraklasa/teaminfo.php?team_id=lIDaZJTc");
 });
 
 //free views

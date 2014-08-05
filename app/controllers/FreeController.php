@@ -13,15 +13,18 @@ class FreeController extends \BaseController
             $count[$g->id] = FreeGames::where('user_id', '=', Auth::user()->id)->where('match_id', '=', $g->match_id)->where('confirmed', '=', 1)->where('game_type_id', '=', $g->game_type_id)->count();
             array_push($league_ids, $g->league_details_id);
         }
-        $datarr = array();
-        $datarr[0] = $games;
+//        $datarr = array();
+//        $datarr = $games;
         if (count($league_ids) > 0) {
             $standings = Standings::whereIn('league_details_id', $league_ids)->lists('place', 'team');
         } else {
             $standings = array();
         }
 //        $datarr[1] = array();
-        return View::make('matches')->with(['datarr' => $datarr, 'standings' => $standings, 'ppm' => true, 'league_details_id' => -1, 'fromdate' => $fromdate, 'todate' => $todate, 'count' => $count, 'big' => $big, 'small' => $small]);
+
+//        return $datarr;
+        return View::make('freeview')->with(['data' => $games, 'standings' => $standings, 'league_details_id' => -1, 'fromdate' => $fromdate, 'todate' => $todate, 'count' => $count, 'big' => $big, 'small' => $small]);
+
     }
 
     public static function manage()
@@ -31,11 +34,14 @@ class FreeController extends \BaseController
 
     public static function save()
     {
-        $team_id = Input::get("team");
-        $league_id = Input::get("league_id");
-        $match_id = Parser::parseTeamMatches($team_id, $league_id);
-        $team = FreeplayTeams::firstOrNew(['user_id' => Auth::user()->id, 'team_id' => $team_id, 'league_details_id' => $league_id]);
-        $team->match_id = null;
+        $url = Input::get("url");
+        $match_id = Parser::parseTeamMatches($url);
+        $urlarr = explode('/', $url);
+        $team_id = explode('=', $urlarr[5])[1];
+        $league = LeagueDetails::where('country', '=', $urlarr[3])->where('fullName', '=', $urlarr[4])->first();
+        Match::find($match_id)->league_details_id = $league->id;
+        $team = FreeplayTeams::firstOrNew(['user_id' => Auth::user()->id, 'team_id' => $team_id, 'league_details_id' => $league->id]);
+        $team->match_id = $match_id;
         $team->save();
         $game = FreeGames::firstOrNew(['user_id' => Auth::user()->id, 'team' => $team_id, 'match_id' => $match_id]);
         $game->bsf = 0;
