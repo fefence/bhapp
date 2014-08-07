@@ -88,9 +88,9 @@ class Match extends Eloquent {
 	    return substr($headers[0], 9, 3);
 	}
 
-    public static function updateMatchDetailsLivescore($match_id) {
-        $match = Match::find($match_id);
-        $url = "http://www.livescore.in/match/".$match_id."/#match-summary";
+    public static function updateMatchDetailsLivescore($match) {
+//        $match = Match::find($match_id);
+        $url = "http://www.livescore.in/match/".$match->id."/#match-summary";
         if(Match::get_http_response_code($url) != "200"){
             return "Wrong match details url! --> $url";
 
@@ -104,9 +104,9 @@ class Match extends Eloquent {
 
         $table = $dom->getElementById("flashscore");
         $rows = $table->getElementsByTagName("tr");
-        $finished = trim($rows->item(3)->getElementsByTagName('td')->item(0)->nodeValue);
+        $finished = trim($rows->item(2)->getElementsByTagName('td')->item(0)->nodeValue);
         if($finished == "Finished") {
-            $res = explode('-', $rows->item(0)->getElementsByTagName('td')->item(2));
+            $res = explode('-', $rows->item(0)->getElementsByTagName('td')->item(2)->nodeValue);
             $match->homeGoals = $res[0];
             $match->awayGoals = $res[1];
             if ($res[0] == $res[1]) {
@@ -120,6 +120,7 @@ class Match extends Eloquent {
                 $match->resultShort = $resultShort;
             }
         }
+        return $match;
 //        return Parser::parseLivescoreForMatch($dom);
     }
 

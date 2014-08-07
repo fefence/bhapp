@@ -313,7 +313,7 @@ class Updater
         $matches = self::getPPMMatches();
 //        return $matches;
         foreach ($matches as $match) {
-            $match = self::updateMatchDetailsLivescore($match);
+            $match = Match::updateMatchDetailsLivescore($match);
             if (Updater::isLastGameInGroup($match)) {
                 Updater::updateGroup($match->groups_id);
             }
