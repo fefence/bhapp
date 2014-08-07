@@ -7,6 +7,7 @@ Route::get('/boo', function(){
 //    return Updater::updateGroup(106);
 //    return Updater::getNextPPMMatch(Match::find("6wTAnq0P"));
 //    return Parser::parseTeamMatches("http://www.betexplorer.com/soccer/poland/ekstraklasa/teaminfo.php?team_id=lIDaZJTc");
+    return Match::updateMatchDetailsLivescore("QwGrWO6q");
 });
 
 //free views

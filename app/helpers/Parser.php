@@ -503,13 +503,14 @@ class Parser
         $finder1 = new DomXPath($dom);
         $classname1 = "bg-white";
         $nodes1 = $finder1->query("//*[contains(@class, '$classname1')]");
-        print_r($nodes1->item(0)->nodeValue);
+        $team_arr = explode(": ", $nodes1->item(0)->nodeValue);
+        return array($team_arr[1], $id);
 //        if ($league_details_id == 112) {
 //            Parser::parseLeagueSeriesUSA($league_details_id);
 //        } else {
 //            Parser::parseLeagueSeries($league_details_id);
 //        }
-        return $id;
+//        return $id;
     }
 
     private static function get_http_response_code($url)

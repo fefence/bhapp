@@ -88,6 +88,41 @@ class Match extends Eloquent {
 	    return substr($headers[0], 9, 3);
 	}
 
+    public static function updateMatchDetailsLivescore($match_id) {
+        $match = Match::find($match_id);
+        $url = "http://www.livescore.in/match/".$match_id."/#match-summary";
+        if(Match::get_http_response_code($url) != "200"){
+            return "Wrong match details url! --> $url";
+
+        }
+        $data = file_get_contents($url);
+
+        $dom = new domDocument;
+
+        @$dom->loadHTML($data);
+        $dom->preserveWhiteSpace = false;
+
+        $table = $dom->getElementById("flashscore");
+        $rows = $table->getElementsByTagName("tr");
+        $finished = trim($rows->item(3)->getElementsByTagName('td')->item(0)->nodeValue);
+        if($finished == "Finished") {
+            $res = explode('-', $rows->item(0)->getElementsByTagName('td')->item(2));
+            $match->homeGoals = $res[0];
+            $match->awayGoals = $res[1];
+            if ($res[0] == $res[1]) {
+                if ($res[0] > $res[1]) {
+                    $resultShort = 'H';
+                } else if ($res[0] < $res[1]) {
+                    $resultShort = 'A';
+                } else {
+                    $resultShort = 'D';
+                }
+                $match->resultShort = $resultShort;
+            }
+        }
+//        return Parser::parseLivescoreForMatch($dom);
+    }
+
 	public static function updateMatchDetails($match) {
 		$baseUrl = "http://www.betexplorer.com/soccer/poland/ekstraklasa/";
 		$url = $baseUrl."matchdetails.php?matchid=".$match->id;
@@ -113,8 +148,6 @@ class Match extends Eloquent {
 			return $url;
 		}
 		// echo "$matchId ";
-
-		
 
 		$scoreTable = $tables->item(1);
 		$scoreRows = $scoreTable->getElementsByTagName('tr');

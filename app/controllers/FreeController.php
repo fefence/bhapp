@@ -35,15 +35,15 @@ class FreeController extends \BaseController
     public static function save()
     {
         $url = Input::get("url");
-        $match_id = Parser::parseTeamMatches($url);
+        $parsed = Parser::parseTeamMatches($url);
         $urlarr = explode('/', $url);
-        $team_id = explode('=', $urlarr[5])[1];
-        $league = LeagueDetails::where('country', '=', $urlarr[3])->where('fullName', '=', $urlarr[4])->first();
-        Match::find($match_id)->league_details_id = $league->id;
-        $team = FreeplayTeams::firstOrNew(['user_id' => Auth::user()->id, 'team_id' => $team_id, 'league_details_id' => $league->id]);
-        $team->match_id = $match_id;
+        $team_id = explode('=', $urlarr[count($urlarr) - 1])[1];
+        $league = LeagueDetails::where('country', '=', $urlarr[4])->where('fullName', '=', $urlarr[5])->first();
+        Match::find($parsed[1])->league_details_id = $league->id;
+        $team = FreeplayTeams::firstOrNew(['user_id' => Auth::user()->id, 'team_id' => $team_id, 'league_details_id' => $league->id, 'team' => $parsed[0]]);
+        $team->match_id = $parsed[1];
         $team->save();
-        $game = FreeGames::firstOrNew(['user_id' => Auth::user()->id, 'team' => $team_id, 'match_id' => $match_id]);
+        $game = FreeGames::firstOrNew(['user_id' => Auth::user()->id, 'team' => $team_id, 'match_id' => $parsed[1]]);
         $game->bsf = 0;
         $game->game_type_id = 1;
         $game->bookmaker_id = 1;
