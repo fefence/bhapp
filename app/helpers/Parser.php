@@ -119,6 +119,25 @@ class Parser
 
     public static function parseLeagueStandings($league_details_id)
     {
+        $league = LeagueDetails::find($league_details_id);
+//        if ($league->pps == 0) {
+//            return Parser::parseLeagueStandings($league_details_id);
+//        }
+        $baseUrl = "http://www.betexplorer.com/soccer/";
+        $url = $baseUrl . $league->country . "/" . $league->fullName . "/standings/?table=table";
+        return $url;
+        if (Parser::get_http_response_code($url) != "200") {
+            return "Wrong league stats url! --> $url";
+        }
+        $data = file_get_contents($url);
+
+        $dom = new domDocument;
+
+        @$dom->loadHTML($data);
+        $dom->preserveWhiteSpace = false;
+
+        $table = $dom->getElementById("table-type-1");
+        return $table;
 //        $baseUrl = "http://www.betexplorer.com/soccer/";
 //        $league = LeagueDetails::find($league_details_id);
 //        $url = $baseUrl . $league->country . "/" . $league->fullName . "/";
@@ -503,14 +522,14 @@ class Parser
         $finder1 = new DomXPath($dom);
         $classname1 = "bg-white";
         $nodes1 = $finder1->query("//*[contains(@class, '$classname1')]");
-        $team_arr = explode(": ", $nodes1->item(0)->nodeValue);
-        return array($team_arr[1], $id);
+        $team_arr = explode(" : ",$nodes1->item(0)->nodeValue);
+//        return list($team_arr);
 //        if ($league_details_id == 112) {
 //            Parser::parseLeagueSeriesUSA($league_details_id);
 //        } else {
 //            Parser::parseLeagueSeries($league_details_id);
 //        }
-//        return $id;
+        return $id;
     }
 
     private static function get_http_response_code($url)
