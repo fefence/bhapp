@@ -46,6 +46,7 @@ class Parser
 
     public static function parseLeagueSeries($league_details_id)
     {
+        return Parser::parseLeagueStandings($league_details_id);
 //        $league = LeagueDetails::find($league_details_id);
 //        if ($league->pps == 0) {
 //            return Parser::parseLeagueStandings($league_details_id);
@@ -125,7 +126,7 @@ class Parser
 //        }
         $baseUrl = "http://www.betexplorer.com/soccer/";
         $url = $baseUrl . $league->country . "/" . $league->fullName . "/standings/?table=table";
-        return $url;
+//        return $url;
         if (Parser::get_http_response_code($url) != "200") {
             return "Wrong league stats url! --> $url";
         }
@@ -137,7 +138,20 @@ class Parser
         $dom->preserveWhiteSpace = false;
 
         $table = $dom->getElementById("table-type-1");
-        return $table;
+        $rows = $table->getElementsByTagName("tr");
+        foreach ($rows as $row) {
+            $cols = $row->getElementsByTagName("td");
+            if ($cols->length > 1) {
+                $place = explode(".", $cols->item(0)->nodeValue)[0];
+                $team = $cols->item(1)->nodeValue;
+                $stand = Standings::firstOrNew(['league_details_id' => $league_details_id, 'team' => $team]);
+                $stand->place = $place;
+                $stand->save();
+                echo "$place $team <br>";
+            }
+//            echo "<br>";
+        }
+//        return $table;
 //        $baseUrl = "http://www.betexplorer.com/soccer/";
 //        $league = LeagueDetails::find($league_details_id);
 //        $url = $baseUrl . $league->country . "/" . $league->fullName . "/";
@@ -302,7 +316,7 @@ class Parser
                 $match = Match::firstOrNew(array('id' => $id));
                 $match->home = $home;
                 $match->away = $away;
-                $timestamp = strtotime($time) + 60*60;
+                $timestamp = strtotime($time) + 60 * 60;
                 $match->matchTime = date('H:i:s', $timestamp);
                 $match->matchDate = $date;
                 $match->groups_id = $group->id;
@@ -418,7 +432,7 @@ class Parser
 
                 $match->home = $home;
                 $match->away = $away;
-                $timestamp = strtotime($time) + 60*60;
+                $timestamp = strtotime($time) + 60 * 60;
                 $match->matchTime = date('H:i:s', $timestamp);
                 $match->matchDate = $date;
                 $match->resultShort = '-';
@@ -522,7 +536,7 @@ class Parser
         $finder1 = new DomXPath($dom);
         $classname1 = "bg-white";
         $nodes1 = $finder1->query("//*[contains(@class, '$classname1')]");
-        $team_arr = explode(" : ",$nodes1->item(0)->nodeValue);
+        $team_arr = explode(" : ", $nodes1->item(0)->nodeValue);
 //        return list($team_arr);
 //        if ($league_details_id == 112) {
 //            Parser::parseLeagueSeriesUSA($league_details_id);
@@ -538,17 +552,18 @@ class Parser
         return substr($headers[0], 9, 3);
     }
 
-    public static function parseLivescoreForMatch($dom) {
+    public static function parseLivescoreForMatch($dom)
+    {
         $rows = $dom->getElementById('parts')->getElementsByTagName('tr');
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $cols = $row->getElementsByTagName('td');
-            foreach($cols as $col) {
+            foreach ($cols as $col) {
                 $spans = $col->getElementsByTagName('span');
-                foreach($spans as $span) {
+                foreach ($spans as $span) {
                     $attr = $span->getAttribute('class');
-                    echo $attr." ";
+                    echo $attr . " ";
                 }
-                echo $col->nodeValue." ";
+                echo $col->nodeValue . " ";
             }
             echo "<br>";
         }

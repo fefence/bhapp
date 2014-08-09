@@ -5,7 +5,8 @@ Route::get('/boo', function(){
 //    $gr1 = Groups::where('league_details_id', '=', 69)->where('state', '=', 3)->first();
 //    return Parser::parseMatchesForGroup($gr, $gr1);
 //    return Updater::updateGroup(106);
-    return Parser::parseLeagueStandings(6);
+    Updater::updateGroup(145);
+//    return Parser::parseLeagueStandings(6);
 //    return Updater::getNextPPMMatch(Match::find("Cpe0nEYB"));
 //    return Parser::parseTeamMatches("http://www.betexplorer.com/soccer/poland/ekstraklasa/teaminfo.php?team_id=lIDaZJTc");
 //    return Match::updateMatchDetailsLivescore("QwGrWO6q");

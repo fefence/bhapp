@@ -208,7 +208,7 @@ class SettingsController extends BaseController
         foreach ($ids as $id) {
             if (!in_array($id, $notIn)) {
                 $round = Input::get('v-' . $id);
-                 return SettingsController::createOperationalGroup($id, $round);
+                SettingsController::createOperationalGroup($id, $round);
             }
         }
         return Redirect::back()->with("message", "League added");
