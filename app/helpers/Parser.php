@@ -46,7 +46,7 @@ class Parser
 
     public static function parseLeagueSeries($league_details_id)
     {
-        return Parser::parseLeagueStandings($league_details_id);
+//        return Parser::parseLeagueStandings($league_details_id);
 //        $league = LeagueDetails::find($league_details_id);
 //        if ($league->pps == 0) {
 //            return Parser::parseLeagueStandings($league_details_id);
@@ -120,37 +120,37 @@ class Parser
 
     public static function parseLeagueStandings($league_details_id)
     {
-        $league = LeagueDetails::find($league_details_id);
-//        if ($league->pps == 0) {
-//            return Parser::parseLeagueStandings($league_details_id);
+//        $league = LeagueDetails::find($league_details_id);
+////        if ($league->pps == 0) {
+////            return Parser::parseLeagueStandings($league_details_id);
+////        }
+//        $baseUrl = "http://www.betexplorer.com/soccer/";
+//        $url = $baseUrl . $league->country . "/" . $league->fullName . "/standings/?table=table";
+////        return $url;
+//        if (Parser::get_http_response_code($url) != "200") {
+//            return "Wrong league stats url! --> $url";
 //        }
-        $baseUrl = "http://www.betexplorer.com/soccer/";
-        $url = $baseUrl . $league->country . "/" . $league->fullName . "/standings/?table=table";
-//        return $url;
-        if (Parser::get_http_response_code($url) != "200") {
-            return "Wrong league stats url! --> $url";
-        }
-        $data = file_get_contents($url);
-
-        $dom = new domDocument;
-
-        @$dom->loadHTML($data);
-        $dom->preserveWhiteSpace = false;
-
-        $table = $dom->getElementById("table-type-1");
-        $rows = $table->getElementsByTagName("tr");
-        foreach ($rows as $row) {
-            $cols = $row->getElementsByTagName("td");
-            if ($cols->length > 1) {
-                $place = explode(".", $cols->item(0)->nodeValue)[0];
-                $team = $cols->item(1)->nodeValue;
-                $stand = Standings::firstOrNew(['league_details_id' => $league_details_id, 'team' => $team]);
-                $stand->place = $place;
-                $stand->save();
-                echo "$place $team <br>";
-            }
-//            echo "<br>";
-        }
+//        $data = file_get_contents($url);
+//
+//        $dom = new domDocument;
+//
+//        @$dom->loadHTML($data);
+//        $dom->preserveWhiteSpace = false;
+//
+//        $table = $dom->getElementById("table-type-1");
+//        $rows = $table->getElementsByTagName("tr");
+//        foreach ($rows as $row) {
+//            $cols = $row->getElementsByTagName("td");
+//            if ($cols->length > 1) {
+//                $place = explode(".", $cols->item(0)->nodeValue)[0];
+//                $team = $cols->item(1)->nodeValue;
+//                $stand = Standings::firstOrNew(['league_details_id' => $league_details_id, 'team' => $team]);
+//                $stand->place = $place;
+//                $stand->save();
+//                echo "$place $team <br>";
+//            }
+////            echo "<br>";
+//        }
 //        return $table;
 //        $baseUrl = "http://www.betexplorer.com/soccer/";
 //        $league = LeagueDetails::find($league_details_id);
