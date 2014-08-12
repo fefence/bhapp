@@ -42,7 +42,7 @@ Route::get('/ppmseries/{id}', "PPMController@displaySeries");
 Route::get('/confirmallppm/{country}/{from}/{to}', "GamesController@confirmAllPPM");
 
 //livescore
-Route::get('/livescore', "LivescoreController@livescore");
+Route::get('/livescore/{from?}/{to?}', "LivescoreController@livescore");
 Route::get('/livescorematch/{match_id}', "LivescoreController@matchScore");
 
 //Groups views

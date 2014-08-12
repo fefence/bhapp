@@ -2,24 +2,27 @@
 
 class LivescoreController extends \BaseController
 {
-    public function livescore()
+    public function livescore($fromdate = '', $todate = '')
     {
-//        list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
+        list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
         //TODO parse from livescore
         $today = date('Y-m-d', time());
-        $now = date('H:i:s', time());
         $ids = PPM::where('user_id', '=', Auth::user()->id)->lists('match_id');
 //        return $ids;
         $pps = Games::where('user_id', '=', Auth::user()->id)->lists('match_id');
-        $matches = Match::where('matchDate', '=', $today)
+        $matches = Match::where('matchDate', '<=', $todate)
+            ->join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
+            ->where('matchDate', '>=', $fromdate)
             ->where(function($query) use ($ids, $pps){
-                $query->whereIn('id', $ids)
-                    ->orWhereIn('id', $pps);
+                $query->whereIn('match.id', $ids)
+                    ->orWhereIn('match.id', $pps);
             })
+            ->orderBy('matchDate')
             ->orderBy('matchTime')
+            ->select(DB::raw("`match`.*, `leagueDetails`.country, `leagueDetails`.displayName"))
             ->get();
 //        return $matches;
-        return View::make('livescore')->with(['matches' => $matches]);
+        return View::make('livescore')->with(['matches' => $matches, 'fromdate' => $fromdate, 'todate' => $todate]);
     }
 
     public static function matchScore($match_id) {

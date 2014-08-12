@@ -18,29 +18,31 @@
 <table id="matches" style="margin-bottom: 30px;">
     <thead>
     <tr>
+        <th><input type="text" name="search_engine" class="search_init" placeholder="league"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="date"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="time"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="home"></th>
-        <th><input type="text" name="search_engine" class="search_init" placeholder="away"></th>
         <th><input type="hidden"></th>
+        <th><input type="text" name="search_engine" class="search_init" placeholder="away"></th>
         <th><input type="hidden"></th>
     </tr>
     <tr>
+        <th>league</th>
         <th style="width:60px;">date</th>
         <th style="width:50px;">time</th>
-        <th>home</th>
-        <th>away</th>
+        <th style="width:120px;">home</th>
         <th>res</th>
+        <th style="width:120px;">away</th>
         <th>res</th>
     </tr>
     </thead>
     <tbody>
     @foreach($matches as $d)
     <tr class="{{$d->match_id}}">
+        <td><img src='/images/{{strtoupper($d->country)}}.png'>&nbsp;{{$d->displayName}}</td>
         <td>{{date('d M', strtotime($d->matchDate))}}</td>
         <td>{{substr($d->matchTime, 0, strlen($d->matchTime)-3)}}</td>
         <td><a href="/livescorematch/{{$d->id}}">{{$d->home}}</a></td>
-        <td><a href="/livescorematch/{{$d->id}}">{{$d->away}}</a></td>
         <td>
             @if ($d->resultShort != '-')
             {{$d->homeGoals}}:{{$d->awayGoals}}
@@ -48,6 +50,7 @@
             -
             @endif
         </td>
+        <td><a href="/livescorematch/{{$d->id}}">{{$d->away}}</a></td>
         <td>{{$d->resultShort}}</td>
     </tr>
     @endforeach
@@ -80,8 +83,9 @@
             "sDom": '<"top"i>t<"bottom"><"clear">',
             "sPaginationType": "full_numbers",
             "aoColumnDefs": [
-                { 'bSortable': false, 'aTargets': [ 0,1 ] }
-            ]
+                { 'bSortable': false, 'aTargets': [ 0 ] }
+            ],
+            "order": [[ 1, "asc" ]]
         });
     });
 </script>
