@@ -32,6 +32,8 @@ class Updater
                     $streaksHome->streak = $streaksHome->streak + 1;
                     $streaksAway->streak = $streaksAway->streak + 1;
                 }
+                $streaksAway->save();
+                $streaksHome->save();
                 foreach ($games as $game) {
                     Updater::updatePool($game, $match->resultShort);
 //                    if ($game->special == 1) {

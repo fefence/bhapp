@@ -30,7 +30,7 @@ $i = 0;
         <th><input type="hidden"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="r"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="game"></th>
-        <th><input type="text" name="search_engine" class="search_init" placeholder="bookie"></th>
+<!--        <th><input type="text" name="search_engine" class="search_init" placeholder="bookie"></th>-->
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
@@ -48,7 +48,7 @@ $i = 0;
         <th>res</th>
         <th style="width:10px;">r</th>
         <th style="width:60px;">game</th>
-        <th style="width:40px;">bookie</th>
+<!--        <th style="width:40px;">bookie</th>-->
         <th style="width:40px;">bsf</th>
         <th style="width:40px;">bet</th>
         <th style="width:40px;">odds</th>
@@ -90,13 +90,12 @@ $i = 0;
         </td>
         <td>{{$d->resultShort}}</td>
         <td class='editabledd warning'>{{$d->type}}</td>
-        <td class='editabledd warning'>{{$d->bookmakerName}}</td>
         <td class='editable warning' id="{{$d->game_type_id}}">{{$d->bsf}}</td>
         <td class='editable warning' id="{{$d->game_type_id}}">{{$d->bet}}</td>
         <td class='editable warning' id="{{$d->game_type_id}}">{{$d->odds}}</td>
         <td>{{$d->income}}</td>
         <td>{{round(($d->income - $d->bsf - $d->bet), 2, PHP_ROUND_HALF_UP)}}</td>
-        <td><a href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}">+&nbsp<span style='display: none;'>{{$d->match_id}}</span></a>({{ (array_key_exists($d->match_id,
+        <td><a href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}" style="font-size: 130%;">+&nbsp<span style='display: none;'>{{$d->match_id}}</span></a>({{ (array_key_exists($d->match_id,
             $count))?$count[$d->match_id]:$count[$d->id] }})
         </td>
     </tr>
@@ -137,8 +136,7 @@ $i = 0;
         <td>-</td>
         <td>-</td>
         <td>-</td>
-        <td>-</td>
-        <td><a href="/addgame/{{$dd->groups_id}}/{{$dd->standings_id}}/{{$dd->id}}">+</a> <span style='display: none;'>{{$dd->id}}</span>
+        <td><a href="/addgame/{{$dd->groups_id}}/{{$dd->standings_id}}/{{$dd->id}}" style="font-size: 130%;">+</a> <span style='display: none;'>{{$dd->id}}</span>
         </td>
     </tr>
     @endforeach
@@ -284,12 +282,12 @@ $(document).ready(function () {
             var aPos = oTable.fnGetPosition(this);
 //                alert(sValue);
             var arr = sValue.split("#");
-            oTable.fnUpdate(arr[0], aPos[0], 10);
-            oTable.fnUpdate(arr[1], aPos[0], 11);
-            oTable.fnUpdate(arr[2], aPos[0], 12);
-            oTable.fnUpdate(arr[3], aPos[0], 13);
+            oTable.fnUpdate(arr[0], aPos[0], 9);
+            oTable.fnUpdate(arr[1], aPos[0], 10);
+            oTable.fnUpdate(arr[2], aPos[0], 11);
+            oTable.fnUpdate(arr[3], aPos[0], 12);
             var a = arr[3] - arr[0] - arr[1];
-            oTable.fnUpdate(a.toFixed(2), aPos[0], 14);
+            oTable.fnUpdate(a.toFixed(2), aPos[0], 13);
 
             if (arr[4] != "") {
                 if (parseFloat(arr[4]) != parseFloat($("#pool").text())) {

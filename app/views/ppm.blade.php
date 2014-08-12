@@ -81,54 +81,11 @@ $i = 0;
         <td class='editable warning' id="{{$d->game_type_id}}">{{$d->odds}}</td>
         <td>{{$d->income}}</td>
         <td>{{round(($d->income - $d->bsf - $d->bet), 2, PHP_ROUND_HALF_UP)}}</td>
-        <td><a href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}">+&nbsp<span
+        <td><a href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}" style="font-size: 130%;">+&nbsp<span
                     style='display: none;'>{{$d->match_id}}</span></a>({{ (array_key_exists($d->match_id,
             $count))?$count[$d->match_id]:$count[$d->id] }})
         </td>
     </tr>
-    @else
-    @foreach($d as $dd)
-    <tr id="no">
-        <td class="center"><img class="clickable" src="/images/plus-small.png"></td>
-        <td></td>
-        <td>{{date('d M', strtotime($dd->matchDate))}}</td>
-        <td>{{substr($dd->matchTime, 0, strlen($dd->matchTime)-3)}}</td>
-        <td>
-            @if ($dd->team == $dd->home)
-            <strong>{{$dd->home}}</strong>
-            @else
-            {{$dd->home}}
-            @endif
-            ({{$standings[$dd->home]}})
-        </td>
-        <td>
-            @if ($dd->team == $dd->away)
-            <strong>{{$dd->away}}</strong>
-            @else
-            {{$dd->away}}
-            @endif
-            ({{$standings[$dd->away]}})
-        </td>
-        <td>{{$dd->streak}}</td>
-        <td>
-            @if ($dd->resultShort != '-')
-            {{$dd->homeGoals}}:{{$dd->awayGoals}}
-            @else
-            -
-            @endif
-        </td>
-        <td>{{$dd->resultShort}}</td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
-        <td><a href="/addgame/{{$dd->groups_id}}/{{$dd->standings_id}}/{{$dd->id}}">+</a> <span style='display: none;'>{{$dd->id}}</span>
-        </td>
-    </tr>
-    @endforeach
     @endif
     @endforeach
 
