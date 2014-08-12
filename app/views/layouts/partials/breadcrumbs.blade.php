@@ -22,8 +22,9 @@
         <a href="/confirmall/{{$group}}{{$tail}}">confirm all</a> |
         <a href="/groupodds/{{$group}}">refresh odds</a> |
 		@endif
-		@if(isset($ppm) && $ppm == true && isset($fromdate) && isset($todate))
-		<a href="/ppm/{{$fromdate}}/{{$todate}}/odds">refresh odds</a> |
+		@if(isset($ppm) && $ppm == true && isset($fromdate) && isset($todate) && isset($country))
+        <a href="/confirmallppm/{{$country}}/{{$fromdate}}/{{$todate}}">confirm all</a> |
+        <a href="/ppm/{{$fromdate}}/{{$todate}}/odds">refresh odds</a> |
 		@endif
 		@if(isset($save) && $save)
 		<a id="save" href="#" class="text-danger">save</a> |

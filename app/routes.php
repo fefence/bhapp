@@ -39,6 +39,7 @@ Route::get('/ppm/{from?}/{to?}', "PPMController@displayCountries");
 Route::get('/ppmflat/{from?}/{to?}', "PPMController@displayFlatView");
 Route::get('/ppm/{from?}/{to?}/odds', "PPMController@getOdds");
 Route::get('/ppmseries/{id}', "PPMController@displaySeries");
+Route::get('/confirmallppm/{country}/{from}/{to}', "GamesController@confirmAllPPM");
 
 //livescore
 Route::get('/livescore', "LivescoreController@livescore");

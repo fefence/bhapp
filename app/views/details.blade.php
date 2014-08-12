@@ -27,7 +27,7 @@
 				@foreach($away as $h)
 				<tr>
 					<?php
-	                    $d = array('team' => $team, 'match' => $h);
+	                    $d = array('team' => $awayteam, 'match' => $h);
 	                  ?>
 					<td>@include('layouts.partials.square', array('data' => $d)) {{$h->home}} - {{$h->away}} <a href="#">{{$h->homeGoals}}:{{$h->awayGoals}}</a> {{$h->matchDate}}</td>
 				</tr>

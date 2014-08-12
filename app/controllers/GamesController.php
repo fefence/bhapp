@@ -56,6 +56,27 @@ class GamesController extends \BaseController
         return View::make('matches')->with(['tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "group/$league_details_id", 'big' => $big, 'small' => $small, 'disable' => $disable]);
     }
 
+    public static function confirmAllPPM($country, $fromdate, $todate) {
+        $games = PPM::where('user_id', '=', Auth::user()->id)
+            ->join('match', 'match.id', '=', 'ppm.match_id')
+            ->where('confirmed', '=', 0)
+            ->where('ppm.country', '=', $country)
+            ->where('matchDate', '>=', $fromdate)
+            ->where('matchDate', '<=', $todate)
+            ->where('resultShort', '=', '-')
+            ->where('bet', '<>', '0')
+            ->orderBy('matchDate')
+            ->orderBy('matchTime')
+            ->orderBy('game_type_id')
+            ->select(DB::raw("`ppm`.*"))
+            ->get();
+        foreach($games as $game){
+            Games::confirmGame($game->id, $game->game_type_id);
+        }
+        return Redirect::back()->with('message', 'Bet confirmed');
+//        return $games;
+    }
+
     public function confirmGame($game_id, $game_type_id)
     {
         Games::confirmGame($game_id, $game_type_id);

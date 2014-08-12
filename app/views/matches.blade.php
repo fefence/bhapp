@@ -184,7 +184,7 @@ function fnFormatDetails(oTable, nTr) {
         team = 'ppm';
     }
     var re = new RegExp('display: none;">(.*?)</span>');
-    var m = re.exec(aData[15]);
+    var m = re.exec(aData[14]);
     var id = m[1];
 //		alert(id);
     // var d = aData[1].replace(/\//g, '-');
