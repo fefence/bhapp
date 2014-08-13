@@ -26,6 +26,7 @@ class LivescoreController extends \BaseController
     }
 
     public static function matchScore($match_id) {
+
         $url = "http://d.livescore.in/x/feed/d_su_".$match_id."_en_4";
         $curl = curl_init ( $url );
 

@@ -36,6 +36,7 @@ class FreeController extends \BaseController
     {
         $url = Input::get("url");
         $parsed = Parser::parseTeamMatches($url);
+//        return $parsed;
         $urlarr = explode('/', $url);
         $team_id = explode('=', $urlarr[count($urlarr) - 1])[1];
         $league = LeagueDetails::where('country', '=', $urlarr[4])->where('fullName', '=', $urlarr[5])->first();
@@ -90,5 +91,48 @@ class FreeController extends \BaseController
         print_r($html);
     }
 
+    public static function saveTable() {
+        $game_id = Input::get('row_id');
+        $game_type_id = Input::get('id');
+        $value = Input::get('value');
+        $game = FreeGames::find($game_id);
+        $col = Input::get('column');
+        $bsf = "";
+//        return $col;
+        if ($col == 9 || $col == '9') {
+//            return $value;
+            $bsf = $game->bsf;
+            $game->bsf = $value;
+            $game->save();
+            $pool = Pools::firstOrNew('user_id', '=', $game->user_id)->where('league_details_id', '=', 6666);
+            $pool->amount = $pool->amount - $bsf + $value;
+            $pool->save();
+//            $bsf = round($pool->current, 2);
+
+            $aLog = new ActionLog;
+            $aLog->type = "free";
+            $aLog->action = "change bsf";
+            $aLog->amount = $value;
+            $aLog->element_id = $game->id;
+            $aLog->save();
+//            $bsf = $pool->current();
+        }
+        if ($col == 10 || $col == '10') {
+            $game->bet = $value;
+            $game->income = $game->odds * $value;
+            $game->save();
+
+        }
+        if ($col == 11 || $col == '11') {
+            $game->odds = $value;
+            $game->income = $value * $game->bet;
+            $game->save();
+
+        }
+        $game = FreeGames::find($game_id);
+        return $game->bsf . "#" . $game->bet . "#" . $game->odds . "#" . $game->income . "#" . $bsf;
+
+//        return FreeGames::find($game_id);
+    }
 
 }

@@ -12,7 +12,7 @@ $elements = array('active' => $active, 'list' => $list);
 @stop
 
 @section('pageHeader')
-@include('layouts.partials.pageheader', array('calendar' => false, 'big' => $big, 'small' => $small))
+@include('layouts.partials.pageheader', array('calendar' => true, 'big' => $big, 'small' => $small))
 @stop
 @section('content')
 <table id="matches" style="margin-bottom: 30px;">
@@ -27,7 +27,6 @@ $elements = array('active' => $active, 'list' => $list);
         <th><input type="hidden"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="r"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="game"></th>
-        <th><input type="text" name="search_engine" class="search_init" placeholder="bookie"></th>
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
@@ -45,7 +44,6 @@ $elements = array('active' => $active, 'list' => $list);
         <th>res</th>
         <th style="width:10px;">r</th>
         <th style="width:60px;">game</th>
-        <th style="width:40px;">bookie</th>
         <th style="width:40px;">bsf</th>
         <th style="width:40px;">bet</th>
         <th style="width:40px;">odds</th>
@@ -87,7 +85,6 @@ $elements = array('active' => $active, 'list' => $list);
         </td>
         <td>{{$d->resultShort}}</td>
         <td class='editabledd warning'>{{$d->type}}</td>
-        <td class='editabledd warning'>{{$d->bookmakerName}}</td>
         <td class='editable warning' id="{{$d->game_type_id}}">{{$d->bsf}}</td>
         <td class='editable warning' id="{{$d->game_type_id}}">{{$d->bet}}</td>
         <td class='editable warning' id="{{$d->game_type_id}}">{{$d->odds}}</td>
@@ -161,7 +158,7 @@ function fnFormatDetails(oTable, nTr) {
         team = 'ppm';
     }
     var re = new RegExp('display: none;">(.*?)</span>');
-    var m = re.exec(aData[15]);
+    var m = re.exec(aData[14]);
     var id = m[1];
 //		alert(id);
     // var d = aData[1].replace(/\//g, '-');
@@ -248,17 +245,17 @@ $(document).ready(function () {
     });
 
     /* Apply the jEditable handlers to the table */
-    oTable.$('td.editable').editable('/save', {
+    oTable.$('td.editable').editable('/savefree', {
         "callback": function (sValue, y) {
             var aPos = oTable.fnGetPosition(this);
-//                alert(sValue);
+                alert(sValue);
             var arr = sValue.split("#");
-            oTable.fnUpdate(arr[0], aPos[0], 10);
-            oTable.fnUpdate(arr[1], aPos[0], 11);
-            oTable.fnUpdate(arr[2], aPos[0], 12);
-            oTable.fnUpdate(arr[3], aPos[0], 13);
+//            oTable.fnUpdate(arr[0], aPos[0], 9);
+            oTable.fnUpdate(arr[1], aPos[0], 10);
+            oTable.fnUpdate(arr[2], aPos[0], 11);
+            oTable.fnUpdate(arr[3], aPos[0], 12);
             var a = arr[3] - arr[0] - arr[1];
-            oTable.fnUpdate(a.toFixed(2), aPos[0], 14);
+            oTable.fnUpdate(a.toFixed(2), aPos[0], 13);
 
             if (arr[4] != "") {
                 if (parseFloat(arr[4]) != parseFloat($("#pool").text())) {

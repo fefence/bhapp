@@ -536,8 +536,9 @@ class Parser
         $finder1 = new DomXPath($dom);
         $classname1 = "bg-white";
         $nodes1 = $finder1->query("//*[contains(@class, '$classname1')]");
-        $team_arr = explode(" : ", $nodes1->item(0)->nodeValue);
-//        return list($team_arr);
+        $team_arr = explode(": ", $nodes1->item(0)->nodeValue);
+//        return $team_arr;
+        return array($team_arr[1], $id);
 //        if ($league_details_id == 112) {
 //            Parser::parseLeagueSeriesUSA($league_details_id);
 //        } else {

@@ -28,7 +28,7 @@ class Updater
                 if ($match->resultShort == 'D') {
                     $streaksHome->streak = 0;
                     $streaksAway->streak = 0;
-                } else {
+                } else if ($match->resultShort == 'A' || $match->resultShort == 'H') {
                     $streaksHome->streak = $streaksHome->streak + 1;
                     $streaksAway->streak = $streaksAway->streak + 1;
                 }

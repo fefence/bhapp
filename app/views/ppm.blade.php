@@ -117,7 +117,7 @@ function fnFormatDetails(oTable, nTr) {
     var aData = oTable.fnGetData(nTr);
     var team = 'ppm';
     var re = new RegExp('display: none;">(.*?)</span>');
-    var m = re.exec(aData[14]);
+    var m = re.exec(aData[15]);
     var id = m[1];
 //		alert(id);
     // var d = aData[1].replace(/\//g, '-');
@@ -137,34 +137,14 @@ function testAjax(team, mDate, game) {
     });
 }
 
-$("tbody>tr").hover(
-    function () {
-        var claz = $(this).attr('class');
-        var st = claz.split(' ');
-        var firstClass = st[0];
-        var id = "." + firstClass;
-        // alert(id);
-        if ($(id).length > 1 && firstClass != 'odd' && firstClass != even) {
-            $(id + ">td").addClass("dt-doublematch");
-        }
-        //$(id).attr("style", "color: red");
-        //$( this ).append( $( "<span> ***</span>" ) );
-    }, function () {
-        var claz = $(this).attr('class');
-        var st = claz.split(' ');
-        var firstClass = st[0];
-
-        var id = "." + firstClass;
-        //alert(id);
-        $(id + ">td").removeClass("dt-doublematch");
-        //$(id).addClass("test");
-    }
-);
-
 var asInitVals = new Array();
 
-$(document).ready(function () {
+//$('[name="value"]').on("focus", function(){
+//    alert("boo");
+////    $('[name="value"]').val("");
+//});
 
+$(document).ready(function () {
     var oTable = $("#matches0").dataTable({
         "iDisplayLength": 100,
         "bJQueryUI": true,
@@ -242,7 +222,8 @@ $(document).ready(function () {
             };
         },
         "height": "25px",
-        "width": "40px"
+        "width": "40px",
+        "value": ""
     });
 
     oTable.$('td.editabledd').editable('#', {

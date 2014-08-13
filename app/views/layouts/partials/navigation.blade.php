@@ -4,12 +4,12 @@
             <ul class="nav navbar-nav">
                 <li class="{{Request::path() == 'pps' ? 'active' : '';}}"><a href="{{ URL::to('pps') }}">pps</a></li>
                 <li class="{{Request::path() == 'ppm' ? 'active' : '';}}"><a href="{{URL::to('/ppm')}}">ppm</a></li>
-                <li class="{{Request::path() == 'free' ? 'active' : '';}}"><a href="{{URL::to('/free')}}">free</a></li>
+                <li class="{{Request::path() == 'livescore' ? 'active' : '';}}"><a href="{{URL::to('/livescore')}}">ls</a></li>
+                <li class="{{Request::path() == 'free' ? 'active' : '';}}"><a href="{{URL::to('/free')}}">fv</a></li>
 
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">tools <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li class="{{Request::path() == 'livescore' ? 'active' : '';}}"><a href="{{URL::to('/livescore')}}">livescore</a></li>
                         <li class="{{Request::path() == 'poolmanagement' ? 'active' : '';}}"><a href="{{URL::to('/pool')}}">pool</a></li>
                         <li class="{{Request::path() == 'countries' ? 'active' : '';}}"><a href="{{ URL::to('countries') }}">stats</a></li>
                         <li class="divider"></li>

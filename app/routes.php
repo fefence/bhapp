@@ -1,12 +1,12 @@
 <?php
 Route::get('/boo', function(){
-//    return Updater::updatePPM();
+    return Updater::update();
 //    $gr = Groups::where('league_details_id', '=', 35)->where('state', '=', 2)->first();
 //    $gr1 = Groups::where('league_details_id', '=', 35)->where('state', '=', 3)->first();
 //     Parser::parseMatchesForGroup($gr, $gr1);
-    $gr = Groups::where('league_details_id', '=', 30)->where('state', '=', 2)->first();
-    $gr1 = Groups::where('league_details_id', '=', 30)->where('state', '=', 3)->first();
-    return Parser::parseMatchesForGroup($gr, $gr1);
+//    $gr = Groups::where('league_details_id', '=', 30)->where('state', '=', 2)->first();
+//    $gr1 = Groups::where('league_details_id', '=', 30)->where('state', '=', 3)->first();
+//    return Parser::parseMatchesForGroup($gr, $gr1);
 //    return Updater::updateGroup(106);
 //    Updater::updateGroup(145);
 //    return Parser::parseLeagueStandings(6);
@@ -17,6 +17,7 @@ Route::get('/boo', function(){
 
 //free views
 Route::get('/free/{from?}/{to?}', "FreeController@display");
+Route::post('/savefree', "FreeController@saveTable");
 Route::get('/managefree', "FreeController@manage");
 Route::post('/saveteam', "FreeController@save");
 
