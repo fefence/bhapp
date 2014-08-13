@@ -89,10 +89,10 @@ $i = 0;
             @endif
         </td>
         <td>{{$d->resultShort}}</td>
-        <td @if($d->resultShort == '-') class='editable text-warning' @else class='text-warning' @endif>{{$d->type}}</td>
+        <td class='text-muted'><em>{{$d->type}}</em></td>
         <td @if($d->resultShort == '-') class='editable' @endif id="{{$d->game_type_id}}">{{$d->bsf}}</td>
         <td @if($d->resultShort == '-') class='editable' @endif id="{{$d->game_type_id}}">{{$d->bet}}</td>
-        <td @if($d->resultShort == '-') class='editable alert-warning' @endif id="{{$d->game_type_id}}">{{$d->odds}}</td>
+        <td @if($d->resultShort == '-') class='editable oddsColumn' @endif id="{{$d->game_type_id}}">{{$d->odds}}</td>
         <td>{{$d->income}}</td>
         <td>{{round(($d->income - $d->bsf - $d->bet), 2, PHP_ROUND_HALF_UP)}}</td>
         <td>@if($d->resultShort == '-')

@@ -95,6 +95,10 @@ table.matchDetails td {
 .dt-doublematch {
   background-color: #eee;
 }
+.oddsColumn {
+    background-color: #dddddd;
+    text-align: center;
+}
 .statsBrowser {
   
 }
