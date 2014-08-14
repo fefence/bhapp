@@ -24,7 +24,7 @@ Route::post('/saveteam', "FreeController@save");
 
 //details views
 Route::get('/details/ppm/{date}/{game}', "DetailsController@detailsPPM");
-Route::get('/details/{team}/{date}/{game}', "DetailsController@details");
+Route::get('/details/{team}/{date}', "DetailsController@details");
 
 //pool management
 Route::post('/pools/get', "PoolsController@poolsGet");

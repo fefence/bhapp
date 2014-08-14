@@ -29,7 +29,7 @@ $i = 0;
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="r"></th>
-        <th><input type="text" name="search_engine" class="search_init" placeholder="game"></th>
+<!--        <th><input type="text" name="search_engine" class="search_init" placeholder="game"></th>-->
 <!--        <th><input type="text" name="search_engine" class="search_init" placeholder="bookie"></th>-->
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
@@ -47,7 +47,7 @@ $i = 0;
         <th style="width:10px;">l</th>
         <th>res</th>
         <th style="width:10px;">r</th>
-        <th style="width:60px;">game</th>
+<!--        <th style="width:60px;">game</th>-->
 <!--        <th style="width:40px;">bookie</th>-->
         <th style="width:40px;">bsf</th>
         <th style="width:40px;">bet</th>
@@ -89,7 +89,7 @@ $i = 0;
             @endif
         </td>
         <td>{{$d->resultShort}}</td>
-        <td class='text-muted'><em>{{$d->type}}</em></td>
+<!--        <td class='text-muted'><em>{{$d->type}}</em></td>-->
         <td @if($d->resultShort == '-') class='editable' @endif id="{{$d->game_type_id}}">{{$d->bsf}}</td>
         <td @if($d->resultShort == '-') class='editable' @endif id="{{$d->game_type_id}}">{{$d->bet}}</td>
         <td @if($d->resultShort == '-') class='editable oddsColumn' @endif id="{{$d->game_type_id}}">{{$d->odds}}</td>
@@ -136,7 +136,7 @@ $i = 0;
         <td>-</td>
         <td>-</td>
         <td>-</td>
-        <td>-</td>
+<!--        <td>-</td>-->
         <td>-</td>
         <td>-</td>
         <td><a href="/addgame/{{$dd->groups_id}}/{{$dd->standings_id}}/{{$dd->id}}" style="font-size: 130%;">+</a> <span style='display: none;'>{{$dd->id}}</span>
@@ -184,13 +184,13 @@ function fnFormatDetails(oTable, nTr) {
         team = 'ppm';
     }
     var re = new RegExp('display: none;">(.*?)</span>');
-    var m = re.exec(aData[14]);
+    var m = re.exec(aData[13]);
     var id = m[1];
 //		alert(id);
-    var re2 = new RegExp('<em>(.*?)</em>');
-    var game = re2.exec(aData[8])[1];
+//    var re2 = new RegExp('<em>(.*?)</em>');
+//    var game = re2.exec(aData[8])[1];
     // var d = aData[1].replace(/\//g, '-');
-    var promise = testAjax(team, id, game);
+    var promise = testAjax(team, id);
     promise.success(function (data) {
         text = data;
     });
@@ -198,7 +198,7 @@ function fnFormatDetails(oTable, nTr) {
 }
 
 function testAjax(team, mDate, game) {
-    var url = "/details/" + team + "/" + mDate + "/" + game;
+    var url = "/details/" + team + "/" + mDate;
 //        alert(url);
     return $.ajax({
         async: false,
@@ -263,12 +263,12 @@ $(document).ready(function () {
             var aPos = oTable.fnGetPosition(this);
 //                alert(sValue);
             var arr = sValue.split("#");
-            oTable.fnUpdate(arr[0], aPos[0], 9);
-            oTable.fnUpdate(arr[1], aPos[0], 10);
-            oTable.fnUpdate(arr[2], aPos[0], 11);
-            oTable.fnUpdate(arr[3], aPos[0], 12);
+            oTable.fnUpdate(arr[0], aPos[0], 8);
+            oTable.fnUpdate(arr[1], aPos[0], 9);
+            oTable.fnUpdate(arr[2], aPos[0], 10);
+            oTable.fnUpdate(arr[3], aPos[0], 11);
             var a = arr[3] - arr[0] - arr[1];
-            oTable.fnUpdate(a.toFixed(2), aPos[0], 13);
+            oTable.fnUpdate(a.toFixed(2), aPos[0], 12);
 
             if (arr[4] != "") {
                 if (parseFloat(arr[4]) != parseFloat($("#pool").text())) {
