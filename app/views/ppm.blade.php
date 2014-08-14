@@ -117,11 +117,13 @@ function fnFormatDetails(oTable, nTr) {
     var aData = oTable.fnGetData(nTr);
     var team = 'ppm';
     var re = new RegExp('display: none;">(.*?)</span>');
-    var m = re.exec(aData[15]);
+    var m = re.exec(aData[14]);
     var id = m[1];
+    var re2 = new RegExp('<em>(.*?)</em>');
+    var game = re2.exec(aData[8])[1];
 //		alert(id);
     // var d = aData[1].replace(/\//g, '-');
-    var promise = testAjax(team, id, aData[8]);
+    var promise = testAjax(team, id, game);
     promise.success(function (data) {
         text = data;
     });

@@ -187,8 +187,10 @@ function fnFormatDetails(oTable, nTr) {
     var m = re.exec(aData[14]);
     var id = m[1];
 //		alert(id);
+    var re2 = new RegExp('<em>(.*?)</em>');
+    var game = re2.exec(aData[8])[1];
     // var d = aData[1].replace(/\//g, '-');
-    var promise = testAjax(team, id, aData[8]);
+    var promise = testAjax(team, id, game);
     promise.success(function (data) {
         text = data;
     });
@@ -203,30 +205,6 @@ function testAjax(team, mDate, game) {
         url: url
     });
 }
-
-$("tbody>tr").hover(
-    function () {
-        var claz = $(this).attr('class');
-        var st = claz.split(' ');
-        var firstClass = st[0];
-        var id = "." + firstClass;
-        // alert(id);
-        if ($(id).length > 1 && firstClass != 'odd' && firstClass != even) {
-            $(id + ">td").addClass("dt-doublematch");
-        }
-        //$(id).attr("style", "color: red");
-        //$( this ).append( $( "<span> ***</span>" ) );
-    }, function () {
-        var claz = $(this).attr('class');
-        var st = claz.split(' ');
-        var firstClass = st[0];
-
-        var id = "." + firstClass;
-        //alert(id);
-        $(id + ">td").removeClass("dt-doublematch");
-        //$(id).addClass("test");
-    }
-);
 
 var asInitVals = new Array();
 
