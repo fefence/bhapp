@@ -416,20 +416,21 @@ class Updater
 
     public static function updateFree()
     {
-        $teams = FreeplayTeams::lists(['team']);
+        $teams = FreeplayTeams::lists('team');
+//        return $teams;
         $now = date('Y-m-d H:i:s');
-        $start = explode(' ', date("Y-m-d H:i:s", strtotime("$now - 2 hours")));
+        $start = explode(' ', date("Y-m-d H:i:s", strtotime("$now - 100 min")));
         $matches = Match::where(function ($q) use ($teams) {
             $q->whereIn('home', $teams)
                 ->orWhereIn('away', $teams);
         })
-            ->where(function ($q) use ($start) {
-                $q->where('matchDate', '<', $start[0])
-                    ->orWhere(function ($query) use ($start) {
-                        $query->where('matchDate', '=', $start[0])
-                            ->where('matchTime', '<=', $start[1]);
-                    });
-            })
+//            ->where(function ($q) use ($start) {
+//                $q->where('matchDate', '<', $start[0])
+//                    ->orWhere(function ($query) use ($start) {
+//                        $query->where('matchDate', '=', $start[0])
+//                            ->where('matchTime', '<=', $start[1]);
+//                    });
+//            })
             ->where('resultShort', '=', '-')
             ->where('state', '<>', 'canceled')
             ->where('state', '<>', 'Awarded')

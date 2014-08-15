@@ -1,6 +1,6 @@
 <?php
 Route::get('/boo', function(){
-
+    return Updater::updateFree();
 });
 
 //free views
@@ -8,10 +8,13 @@ Route::get('/free/{from?}/{to?}', "FreeController@display");
 Route::post('/savefree', "FreeController@saveTable");
 Route::get('/managefree', "FreeController@manage");
 Route::post('/saveteam', "FreeController@save");
+Route::get('/confirmfree/{game_id}', 'FreeController@confirmGame');
+Route::get('/deletefree/{game_id}', 'FreeController@deleteGame');
 
 //details views
 Route::get('/details/ppm/{date}/{game}', "DetailsController@detailsPPM");
 Route::get('/details/{team}/{date}', "DetailsController@details");
+Route::get('/detailsfree/{match}/', "DetailsController@detailsFree");
 
 //pool management
 Route::post('/pools/get/{free?}', "PoolsController@poolsGet");

@@ -90,7 +90,7 @@ $elements = array('active' => $active, 'list' => $list);
         <td class='editable warning' id="{{$d->team_id}}">{{$d->odds}}</td>
         <td>{{$d->income}}</td>
         <td>{{round(($d->income - $d->bsf - $d->bet), 2, PHP_ROUND_HALF_UP)}}</td>
-        <td><a href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}">+&nbsp<span style='display: none;'>{{$d->match_id}}</span></a>({{ (array_key_exists($d->match_id,
+        <td><a href="/confirmfree/{{$d->games_id}}">+&nbsp<span style='display: none;'>{{$d->match_id}}</span></a>({{ (array_key_exists($d->match_id,
             $count))?$count[$d->match_id]:$count[$d->id] }})
         </td>
     </tr>
@@ -129,38 +129,13 @@ function fnFormatDetails(oTable, nTr) {
 }
 
 function testAjax(team, mDate, game) {
-    var url = "/details/" + team + "/" + mDate + "/" + game;
+    var url = "/detailsfree/" + mDate;
 //        alert(url);/
     return $.ajax({
         async: false,
         url: url
     });
 }
-
-$("tbody>tr").hover(
-    function () {
-        var claz = $(this).attr('class');
-        var st = claz.split(' ');
-        var firstClass = st[0];
-        var id = "." + firstClass;
-        // alert(id);
-        if ($(id).length > 1 && firstClass != 'odd' && firstClass != even) {
-            $(id + ">td").addClass("dt-doublematch");
-        }
-        //$(id).attr("style", "color: red");
-        //$( this ).append( $( "<span> ***</span>" ) );
-    }, function () {
-        var claz = $(this).attr('class');
-        var st = claz.split(' ');
-        var firstClass = st[0];
-
-        var id = "." + firstClass;
-        //alert(id);
-        $(id + ">td").removeClass("dt-doublematch");
-        //$(id).addClass("test");
-    }
-);
-
 var asInitVals = new Array();
 
 $(document).ready(function () {

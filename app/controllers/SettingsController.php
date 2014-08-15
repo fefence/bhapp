@@ -19,7 +19,8 @@ class SettingsController extends BaseController
                 if ($dd != '') {
                     $gr = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 2)->first();
                     if ($gr == null) {
-                        return $league;
+//                        return $league;
+                        continue;
                     }
                     $match_count = $gr->matches()->where('resultShort', '<>', '-')->count();
                     if ($match_count > 0) {

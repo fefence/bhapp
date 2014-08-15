@@ -135,4 +135,52 @@ class FreeController extends \BaseController
 //        return FreeGames::find($game_id);
     }
 
+    public static function confirmGame($game_id) {
+        $free = FreeGames::find($game_id);
+
+        $aLog = new ActionLog;
+        $aLog->action = "confirm";
+        $aLog->type = "free";
+        $aLog->amount = $free->bet;
+        $aLog->element_id = $free->id;
+        $aLog->save();
+
+        $pool = FreePool::where('user_id', '=', $free->user_id)
+            ->where('team_id', '=', $free->team_id)
+            ->first();
+        $main = CommonPools::where('user_id', '=', $free->user_id)->first();
+
+        $main->account = $main->account - $free->bet;
+        $main->save();
+        $pool->account = $pool->account - $free->bet;
+        $pool->save();
+        $newFree = $free->replicate();
+        $free->confirmed = 1;
+        $newFree->save();
+        $free->save();
+        return Redirect::back()->with('message', 'Bet confirmed');
+
+    }
+
+    public static function deleteGame($game_id) {
+        $free = FreeGames::find($game_id);
+
+        $aLog = new ActionLog;
+        $aLog->action = "delete";
+        $aLog->type = "free";
+        $aLog->amount = $free->bet;
+        $aLog->element_id = $free->id;
+        $aLog->save();
+        $pool = FreePool::where('user_id', '=', $free->user_id)
+            ->where('team_id', '=', $free->team_id)
+            ->first();
+        $main = CommonPools::where('user_id', '=', $free->user_id)->first();
+        $main->account = $main->account + $free->bet;
+        $pool->account = $pool->account + $free->bet;
+        $pool->save();
+        $free->delete();
+        return Redirect::back()->with('message', 'Bet deleted');
+
+    }
+
 }
