@@ -1,6 +1,6 @@
 <?php
 Route::get('/boo', function(){
-    
+
 });
 
 //free views

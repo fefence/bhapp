@@ -29,10 +29,11 @@
                 <li><p class="navbar-text"><span class="text-default">A: <span id="pool">{{$pool->account}}</span> </span>
                     </p></li>
                 <li><p class="navbar-text"><span class="text-default">P: {{$pool->amount}}</span></p></li>
-                @endif
+                @else
                 @if(isset($global))
                 <li><p class="navbar-text"><span class="text-success">{{$global->account}}</span></p></li>
                 <li><p class="navbar-text"><span class="text-success">{{$global->amount}}</span></p></li>
+                @endif
                 @endif
             </ul>
         </div>
