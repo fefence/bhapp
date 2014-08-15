@@ -12,16 +12,21 @@ class PoolsController extends \BaseController
         $ppmpoolsq = Pools::getPPMPoolsQForUser($user_id);
         $ppmpools = $ppmpoolsq->get();
         $ppmtotal = $ppmpoolsq->select(DB::raw("sum(profit) as profit, sum(account) as account, sum(amount) as amount"))->first();
-
-        $free = array();
-        return View::make('poolmanagement')->with(['ppmpools' => $ppmpools, 'ppspools' => $ppspools, 'free' => $free, 'ppstotal' => $ppstotal, 'ppmtotal' => $ppmtotal]);
+        $freepoolsq = Pools::getFreePoolsQForUser($user_id);
+        $freepools = $freepoolsq->get();
+//        return $freepools;
+        return View::make('poolmanagement')->with(['ppmpools' => $ppmpools, 'ppspools' => $ppspools, 'free' => $freepools, 'ppstotal' => $ppstotal, 'ppmtotal' => $ppmtotal]);
     }
 
-    public function poolsGet()
+    public function poolsGet($free = 'false')
     {
         $id = Input::get('id');
         $amount = Input::get('amount');
-        $pool = Pools::find($id);
+        if ($free == "false") {
+            $pool = Pools::find($id);
+        } else {
+            $pool = FreePool::find($id);
+        }
         $main = CommonPools::where('user_id', '=', Auth::user()->id)->first();
         $pool->amount = $pool->amount - $amount;
         $main->in_transit = $main->in_transit + $amount;
@@ -38,7 +43,7 @@ class PoolsController extends \BaseController
         $aLog->amount = $amount;
         $aLog->element_id = $pool->id;
         $aLog->save();
-        if ($pool->game_type_id >= 5 && $pool->game_type_id <= 8) {
+        if ($free == "false" && $pool->game_type_id >= 5 && $pool->game_type_id <= 8) {
             $ppms = PPM::join('match', 'match.id', '=', 'ppm.match_id')
                 ->where('resultShort', '=', '-')
                 ->where('confirmed', '=', 0)
@@ -52,14 +57,32 @@ class PoolsController extends \BaseController
                 $ppm->save();
             }
         }
+        if ($free == "true") {
+            $fgame = FreeGames::join('freeplay_teams', 'freeplay_teams.team_id', '=', 'freeplay.team_id')
+                ->where('freeplay.user_id', '=', $pool->user_id)
+                ->where('freeplay.team_id', '=', $pool->team_id)
+                ->join('match', 'freeplay.match_id', '=', "match.id")
+                ->where('resultShort', '=', '-')
+                ->select(DB::raw('freeplay.*, match.resultShort'))
+                ->first();
+//            return $fgame;
+            $fgame->bsf = $pool->amount;
+            $fgame->save();
+        }
         return Redirect::back()->with("message", $amount. "€ removed from pool");
     }
 
-    public function poolsInsert()
+    public function poolsInsert($free = 'false')
     {
+//        return $free;
         $id = Input::get('id');
+//        return $id;
         $amount = Input::get('amount');
-        $pool = Pools::find($id);
+        if ($free == "false") {
+            $pool = Pools::find($id);
+        } else {
+            $pool = FreePool::find($id);
+        }
         $main = CommonPools::where('user_id', '=', Auth::user()->id)->first();
         $pool->amount = $pool->amount + $amount;
         $main->in_transit = $main->in_transit - $amount;
@@ -76,7 +99,7 @@ class PoolsController extends \BaseController
         $aLog->amount = $amount;
         $aLog->element_id = $pool->id;
         $aLog->save();
-        if ($pool->game_type_id >= 5 && $pool->game_type_id <= 8) {
+        if ($free == "false" && $pool->game_type_id >= 5 && $pool->game_type_id <= 8) {
             $ppms = PPM::join('match', 'match.id', '=', 'ppm.match_id')
                 ->where('resultShort', '=', '-')
                 ->where('confirmed', '=', 0)
@@ -89,6 +112,18 @@ class PoolsController extends \BaseController
                 $ppm->bsf = ($pool->amount)/count($ppms);
                 $ppm->save();
             }
+        }
+        if ($free == "true") {
+            $fgame = FreeGames::join('freeplay_teams', 'freeplay_teams.team_id', '=', 'freeplay.team_id')
+                ->where('freeplay.user_id', '=', $pool->user_id)
+                ->where('freeplay.team_id', '=', $pool->team_id)
+                ->join('match', 'freeplay.match_id', '=', "match.id")
+                ->where('resultShort', '=', '-')
+                ->select(DB::raw('freeplay.*, match.resultShort'))
+                ->first();
+//            return $fgame;
+            $fgame->bsf = $pool->amount;
+            $fgame->save();
         }
         return Redirect::back()->with("message", $amount. "€ added to pool");
     }

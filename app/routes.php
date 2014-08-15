@@ -1,19 +1,6 @@
 <?php
 Route::get('/boo', function(){
-//    return Updater::update();
-//    $gr = Groups::where('league_details_id', '=', 35)->where('state', '=', 2)->first();
-//    $gr1 = Groups::where('league_details_id', '=', 35)->where('state', '=', 3)->first();
-//     Parser::parseMatchesForGroup($gr, $gr1);
-//    $gr = Groups::where('league_details_id', '=', 30)->where('state', '=', 2)->first();
-//    $gr1 = Groups::where('league_details_id', '=', 30)->where('state', '=', 3)->first();
-//    return Parser::parseMatchesForGroup($gr, $gr1);
-//    return Updater::updateGroup(106);
-//    Updater::updateGroup(145);
-    return Match::updateMatchDetailsLivescore(Match::find("hK63AjpE"));
-//    return Parser::parseLeagueStandings(6);
-//    return Updater::getNextPPMMatch(Match::find("Cpe0nEYB"));
-//    return Parser::parseTeamMatches("http://www.betexplorer.com/soccer/poland/ekstraklasa/teaminfo.php?team_id=lIDaZJTc");
-//    return Match::updateMatchDetailsLivescore("QwGrWO6q");
+    
 });
 
 //free views
@@ -27,8 +14,8 @@ Route::get('/details/ppm/{date}/{game}', "DetailsController@detailsPPM");
 Route::get('/details/{team}/{date}', "DetailsController@details");
 
 //pool management
-Route::post('/pools/get', "PoolsController@poolsGet");
-Route::post('/pools/insert', "PoolsController@poolsInsert");
+Route::post('/pools/get/{free?}', "PoolsController@poolsGet");
+Route::post('/pools/insert/{free?}', "PoolsController@poolsInsert");
 Route::get('/pool', "PoolsController@managePools");
 
 //leagues to play management

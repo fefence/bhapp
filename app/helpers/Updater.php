@@ -11,6 +11,7 @@ class Updater
         // return $allMatches;
         foreach ($allMatches as $match) {
             $match = Updater::updateDetails($match);
+//            return $match;
             $log = $log . $match->home . "-" . $match->away . ": " . $match->resultShort . '\n';
             try {
                 $match->id;
@@ -125,7 +126,7 @@ class Updater
 
     public static function updateDetails($match)
     {
-        return Match::updateMatchDetails($match);
+        return Match::updateMatchDetailsLivescore($match);
     }
 
     public static function getAllGamesForMatch($match_id)
@@ -313,9 +314,9 @@ class Updater
     {
         $time = time();
         $matches = self::getPPMMatches();
-//        return $matches;
         foreach ($matches as $match) {
             $match = Match::updateMatchDetailsLivescore($match);
+//print_r($match);
             if (Updater::isLastGameInGroup($match)) {
                 Updater::updateGroup($match->groups_id);
             }

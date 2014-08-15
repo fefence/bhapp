@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'ActionLog' => $baseDir . '/app/models/ActionLog.php',
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
     'Bookmaker' => $baseDir . '/app/models/Bookmaker.php',
     'Boris\\Boris' => $vendorDir . '/d11wtq/boris/lib/Boris/Boris.php',
@@ -31,6 +32,7 @@ return array(
     'ClassPreloader\\Parser\\NodeTraverser' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/Parser/NodeTraverser.php',
     'CommonPools' => $baseDir . '/app/models/CommonPools.php',
     'CreateActionLogTable' => $baseDir . '/app/database/migrations/2014_07_29_104515_create_action_log_table.php',
+    'CreateFreePoolTable' => $baseDir . '/app/database/migrations/2014_08_15_101452_create_free_pool_table.php',
     'CreateGroupToStreaks' => $baseDir . '/app/database/migrations/2014_07_07_205729_create_group_to_streaks.php',
     'CreateLogPoolTable' => $baseDir . '/app/database/migrations/2014_07_29_093406_create_log_pool_table.php',
     'CreateTableFreePlay' => $baseDir . '/app/database/migrations/2014_07_14_083149_create_table_free_play.php',

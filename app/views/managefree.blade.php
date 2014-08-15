@@ -12,7 +12,7 @@ $elements = array('active' => $active, 'list' => $list);
 @stop
 
 @section('pageHeader')
-@include('layouts.partials.pageheader', array('calendar' => false, 'big' => "Add PPS leagues"))
+@include('layouts.partials.pageheader', array('calendar' => false, 'big' => "Add Free play teams"))
 @stop
 @section('content')
 <!-- Form -->

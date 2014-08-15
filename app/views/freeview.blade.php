@@ -84,58 +84,17 @@ $elements = array('active' => $active, 'list' => $list);
             @endif
         </td>
         <td>{{$d->resultShort}}</td>
-        <td class='editabledd warning'>{{$d->type}}</td>
-        <td class='editable warning' id="{{$d->game_type_id}}">{{$d->bsf}}</td>
-        <td class='editable warning' id="{{$d->game_type_id}}">{{$d->bet}}</td>
-        <td class='editable warning' id="{{$d->game_type_id}}">{{$d->odds}}</td>
+        <td>{{$d->type}}</td>
+        <td>{{$d->bsf}}</td>
+        <td class='editable warning' id="{{$d->team_id}}">{{$d->bet}}</td>
+        <td class='editable warning' id="{{$d->team_id}}">{{$d->odds}}</td>
         <td>{{$d->income}}</td>
         <td>{{round(($d->income - $d->bsf - $d->bet), 2, PHP_ROUND_HALF_UP)}}</td>
         <td><a href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}">+&nbsp<span style='display: none;'>{{$d->match_id}}</span></a>({{ (array_key_exists($d->match_id,
             $count))?$count[$d->match_id]:$count[$d->id] }})
         </td>
     </tr>
-    @else
-    @foreach($d as $dd)
-    <tr id="no">
-        <td class="center"><img class="clickable" src="/images/plus-small.png"></td>
-        <td>{{date('d M', strtotime($dd->matchDate))}}</td>
-        <td>{{substr($dd->matchTime, 0, strlen($dd->matchTime)-3)}}</td>
-        <td>
-            @if ($dd->team == $dd->home)
-            <strong>{{$dd->home}}</strong>
-            @else
-            {{$dd->home}}
-            @endif
-            ({{$standings[$dd->home]}})
-        </td>
-        <td>
-            @if ($dd->team == $dd->away)
-            <strong>{{$dd->away}}</strong>
-            @else
-            {{$dd->away}}
-            @endif
-            ({{$standings[$dd->away]}})
-        </td>
-        <td>{{$dd->streak}}</td>
-        <td>
-            @if ($dd->resultShort != '-')
-            {{$dd->homeGoals}}:{{$dd->awayGoals}}
-            @else
-            -
-            @endif
-        </td>
-        <td>{{$dd->resultShort}}</td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
-        <td><a href="/addgame/{{$dd->groups_id}}/{{$dd->standings_id}}/{{$dd->id}}">+</a> <span style='display: none;'>{{$dd->id}}</span>
-        </td>
-    </tr>
-    @endforeach
+
     @endif
     @endforeach
 
@@ -171,7 +130,7 @@ function fnFormatDetails(oTable, nTr) {
 
 function testAjax(team, mDate, game) {
     var url = "/details/" + team + "/" + mDate + "/" + game;
-//        alert(url);
+//        alert(url);/
     return $.ajax({
         async: false,
         url: url
@@ -248,9 +207,9 @@ $(document).ready(function () {
     oTable.$('td.editable').editable('/savefree', {
         "callback": function (sValue, y) {
             var aPos = oTable.fnGetPosition(this);
-                alert(sValue);
+//                alert(sValue);
             var arr = sValue.split("#");
-//            oTable.fnUpdate(arr[0], aPos[0], 9);
+            oTable.fnUpdate(arr[0], aPos[0], 9);
             oTable.fnUpdate(arr[1], aPos[0], 10);
             oTable.fnUpdate(arr[2], aPos[0], 11);
             oTable.fnUpdate(arr[3], aPos[0], 12);

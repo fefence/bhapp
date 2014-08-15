@@ -46,5 +46,15 @@ class Pools extends Eloquent {
             ->select([DB::raw('pools.*, leagueDetails.displayName, leagueDetails.country, game_type.type')]);
         return $ppspoolsq;
     }
+
+    public static function getFreePoolsQForUser($user_id)
+    {
+        $ppspoolsq = FreePool::where('free_pool.user_id', '=', $user_id)
+            ->join('freeplay_teams', 'freeplay_teams.team_id', '=', 'free_pool.team_id')
+            ->join('leagueDetails', 'leagueDetails.id', '=', 'freeplay_teams.league_details_id')
+            ->orderBy('country')
+            ->select([DB::raw('free_pool.*, leagueDetails.displayName, leagueDetails.country, freeplay_teams.team')]);
+        return $ppspoolsq;
+    }
 }
 

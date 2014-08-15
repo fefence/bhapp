@@ -13,16 +13,12 @@ class FreeController extends \BaseController
             $count[$g->id] = FreeGames::where('user_id', '=', Auth::user()->id)->where('match_id', '=', $g->match_id)->where('confirmed', '=', 1)->where('game_type_id', '=', $g->game_type_id)->count();
             array_push($league_ids, $g->league_details_id);
         }
-//        $datarr = array();
-//        $datarr = $games;
         if (count($league_ids) > 0) {
             $standings = Standings::whereIn('league_details_id', $league_ids)->lists('place', 'team');
         } else {
             $standings = array();
         }
-//        $datarr[1] = array();
 
-//        return $datarr;
         return View::make('freeview')->with(['data' => $games, 'standings' => $standings, 'league_details_id' => -1, 'fromdate' => $fromdate, 'todate' => $todate, 'count' => $count, 'big' => $big, 'small' => $small]);
 
     }
@@ -35,16 +31,18 @@ class FreeController extends \BaseController
     public static function save()
     {
         $url = Input::get("url");
-        $parsed = Parser::parseTeamMatches($url);
 //        return $parsed;
         $urlarr = explode('/', $url);
         $team_id = explode('=', $urlarr[count($urlarr) - 1])[1];
         $league = LeagueDetails::where('country', '=', $urlarr[4])->where('fullName', '=', $urlarr[5])->first();
+        $parsed = Parser::parseTeamMatches($url, $league->id);
+
+        Parser::parseLeagueStandings($league->id);
         Match::find($parsed[1])->league_details_id = $league->id;
         $team = FreeplayTeams::firstOrNew(['user_id' => Auth::user()->id, 'team_id' => $team_id, 'league_details_id' => $league->id, 'team' => $parsed[0]]);
         $team->match_id = $parsed[1];
         $team->save();
-        $game = FreeGames::firstOrNew(['user_id' => Auth::user()->id, 'team' => $team_id, 'match_id' => $parsed[1]]);
+        $game = FreeGames::firstOrNew(['user_id' => Auth::user()->id, 'team_id' => $team_id, 'match_id' => $parsed[1]]);
         $game->bsf = 0;
         $game->game_type_id = 1;
         $game->bookmaker_id = 1;
@@ -52,6 +50,8 @@ class FreeController extends \BaseController
         $game->bet = 0;
         $game->odds = 3;
         $game->save();
+        $pool = FreePool::firstOrNew(['user_id' => Auth::user()->id, 'team_id' => $team_id]);
+        $pool->save();
         return Redirect::back()->with("message", "saved");
     }
 
@@ -93,7 +93,7 @@ class FreeController extends \BaseController
 
     public static function saveTable() {
         $game_id = Input::get('row_id');
-        $game_type_id = Input::get('id');
+        $team_id = Input::get('id');
         $value = Input::get('value');
         $game = FreeGames::find($game_id);
         $col = Input::get('column');
@@ -104,7 +104,7 @@ class FreeController extends \BaseController
             $bsf = $game->bsf;
             $game->bsf = $value;
             $game->save();
-            $pool = Pools::firstOrNew('user_id', '=', $game->user_id)->where('league_details_id', '=', 6666);
+            $pool = FreePool::where('user_id', '=', $game->user_id)->where('team_id', '=', $team_id)->first();
             $pool->amount = $pool->amount - $bsf + $value;
             $pool->save();
 //            $bsf = round($pool->current, 2);

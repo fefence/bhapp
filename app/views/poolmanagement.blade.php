@@ -102,7 +102,21 @@
                 <th style="width: 10%;text-align: center;">Amount</th>
                 <th style="width: 10%;text-align: center;">Action</th>
             </tr>
-<!--           TODO free play stuff-->
+            @foreach($free as $fpool)
+            <tr>
+                <td style="padding-left: 10px;"><p class="text-left"><img src="/images/{{strtoupper($fpool->country)}}.png"> {{$fpool->displayName}} ({{$fpool->team}})</p></td>
+                <td><p class="text-center">{{$fpool->profit}} €</p></td>
+                <td><p class="text-center">{{$fpool->account}} €</p></td>
+                <td><p class="text-center">{{$fpool->amount}} €</p></td>
+                <td class="f">
+                    <form method="post">
+                        <input type="text" class="transitvalue" name="amount">
+                        <input type="hidden" name="id" value="{{$fpool->id}}">
+                    </form>
+                </td>
+                <td><button class="btn btn-sm btn-warning insertbtnfree" type="button">+</button><button class="btn btn-sm btn-primary getbtnfree" type="button">-</button></td>
+            </tr>
+            @endforeach
         </table>
     </div>
 
@@ -117,5 +131,15 @@
 			form.attr('action', 'pools/insert');
 			form.submit();
 		});
+        $(".getbtnfree").on('click', function(){
+            var form = $(this).parent().siblings(".f").children("form");
+            form.attr('action', 'pools/get/true');
+            form.submit();
+        });
+        $(".insertbtnfree").on('click', function(){
+            var form = $(this).parent().siblings(".f").children("form");
+            form.attr('action', 'pools/insert/true');
+            form.submit();
+        });
 	</script>
 @stop

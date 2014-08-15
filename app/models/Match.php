@@ -105,11 +105,13 @@ class Match extends Eloquent {
         $table = $dom->getElementById("flashscore");
         $rows = $table->getElementsByTagName("tr");
         $finished = trim($rows->item(2)->getElementsByTagName('td')->item(0)->nodeValue);
+//        return $finished;
         if($finished == "Finished") {
             $res = explode('-', $rows->item(0)->getElementsByTagName('td')->item(2)->nodeValue);
             $match->homeGoals = $res[0];
             $match->awayGoals = $res[1];
-            if ($res[0] == $res[1]) {
+//            return $res;
+//            if ($res[0] == $res[1]) {
                 if ($res[0] > $res[1]) {
                     $resultShort = 'H';
                 } else if ($res[0] < $res[1]) {
@@ -117,9 +119,10 @@ class Match extends Eloquent {
                 } else {
                     $resultShort = 'D';
                 }
+//                return $resultShort;
                 $match->resultShort = $resultShort;
-            }
         }
+        $match->save();
         return $match;
 //        return Parser::parseLivescoreForMatch($dom);
     }
