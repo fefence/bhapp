@@ -55,42 +55,6 @@ class FreeController extends \BaseController
         return Redirect::back()->with("message", "saved");
     }
 
-    public static function test()
-    {
-        $url = "http://d.livescore.in/x/feed/dc_4_YRPevQZt";
-        $curl = curl_init ( $url );
-
-        curl_setopt( $curl, CURLOPT_URL, $url );
-        $header = array (
-//            'Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-//            'Accept-Charset:ISO-8859-1,utf-8;q=0.7,*;q=0.3',
-                'Accept-Encoding:gzip,deflate,sdch',
-//            'Accept-Language:en-US,en;q=0.8',
-//            'Cache-Control:max-age=0',
-//            'Connection:keep-alive',
-        "X-Requested-With: XMLHttpRequest",
-            "X-GeoIP: 1",
-            "Referer: http://d.livescore.in/x/feed/proxy",
-            "X-Fsign: SW9D1eZo",
-            'User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.142 Safari/535.19',
-        );
-        curl_setopt( $curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.142 Safari/535.19');
-        curl_setopt( $curl, CURLOPT_HTTPHEADER, $header );
-        curl_setopt( $curl, CURLOPT_REFERER, 'http://d.livescore.in/x/feed/proxy' );
-        curl_setopt( $curl, CURLOPT_ENCODING, 'gzip,deflate,sdch' );
-        curl_setopt( $curl, CURLOPT_AUTOREFERER, true );
-        curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
-        curl_setopt( $curl, CURLOPT_TIMEOUT, 10 );
-
-        $html = curl_exec( $curl );
-        return $html;
-        return gzdecode($html);
-        $dom = new DOMDocument;
-        $dom->preserveWhiteSpace = FALSE;
-        @$dom->loadHTML( $html );
-        print_r($html);
-    }
-
     public static function saveTable() {
         $game_id = Input::get('row_id');
         $team_id = Input::get('id');

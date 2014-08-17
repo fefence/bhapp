@@ -147,7 +147,7 @@ class Parser
                 $stand = Standings::firstOrNew(['league_details_id' => $league_details_id, 'team' => $team]);
                 $stand->place = $place;
                 $stand->save();
-                echo "$place $team <br>";
+//                echo "$place $team <br>";
             }
 //            echo "<br>";
         }
@@ -316,9 +316,9 @@ class Parser
                 $match = Match::firstOrNew(array('id' => $id));
                 $match->home = $home;
                 $match->away = $away;
-                $timestamp = strtotime($time) + 60 * 60;
+                $timestamp = strtotime($date." ".$time) + 60 * 60;
                 $match->matchTime = date('H:i:s', $timestamp);
-                $match->matchDate = $date;
+                $match->matchDate = date('Y-m-d', $timestamp);
                 $match->groups_id = $group->id;
                 $match->resultShort = '-';
                 $match->round = $group->round;
@@ -330,6 +330,7 @@ class Parser
             }
         }
         $curr = $current->matches()->orderBy('matchDate')->get();
+//        return $current;
         $firstOfNext = $next->matches()->orderBy('matchDate')->first();
         foreach ($curr as $m) {
             if ($m->matchDate > $firstOfNext->matchDate) {

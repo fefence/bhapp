@@ -12,6 +12,7 @@ class Updater
         foreach ($allMatches as $match) {
             $match = Updater::updateDetails($match);
 //            return $match;
+            Parser::parseLeagueStandings($match->league_details_id);
             $log = $log . $match->home . "-" . $match->away . ": " . $match->resultShort . '\n';
             try {
                 $match->id;
@@ -149,9 +150,7 @@ class Updater
         $main = CommonPools::where('user_id', '=', $user_id)->first();
         if ($resultShort == 'D') {
             $pool->amount = $pool->amount - $game->bsf;
-//            $pool->income = $pool->income + $game->income;
             $pool->account = $pool->account + $game->income;
-//            $main->income = $main->income + $game->income;
             $main->account = $main->account + $game->income;
             $main->amount = $main->amount - $game->bsf;
         } else if ($resultShort == 'A' || $resultShort == 'H') {
@@ -203,12 +202,10 @@ class Updater
         if (count($teams) > 0) {
             $bsfpm = $pool->amount / count($teams);
             $bpm = $pool->amount * $setting->multiplier / count($teams);
-            // $bsfpm = $pool;
         } else {
             $bsfpm = $pool->amount;
             $bpm = $pool->amount * $setting->multiplier;
         }
-//        $recalc = false;
         foreach ($teams as $st_id => $team) {
             $matches = $gr->matches()->where(function ($query) use ($team) {
                 $query->where('home', '=', $team)
@@ -218,9 +215,7 @@ class Updater
                 ->orderBy('matchDate')
                 ->orderBy('matchTime')
                 ->get();
-//            return $matches;
             if (count($matches) == 0) {
-//	        	$recalc = true;
             } else if (count($matches) == 1) {
                 $match = $matches[0];
                 //TODO: add setting based bookmaker && special match check
@@ -232,7 +227,6 @@ class Updater
                 $game->save();
                 $game->income = $game->odds * $game->bet;
                 $game->save();
-//                print_r($game);
             } else if (count($matches) > 1) {
                 $match = $matches[0];
                 $game = Games::firstOrCreate(['user_id' => $user_id, 'match_id' => $match->id, 'groups_id' => $match->groups_id, 'game_type_id' => $game_type_id, 'bookmaker_id' => 1, 'standings_id' => $st_id]);
@@ -247,9 +241,6 @@ class Updater
                 $game->save();
             }
         }
-//		if ($recalc) {
-//			Games::recalculate($gr->id, $setting->multiplier, $pool->amount, $user_id);
-//		}
     }
 
     public static function addPPMMatchForUser($league_details_id, $game_type_id, $user_id)
@@ -270,21 +261,21 @@ class Updater
     {
 
         $ids = Series::where('game_type_id', '>', 4)
-                ->where('game_type_id', '<', 9)
-                ->where('active', '=', 1)
-                ->lists('end_match_id');
- 		$matches = Match::whereIn('id', $ids)
+            ->where('game_type_id', '<', 9)
+            ->where('active', '=', 1)
+            ->lists('end_match_id');
+        $matches = Match::whereIn('id', $ids)
 //                ->where('resultShort', '=', '-')
-               ->get();
+            ->get();
         $res = array();
-        foreach($matches as $m) {
+        foreach ($matches as $m) {
             $all = Match::where('league_details_id', '=', $m->league_details_id)
 //                ->where('resultShort', '=', '-')
                 ->where('season', '=', $m->season)
                 ->where('matchDate', '=', $m->matchDate)
                 ->where('matchTime', '=', $m->matchTime)
                 ->get();
-            foreach($all as $match) {
+            foreach ($all as $match) {
                 array_push($res, $match);
             }
         }
@@ -346,20 +337,20 @@ class Updater
                         $news->end_match_id = $next_match->id;
                         $news->save();
                         foreach ($games as $game) {
+                            $pool = Pools::where('user_id', '=', $game->user_id)
+                                ->where('league_details_id', '=', $match->league_details_id)
+                                ->where('game_type_id', '=', $i)
+                                ->first();
+                            $pool->amount = 0;
                             if ($game->confirmed == 1) {
-                                $pool = Pools::where('user_id', '=', $game->user_id)
-                                    ->where('league_details_id', '=', $match->league_details_id)
-                                    ->where('game_type_id', '=', $i)
-                                    ->first();
                                 $pool->profit = $pool->profit + $game->income - $game->bsf - $game->bet;
                                 $pool->account = $pool->account + $game->income;
                                 $main = CommonPools::where('user_id', '=', $game->user_id)->first();
                                 $main->profit = $main->profit + $game->income - $game->bsf - $game->bet;
                                 $main->account = $main->account + $game->income;
-                                $pool->amount = 0;
-                                $pool->save();
                                 $main->save();
                             }
+                            $pool->save();
                             foreach ($next_matches as $n) {
                                 $newgame = PPM::firstOrNew(['user_id' => $game->user_id, 'series_id' => $news->id, 'match_id' => $n->id, 'game_type_id' => $game->game_type_id, 'country' => $game->country, 'confirmed' => 0]);
                                 $newgame->bet = 0;
@@ -391,7 +382,6 @@ class Updater
                         }
                         $settings = Settings::where('game_type_id', '=', $i)->where('league_details_id', '=', $serie->league_details_id)->get();
                         foreach ($settings as $sett) {
-//                            print_r($sett);
                             $pool = Pools::where('user_id', '=', $sett->user_id)->where('league_details_id', '=', $sett->league_details_id)->where('game_type_id', '=', $sett->game_type_id)->first();
                             foreach ($next_matches as $n) {
                                 $newgame = PPM::firstOrNew(['user_id' => $sett->user_id, 'series_id' => $serie->id, 'match_id' => $n->id, 'game_type_id' => $i, 'country' => $serie->team, 'confirmed' => 0]);
@@ -401,7 +391,6 @@ class Updater
                                 $newgame->income = 0;
                                 $newgame->current_length = $serie->current_length;
                                 $newgame->save();
-//                                print_r($newgame);
                             }
                         }
                     }
@@ -416,35 +405,80 @@ class Updater
 
     public static function updateFree()
     {
-        $teams = FreeplayTeams::lists('team');
-//        return $teams;
-        $now = date('Y-m-d H:i:s');
-        $start = explode(' ', date("Y-m-d H:i:s", strtotime("$now - 100 min")));
-        $matches = Match::where(function ($q) use ($teams) {
-            $q->whereIn('home', $teams)
-                ->orWhereIn('away', $teams);
-        })
-//            ->where(function ($q) use ($start) {
-//                $q->where('matchDate', '<', $start[0])
-//                    ->orWhere(function ($query) use ($start) {
-//                        $query->where('matchDate', '=', $start[0])
-//                            ->where('matchTime', '<=', $start[1]);
-//                    });
-//            })
-            ->where('resultShort', '=', '-')
-            ->where('state', '<>', 'canceled')
-            ->where('state', '<>', 'Awarded')
-            ->orderBy('matchDate')
-            ->orderBy('matchTime')
-            ->get();
-        return $matches;
+        $teams = FreeplayTeams::all();
+
+        foreach ($teams as $team) {
+            $match = Match::find($team->match_id);
+            if ($match->resultShort == '-') {
+                $match = Match::updateMatchDetailsLivescore($match);
+                if ($match->resultShort != '-') {
+                    $standings = Standings::where('team', '=', $team->team)->where('league_details_id', '=', $team->league_details_id)->first();
+                    if ($match->resultShort == 'D') {
+                        $standings->streak = 0;
+                    } else {
+                        $standings->streak = $standings->streak + 1;
+                    }
+                    $standings->save();
+                }
+                $games = FreeGames::where('match_id', '=', $match->id)->where('confirmed', '=', 1)->get();
+                if ($match->resultShort == 'D') {
+                    $pools = FreePool::where('team_id', '=', $team->team_id);
+                    foreach($pools as $pl){
+                        $pl->amount = 0;
+                        $pl->save();
+                    }
+                    foreach ($games as $game) {
+                        $pool = FreePool::where('user_id', '=', $game->user_id)->where('team_id', '=', $team->team_id)->first();
+                        $main = CommonPools::where('user_id', '=', $game->user_id)->first();
+                        $pool->profit = $pool->profit + $game->income - $game->bsf - $game->bet;
+                        $pool->account = $pool->account + $game->income;
+                        $main->profit = $main->profit + $game->income - $game->bsf - $game->bet;
+                        $main->account = $main->account + $game->income;
+                        $pool->save();
+                        $main->save();
+                    }
+                } else if ($match->resultShort == 'H' || $match->resultShort == 'A') {
+                    foreach ($games as $game) {
+                        $pool = FreePool::where('user_id', '=', $game->user_id)->where('team_id', '=', $team->team_id)->first();
+                        $main = CommonPools::where('user_id', '=', $game->user_id)->first();
+                        $pool->amount = $pool->amount + $game->bet;
+                        $main->amount = $main->amount + $game->bet;
+                        $pool->save();
+                        $main->save();
+                    }
+                }
+                if ($match->resultShort != '-') {
+                    $ps = FreePool::where('team_id', '=', $team->team_id)->get();
+                    $league = LeagueDetails::find($team->league_details_id);
+                    $url = "http://www.betexplorer.com/soccer/" . $league->country . "/" . $league->fullName . "/teaminfo.php?team_id=" . $team->team_id;
+                    $parsed = Parser::parseTeamMatches($url, $league->id);
+
+                    Parser::parseLeagueStandings($league->id);
+                    Match::find($parsed[1])->league_details_id = $league->id;
+//                    return $ps;
+                    foreach ($ps as $p) {
+                        $team = FreeplayTeams::firstOrNew(['user_id' => $p->user_id, 'team_id' => $team->team_id, 'league_details_id' => $league->id, 'team' => $parsed[0]]);
+                        $team->match_id = $parsed[1];
+                        $team->save();
+                        $game = FreeGames::firstOrNew(['user_id' => $p->user_id, 'team_id' => $team->team_id, 'match_id' => $parsed[1]]);
+                        $game->bsf = $p->amount;
+                        $game->game_type_id = 1;
+                        $game->bookmaker_id = 1;
+                        $game->income = 0;
+                        $game->odds = 3;
+                        $game->save();
+                    }
+                }
+
+            }
+        }
     }
 
     public static function getNextPPMMatches($match)
     {
         $next = self::getNextPPMMatch($match);
 //        return $next;
-        if($next == null) {
+        if ($next == null) {
             return null;
         }
         return Match::where('league_details_id', '=', $match->league_details_id)
