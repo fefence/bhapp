@@ -21,11 +21,12 @@ class LivescoreController extends \BaseController
             ->orderBy('matchTime')
             ->select(DB::raw("`match`.*, `leagueDetails`.country, `leagueDetails`.displayName"))
             ->get();
+        list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, -1);
 //        foreach($matches as $match){
 //            Match::getScore($match);
 //        }
 //        return $matches;
-        return View::make('livescore')->with(['matches' => $matches, 'fromdate' => $fromdate, 'todate' => $todate]);
+        return View::make('livescore')->with(['matches' => $matches, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small]);
     }
 
     public static function matchScore($match_id) {
