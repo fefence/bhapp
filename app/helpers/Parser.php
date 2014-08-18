@@ -8,7 +8,21 @@ class Parser
     public static function parseMatchOddsForGames($games)
     {
         // return "boo";
+        $oddsarr = array();
         foreach ($games as $game) {
+            if ($game->game_type_id != 5) {
+                if(!array_key_exists($game->match_id, $oddsarr)) {
+                    $oddsarr[$game->match_id] = Parser::parseOdds(Match::find($game->match_id));
+                }
+                if (count($oddsarr[$game->match_id]) == 0) {
+                    continue;
+                }
+                $oddsX = $oddsarr[$game->match_id][$game->game_type_id];
+                $game->odds = $oddsX;
+                $game->income = $oddsX * $game->bet;
+                $game->save();
+                continue 1;
+            }
             $matchId = $game->match_id;
             // return $matchId;
             $bookmaker = Bookmaker::find($game->bookmaker_id);
@@ -571,6 +585,31 @@ class Parser
             echo "<br>";
         }
 
+    }
+
+    public static function parseOdds($match) {
+        $league = LeagueDetails::find($match->league_details_id);
+        $baseUrl = "http://www.oddsportal.com/soccer/";
+        $url = $baseUrl . $league->country . "/" . $league->fullName . "/".$match->id;
+//
+//        if (Parser::get_http_response_code($url) != "200") {
+//            return "Wrong league stats url! --> $url";
+//        }
+        $data = file_get_contents($url);
+        $matches = array();
+        preg_match ( '/xhash":"(?P<hash>[a-z0-9-A-Z]+)","/', $data , $matches );
+        $hash = $matches['hash'];
+
+        $parse_url = "http://fb.oddsportal.com/feed/match/1-1-".$match->id."-8-2-".$hash.".dat";
+        $json_data = file_get_contents($parse_url);
+        $matches2 = array();
+        preg_match ( '/.dat\', (?P<json>.*)\)/', $json_data , $matches2);
+
+        $odds_arr = json_decode($matches2['json'], true);
+        $odds00 = $odds_arr['d']['oddsdata']["back"]['E-8-2-0-0-1']['odds'][16][0];
+        $odds11 = $odds_arr['d']['oddsdata']["back"]['E-8-2-0-0-3']['odds'][16][0];
+        $odds22 = $odds_arr['d']['oddsdata']["back"]['E-8-2-0-0-7']['odds'][16][0];
+        return array(6 => $odds00, 7 => $odds11, 8 => $odds22);
     }
 
 }

@@ -22,8 +22,8 @@
         <th><input type="text" name="search_engine" class="search_init" placeholder="date"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="time"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="home"></th>
-        <th><input type="hidden"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="away"></th>
+        <th><input type="hidden"></th>
         <th><input type="hidden"></th>
     </tr>
     <tr>
@@ -31,8 +31,8 @@
         <th style="width:60px;">date</th>
         <th style="width:50px;">time</th>
         <th style="width:120px;">home</th>
-        <th>res</th>
         <th style="width:120px;">away</th>
+        <th>res</th>
         <th>res</th>
     </tr>
     </thead>
@@ -43,6 +43,7 @@
         <td>{{date('d M', strtotime($d->matchDate))}}</td>
         <td>{{substr($d->matchTime, 0, strlen($d->matchTime)-3)}}</td>
         <td><a href="/livescorematch/{{$d->id}}">{{$d->home}}</a></td>
+        <td><a href="/livescorematch/{{$d->id}}">{{$d->away}}</a></td>
         <td>
             @if ($d->resultShort != '-')
             {{$d->homeGoals}}:{{$d->awayGoals}}
@@ -50,7 +51,6 @@
             -
             @endif
         </td>
-        <td><a href="/livescorematch/{{$d->id}}">{{$d->away}}</a></td>
         <td>{{$d->resultShort}}</td>
     </tr>
     @endforeach

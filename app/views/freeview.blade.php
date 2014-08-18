@@ -75,7 +75,7 @@ $elements = array('active' => $active, 'list' => $list);
             @endif
             ({{$standings[$d->away]}})
         </td>
-        <td>{{$d->streak}}</td>
+        <td>{{$d->current_length}}</td>
         <td>
             @if ($d->resultShort != '-')
             {{$d->homeGoals}}:{{$d->awayGoals}}

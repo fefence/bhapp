@@ -8,11 +8,11 @@ class FreeController extends \BaseController
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, '');
         $games = FreeGames::gamesForDates($fromdate, $todate);
         $count = array();
-        $league_ids = array();
+        $league_ids = FreeplayTeams::where('user_id', '=', Auth::user()->id)->lists('league_details_id');
         foreach ($games as $g) {
             $count[$g->id] = FreeGames::where('user_id', '=', Auth::user()->id)->where('match_id', '=', $g->match_id)->where('confirmed', '=', 1)->where('game_type_id', '=', $g->game_type_id)->count();
-            array_push($league_ids, $g->league_details_id);
         }
+
         if (count($league_ids) > 0) {
             $standings = Standings::whereIn('league_details_id', $league_ids)->lists('place', 'team');
         } else {

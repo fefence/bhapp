@@ -21,6 +21,9 @@ class LivescoreController extends \BaseController
             ->orderBy('matchTime')
             ->select(DB::raw("`match`.*, `leagueDetails`.country, `leagueDetails`.displayName"))
             ->get();
+        foreach($matches as $match){
+            Match::getScore($match);
+        }
 //        return $matches;
         return View::make('livescore')->with(['matches' => $matches, 'fromdate' => $fromdate, 'todate' => $todate]);
     }

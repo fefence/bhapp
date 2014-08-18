@@ -1,7 +1,10 @@
 <?php
 Route::get('/boo', function(){
 //    return Parser::parseMatchesForGroup()
-    return Updater::updateFree();
+//    return Updater::updateFree();
+//    return Match::getScore(Match::find("IRLFElFp"));
+    return Parser::parseOdds(Match::find("IRLFElFp"));
+//        return LivescoreController::matchScore("IRLFElFp");
 });
 
 //free views
@@ -30,7 +33,8 @@ Route::post('/saveleaguestoplay', "SettingsController@saveLeagues");
 Route::get('/ppm/country/{country}/{from?}/{to?}', "PPMController@display");
 Route::get('/ppm/{from?}/{to?}', "PPMController@displayCountries");
 Route::get('/ppmflat/{from?}/{to?}', "PPMController@displayFlatView");
-Route::get('/ppm/{from?}/{to?}/odds', "PPMController@getOdds");
+Route::get('/ppmall/{from?}/{to?}/odds', "PPMController@getOdds");
+Route::get('/ppm/{country}/{from}/{to}/odds', "PPMController@getOddsForCountry");
 Route::get('/ppmseries/{id}', "PPMController@displaySeries");
 Route::get('/confirmallppm/{country}/{from}/{to}', "GamesController@confirmAllPPM");
 
