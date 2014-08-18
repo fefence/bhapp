@@ -245,4 +245,20 @@ class GamesController extends \BaseController
         }
         return $game->bsf . "#" . $game->bet . "#" . $game->odds . "#" . $game->income . "#" . $bsf;
     }
+
+    public static function getMatchOddsForAll($fromdate = '', $todate = '') {
+        list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
+        $games = User::find(Auth::user()->id)
+            ->games()
+            ->join('match', 'match.id', '=', 'games.match_id')
+            ->where('resultShort', '=', '-')
+            ->where('matchDate', '>=', $fromdate)
+            ->where('matchDate', '<=', $todate)
+            ->where('confirmed', '=', 0)
+            ->select(DB::raw("games.*"))
+            ->get();
+        Parser::parseMatchOddsForGames($games);
+        return Redirect::back()->with('message', 'Odds retrieved');
+    }
+
 }

@@ -80,7 +80,7 @@ class GroupController extends \BaseController
             }
         }
 //        return $res;
-        return View::make('games')->with(['data' => $res, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small]);
+        return View::make('games')->with(['data' => $res, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small, 'ppsall' => true]);
     }
 
 }

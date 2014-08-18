@@ -13,6 +13,9 @@
         <span id="flash" class="bg-danger text-danger">{{Session::get('message')}}</span>
         @endif
 
+        @if(isset($ppsall) && isset($fromdate) && isset($todate))
+            <a href="/ppsodds/{{$fromdate}}/{{$todate}}">refresh odds</a> |
+        @endif
 		@if(isset($group))
         @if($disable)
         recalc |

@@ -3,8 +3,9 @@ Route::get('/boo', function(){
 //    return Parser::parseMatchesForGroup()
 //    return Updater::updateFree();
 //    return Match::getScore(Match::find("IRLFElFp"));
-    return Parser::parseOdds(Match::find("IRLFElFp"));
+//    return Parser::parseOdds(Match::find("IRLFElFp"));
 //        return LivescoreController::matchScore("IRLFElFp");
+    return GamesController::getMatchOddsForAll('2014-08-19', '2014-08-19');
 });
 
 //free views
@@ -46,6 +47,7 @@ Route::get('/livescorematch/{match_id}', "LivescoreController@matchScore");
 //Groups views
 Route::get('/group/{id?}/{fromdate?}/{todate?}', 'GamesController@getGamesForGroup');
 Route::get('/groupodds/{groups_id}', 'GamesController@getMatchOddsForGames');
+Route::get('/ppsodds/{fromdate?}/{todate?}', 'GamesController@getMatchOddsForAll');
 
 //games actions
 Route::post('/save', 'GamesController@saveTable');
