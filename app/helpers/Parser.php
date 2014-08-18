@@ -10,7 +10,7 @@ class Parser
         // return "boo";
         $oddsarr = array();
         foreach ($games as $game) {
-            if ($game->game_type_id != 5) {
+            if ($game->game_type_id > 5) {
                 if(!array_key_exists($game->match_id, $oddsarr)) {
                     $oddsarr[$game->match_id] = Parser::parseOdds(Match::find($game->match_id));
                 }

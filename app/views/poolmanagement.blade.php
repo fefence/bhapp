@@ -56,7 +56,7 @@
                     <input type="hidden" name="id" value="{{$ppspool->id}}">
                 </form>
             </td>
-            <td><button class="btn btn-sm btn-warning insertbtn" type="button">+</button><button class="btn btn-sm btn-primary getbtn" type="button">-</button></td>
+            <td><button class="btn btn-sm btn-warning insertbtn" type="button">+</button><button class="btn btn-sm btn-primary getbtn" type="button">-</button><button class="btn btn-sm btn-info accbtn" type="button">?</button></td>
         </tr>
         @endforeach
     </table>
@@ -85,7 +85,7 @@
                         <input type="hidden" name="id" value="{{$ppmpool->id}}">
                     </form>
                 </td>
-                <td><button class="btn btn-sm btn-warning insertbtn" type="button">+</button><button class="btn btn-sm btn-primary getbtn" type="button">-</button></td>
+                <td><button class="btn btn-sm btn-warning insertbtn" type="button">+</button><button class="btn btn-sm btn-primary getbtn" type="button">-</button><button class="btn btn-sm btn-info accbtn" type="button">?</button></td>
             </tr>
             @endforeach
         </table>
@@ -114,7 +114,7 @@
                         <input type="hidden" name="id" value="{{$fpool->id}}">
                     </form>
                 </td>
-                <td><button class="btn btn-sm btn-warning insertbtnfree" type="button">+</button><button class="btn btn-sm btn-primary getbtnfree" type="button">-</button></td>
+                <td><button class="btn btn-sm btn-warning insertbtnfree" type="button">+</button><button class="btn btn-sm btn-primary getbtnfree" type="button">-</button><button class="btn btn-sm btn-info accbtnfree" type="button">?</button></td>
             </tr>
             @endforeach
         </table>
@@ -131,6 +131,11 @@
 			form.attr('action', 'pools/insert');
 			form.submit();
 		});
+        $(".accbtn").on('click', function(){
+            var form = $(this).parent().siblings(".f").children("form");
+            form.attr('action', 'pools/toacc');
+            form.submit();
+        });
         $(".getbtnfree").on('click', function(){
             var form = $(this).parent().siblings(".f").children("form");
             form.attr('action', 'pools/get/true');
@@ -139,6 +144,11 @@
         $(".insertbtnfree").on('click', function(){
             var form = $(this).parent().siblings(".f").children("form");
             form.attr('action', 'pools/insert/true');
+            form.submit();
+        });
+        $(".accbtnfree").on('click', function(){
+            var form = $(this).parent().siblings(".f").children("form");
+            form.attr('action', 'pools/toacc/true');
             form.submit();
         });
 	</script>

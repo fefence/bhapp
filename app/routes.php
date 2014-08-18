@@ -22,6 +22,7 @@ Route::get('/detailsfree/{match}/', "DetailsController@detailsFree");
 
 //pool management
 Route::post('/pools/get/{free?}', "PoolsController@poolsGet");
+Route::post('/pools/toacc/{free?}', "PoolsController@poolsToAccount");
 Route::post('/pools/insert/{free?}', "PoolsController@poolsInsert");
 Route::get('/pool', "PoolsController@managePools");
 
