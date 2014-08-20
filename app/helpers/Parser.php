@@ -5,6 +5,33 @@ use Illuminate\Database\Eloquent;
 class Parser
 {
 
+    public static function parseTimeDate($match) {
+        $baseUrl = "http://www.betexplorer.com/soccer/poland/ekstraklasa/";
+        $url = $baseUrl."matchdetails.php?matchid=".$match->id;
+        $data = file_get_contents($url);
+
+        $dom = new domDocument;
+
+        @$dom->loadHTML($data);
+        $dom->preserveWhiteSpace = false;
+        $tables = $dom->getElementsByTagName('table');
+
+        if ($tables->length > 0) {
+            $date = $tables->item(0)->getElementsByTagName('tr')->item(0)->getElementsByTagName('th')->item(1)->nodeValue;
+            $nums = explode('.', $date);
+            $strdate = $nums[2]."-".$nums[1]."-".$nums[0];
+            $match->matchDate = $strdate;
+        } else {
+            return $url;
+        }
+        // echo "$matchId ";
+
+        $timestamp = strtotime(Match::parseTime($match->id)) + 60*60;
+        $match->matchTime = date('H:i:s', $timestamp);
+        $match->save();
+        return $match;
+    }
+
     public static function parseMatchOddsForGames($games)
     {
         // return "boo";

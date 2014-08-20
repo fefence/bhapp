@@ -21,12 +21,29 @@ class LivescoreController extends \BaseController
             ->orderBy('matchTime')
             ->select(DB::raw("`match`.*, `leagueDetails`.country, `leagueDetails`.displayName"))
             ->get();
+        $res = array();
+//        return $matches;
+        foreach($matches as $match) {
+            if (in_array($match->id, $ids)) {
+                $bet = PPM::where('match_id', '=', $match->id)
+                    ->where('confirmed', '=', 1)
+                    ->where('user_id', '=', Auth::user()->id)->sum('bet');
+            } else {
+                $bet = Games::where('match_id', '=', $match->id)
+                    ->where('confirmed', '=', 1)
+                    ->where('user_id', '=', Auth::user()->id)->sum('bet');
+            }
+            $res[$match->id] = array();
+            $res[$match->id]['match'] = $match;
+            $res[$match->id]['bet'] = $bet;
+        }
+//        return $res;
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, -1);
 //        foreach($matches as $match){
 //            Match::getScore($match);
 //        }
 //        return $matches;
-        return View::make('livescore')->with(['matches' => $matches, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small]);
+        return View::make('livescore')->with(['matches' => $res, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small]);
     }
 
     public static function matchScore($match_id) {

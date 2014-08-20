@@ -25,6 +25,7 @@
         <th><input type="text" name="search_engine" class="search_init" placeholder="away"></th>
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
     </tr>
     <tr>
         <th>league</th>
@@ -34,24 +35,26 @@
         <th style="width:120px;">away</th>
         <th>res</th>
         <th>res</th>
+        <th>bet</th>
     </tr>
     </thead>
     <tbody>
     @foreach($matches as $d)
-    <tr class="{{$d->match_id}}">
-        <td><img src='/images/{{strtoupper($d->country)}}.png'>&nbsp;{{$d->displayName}}</td>
-        <td>{{date('d M', strtotime($d->matchDate))}}</td>
-        <td>{{substr($d->matchTime, 0, strlen($d->matchTime)-3)}}</td>
-        <td><a href="/livescorematch/{{$d->id}}">{{$d->home}}</a></td>
-        <td><a href="/livescorematch/{{$d->id}}">{{$d->away}}</a></td>
+    <tr class="{{$d['match']->match_id}}">
+        <td><img src="/images/{{strtoupper($d['match']->country)}}.png">&nbsp;{{$d['match']->displayName}}</td>
+        <td>{{date('d M', strtotime($d['match']->matchDate))}}</td>
+        <td>{{substr($d['match']->matchTime, 0, strlen($d['match']->matchTime)-3)}}</td>
+        <td><a href="/livescorematch/{{$d['match']->id}}">{{$d['match']->home}}</a></td>
+        <td><a href="/livescorematch/{{$d['match']->id}}">{{$d['match']->away}}</a></td>
         <td>
-            @if ($d->resultShort != '-')
-            {{$d->homeGoals}}:{{$d->awayGoals}}
+            @if ($d['match']->resultShort != '-')
+            {{$d['match']->homeGoals}}:{{$d['match']->awayGoals}}
             @else
             -
             @endif
         </td>
-        <td>{{$d->resultShort}}</td>
+        <td>{{$d['match']->resultShort}}</td>
+        <td>{{$d['bet']}}</td>
     </tr>
     @endforeach
     </tbody>

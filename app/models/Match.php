@@ -326,7 +326,7 @@ class Match extends Eloquent {
 	}
 
 
-	private static function parseTime($matchId) {
+	public static function parseTime($matchId) {
 		$url = "http://www.betexplorer.com/soccer/poland/ekstraklasa/piast-gliwice-slask-wroclaw/$matchId/";
 		$data = file_get_contents($url);
 

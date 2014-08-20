@@ -1,11 +1,12 @@
 <?php
 Route::get('/boo', function(){
+    return Checker::getAllMatches();
 //    return Parser::parseMatchesForGroup()
 //    return Updater::updateFree();
 //    return Match::getScore(Match::find("IRLFElFp"));
 //    return Parser::parseOdds(Match::find("IRLFElFp"));
 //        return LivescoreController::matchScore("IRLFElFp");
-    return GamesController::getMatchOddsForAll('2014-08-19', '2014-08-19');
+//    return GamesController::getMatchOddsForAll('2014-08-19', '2014-08-19');
 });
 
 //free views
