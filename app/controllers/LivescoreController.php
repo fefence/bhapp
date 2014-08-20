@@ -25,17 +25,21 @@ class LivescoreController extends \BaseController
 //        return $matches;
         foreach($matches as $match) {
             if (in_array($match->id, $ids)) {
-                $bet = PPM::where('match_id', '=', $match->id)
+                $game = PPM::where('match_id', '=', $match->id)
                     ->where('confirmed', '=', 1)
-                    ->where('user_id', '=', Auth::user()->id)->sum('bet');
+                    ->where('user_id', '=', Auth::user()->id)
+                    ->orderBy('id')
+                    ->first();
             } else {
-                $bet = Games::where('match_id', '=', $match->id)
+                $game = Games::where('match_id', '=', $match->id)
                     ->where('confirmed', '=', 1)
-                    ->where('user_id', '=', Auth::user()->id)->sum('bet');
+                    ->where('user_id', '=', Auth::user()->id)
+                    ->orderBy('id')
+                    ->first();
             }
             $res[$match->id] = array();
             $res[$match->id]['match'] = $match;
-            $res[$match->id]['bet'] = $bet;
+            $res[$match->id]['game'] = $game;
         }
 //        return $res;
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, -1);

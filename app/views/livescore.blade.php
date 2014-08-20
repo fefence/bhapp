@@ -31,11 +31,11 @@
         <th>league</th>
         <th style="width:60px;">date</th>
         <th style="width:50px;">time</th>
-        <th style="width:120px;">home</th>
-        <th style="width:120px;">away</th>
+        <th style="width:180px;">home</th>
+        <th style="width:180px;">away</th>
         <th>res</th>
         <th>res</th>
-        <th>bet</th>
+        <th>bet 1x2</th>
     </tr>
     </thead>
     <tbody>
@@ -54,7 +54,11 @@
             @endif
         </td>
         <td>{{$d['match']->resultShort}}</td>
-        <td>{{$d['bet']}}</td>
+        @if(isset($d['game']))
+        <td>{{$d['game']->bet}}<span>@</span>{{$d['game']->odds}}</td>
+        @else
+        <td></td>
+        @endif
     </tr>
     @endforeach
     </tbody>
