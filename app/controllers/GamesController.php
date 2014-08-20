@@ -9,7 +9,7 @@ class GamesController extends \BaseController
         if ($fromdate == '' && $todate == '') {
             $gr = Groups::getCurrentGroupId($league_details_id);
             $tail = "";
-
+            $offset = 0;
         } else {
             list($f, $t) = StringsUtil::calculateDates($fromdate, $todate);
             $gr = Groups::getGroupIdForDates($league_details_id, $f, $t);
@@ -53,10 +53,14 @@ class GamesController extends \BaseController
         $arr[1] = $grey;
         $standings = Standings::where('league_details_id', '=', $league_details_id)->lists('place', 'team');
         $league = LeagueDetails::find($league_details_id);
+        if ($tail == "" || isset($offset)) {
+            return View::make('matches')->with(['tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "grouphistory/$league_details_id/$offset", 'base_minus' => "grouphistory/$league_details_id/".($offset+1), 'base_plus' => "grouphistory/$league_details_id/".($offset-1), 'big' => "Round ".$gr->round, 'small' => "current", 'disable' => $disable]);
+        }
         return View::make('matches')->with(['tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "group/$league_details_id", 'big' => $big, 'small' => $small, 'disable' => $disable]);
     }
 
-    public static function confirmAllPPM($country, $fromdate, $todate) {
+    public static function confirmAllPPM($country, $fromdate, $todate)
+    {
         $games = PPM::where('user_id', '=', Auth::user()->id)
             ->join('match', 'match.id', '=', 'ppm.match_id')
             ->where('confirmed', '=', 0)
@@ -70,7 +74,7 @@ class GamesController extends \BaseController
             ->orderBy('game_type_id')
             ->select(DB::raw("`ppm`.*"))
             ->get();
-        foreach($games as $game){
+        foreach ($games as $game) {
             Games::confirmGame($game->id, $game->game_type_id);
         }
         return Redirect::back()->with('message', 'Bet confirmed');
@@ -246,7 +250,8 @@ class GamesController extends \BaseController
         return $game->bsf . "#" . $game->bet . "#" . $game->odds . "#" . $game->income . "#" . $bsf;
     }
 
-    public static function getMatchOddsForAll($fromdate = '', $todate = '') {
+    public static function getMatchOddsForAll($fromdate = '', $todate = '')
+    {
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
         $games = User::find(Auth::user()->id)
             ->games()
@@ -261,4 +266,54 @@ class GamesController extends \BaseController
         return Redirect::back()->with('message', 'Odds retrieved');
     }
 
+    public static function getGamesForGroupOffset($league_details_id, $offset)
+    {
+        $groups = Groups::where('league_details_id', '=', $league_details_id)->where('state', '=', 1)->orderBy('id', 'desc')->get();
+        $i = 0;
+        foreach ($groups as $gr) {
+            $i++;
+            if ($i == $offset) {
+                break;
+            }
+        }
+        $pool = Pools::getPoolForUserLeague(Auth::user()->id, $league_details_id);
+
+        if ($gr != null) {
+            $id = $gr->id;
+            $games = User::find(Auth::user()->id)->games()->where('groups_id', '=', $gr->id)->lists('standings_id');
+            if (count($games) == 0) {
+                $games = [-1];
+            }
+            $standings = Standings::where('league_details_id', '=', $league_details_id)->whereNotIn('id', $games)->lists('team');
+            $count = array();
+
+            $data = Groups::getGamesForGroup($gr->id);
+            $grey = Groups::getMatchesNotInGames($gr->id, $standings);
+//                list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
+
+            $disable = false;
+            foreach ($data as $g) {
+                $match = Match::find($g->match_id);
+                $count[$g->id] = count(Games::confirmedGamesForMatch($match, Auth::user()->id, $g->team));
+                if ($count[$g->id] > 0) {
+                    $disable = true;
+                }
+            }
+        } else {
+            $data = array();
+            $grey = array();
+            $count = 0;
+            $id = -1;
+            $disable = true;
+        }
+//        list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, $league_details_id);
+        $arr = array();
+        $arr[0] = $data;
+        $arr[1] = $grey;
+        $standings = Standings::where('league_details_id', '=', $league_details_id)->lists('place', 'team');
+        $league = LeagueDetails::find($league_details_id);
+//        return $league;
+        return View::make('matches')->with(['tail' => "", 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "group/$league_details_id/", 'base_minus' => "grouphistory/$league_details_id/".($offset + 1), 'base_plus' => "grouphistory/$league_details_id/".($offset - 1), 'big' => "Round ".$gr->round, 'small' => "", 'disable' => $disable]);
+
+    }
 }

@@ -2,7 +2,7 @@
 	@if(isset($fromdate) && isset($todate)) 
 	<span><a href="/{{$base}}/{{date('Y-m-d', strtotime($fromdate) - 86400)}}/{{date('Y-m-d', strtotime($fromdate) - 86400)}}" class="btn btn-default"><</a></span>&nbsp;<span><a href="/{{$base}}/{{date('Y-m-d', time())}}/{{date('Y-m-d', time())}}" class="btn btn-default">today</a></span><span><a href="/{{isset($all_link)?$all_link:$base}}" class="btn btn-default">all</a></span>&nbsp;<span><a href="/{{$base}}/{{date('Y-m-d', strtotime($fromdate) + 86400)}}/{{date('Y-m-d', strtotime($fromdate) + 86400)}}" class="btn btn-default">></a></span>
 	@else
-	<span><a href="#" class="btn btn-default"><</a></span>&nbsp;<span><a href="/{{$base}}" class="btn btn-default">today</a>&nbsp;<a href="#" class="btn btn-default">></a>
+	<span><a href="/{{$base_minus}}" class="btn btn-default"><</a></span>&nbsp;<span><a href="/{{$base}}" class="btn btn-default">today</a>&nbsp;<a href="/{{$base_plus}}" class="btn btn-default">></a>
 	@endif
 </div>
 <form id="dateform" action="{{$base}}" method="get"></form>
