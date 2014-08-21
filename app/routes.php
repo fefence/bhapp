@@ -27,6 +27,9 @@ Route::post('/pools/get/{free?}', "PoolsController@poolsGet");
 Route::post('/pools/toacc/{free?}', "PoolsController@poolsToAccount");
 Route::post('/pools/insert/{free?}', "PoolsController@poolsInsert");
 Route::get('/pool', "PoolsController@managePools");
+Route::get('/poolflow', function(){
+    return View::make("poolflow");
+});
 
 //leagues to play management
 Route::get('/addleagues', "SettingsController@addLeaguesToPlay");

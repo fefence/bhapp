@@ -15,6 +15,7 @@
 @stop
 
 @section('content')
+<a href="/poolflow">>>>flow veiew<<<</a>
 	<div class="row">
 	    <div class="col-xs-4">
 			<div class="alert alert-warning">

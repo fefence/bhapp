@@ -18,34 +18,42 @@
 <table id="matches" style="margin-bottom: 30px;">
     <thead>
     <tr>
-        <th><input type="text" name="search_engine" class="search_init" placeholder="league"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="date"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="time"></th>
+        <th><input type="text" name="search_engine" class="search_init" placeholder="league"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="home"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="away"></th>
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
     </tr>
     <tr>
-        <th>league</th>
         <th style="width:60px;">date</th>
-        <th style="width:50px;">time</th>
-        <th style="width:180px;">home</th>
-        <th style="width:180px;">away</th>
-        <th>res</th>
-        <th>res</th>
+        <th style="width:60px;">time</th>
+        <th style="width:100px;">league</th>
+        <th>home</th>
+        <th>away</th>
+        <th style="width: 50px;">s</th>
         <th>bet 1x2</th>
+        <th style="width: 40px;">res</th>
+        <th style="width: 40px;">res</th>
     </tr>
     </thead>
     <tbody>
     @foreach($matches as $d)
     <tr class="{{$d['match']->match_id}}">
-        <td><img src="/images/{{strtoupper($d['match']->country)}}.png">&nbsp;{{$d['match']->displayName}}</td>
         <td>{{date('d M', strtotime($d['match']->matchDate))}}</td>
         <td>{{substr($d['match']->matchTime, 0, strlen($d['match']->matchTime)-3)}}</td>
+        <td><img src="/images/{{strtoupper($d['match']->country)}}.png">&nbsp;{{$d['match']->displayName}}</td>
         <td><a href="/livescorematch/{{$d['match']->id}}">{{$d['match']->home}}</a></td>
         <td><a href="/livescorematch/{{$d['match']->id}}">{{$d['match']->away}}</a></td>
+        <td>13/14</td>
+        @if(isset($d['game']))
+        <td>{{$d['game']->bet}}<span>@</span>{{$d['game']->odds}}</td>
+        @else
+        <td></td>
+        @endif
         <td>
             @if ($d['match']->resultShort != '-')
             {{$d['match']->homeGoals}}:{{$d['match']->awayGoals}}
@@ -54,11 +62,7 @@
             @endif
         </td>
         <td>{{$d['match']->resultShort}}</td>
-        @if(isset($d['game']))
-        <td>{{$d['game']->bet}}<span>@</span>{{$d['game']->odds}}</td>
-        @else
-        <td></td>
-        @endif
+
     </tr>
     @endforeach
     </tbody>
