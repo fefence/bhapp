@@ -134,6 +134,30 @@ class PPMController extends \BaseController
                 $res[$m->id]['all'] = '-';
                 $res[$m->id]['conf'] = '-';
             }
+            $res[$m->id][5] = Series::where('end_match_id', '=', $m->id)->where('game_type_id', '=', 5)->where('active', '=', 1)->first();
+            if ($res[$m->id][5] != null) {
+                $res[$m->id][5] = $res[$m->id][5]->current_length;
+            } else {
+                $res[$m->id][5] = '-';
+            }
+            $res[$m->id][6] = Series::where('end_match_id', '=', $m->id)->where('game_type_id', '=', 6)->where('active', '=', 1)->first();
+            if ($res[$m->id][6] != null) {
+                $res[$m->id][6] = $res[$m->id][6]->current_length;
+            } else {
+                $res[$m->id][6] = '-';
+            }
+            $res[$m->id][7] = Series::where('end_match_id', '=', $m->id)->where('game_type_id', '=', 7)->where('active', '=', 1)->first();
+            if ($res[$m->id][7] != null) {
+                $res[$m->id][7] = $res[$m->id][7]->current_length;
+            } else {
+                $res[$m->id][7] = '-';
+            }
+            $res[$m->id][8] = Series::where('end_match_id', '=', $m->id)->where('game_type_id', '=', 8)->where('active', '=', 1)->first();
+            if ($res[$m->id][8] != null) {
+                $res[$m->id][8] = $res[$m->id][8]->current_length;
+            } else {
+                $res[$m->id][8] = '-';
+            }
         }
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, -1);
         return View::make('flat')->with(['matches' => $res, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small]);

@@ -27,6 +27,10 @@
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
     </tr>
     <tr>
         <td></td>
@@ -34,6 +38,10 @@
         <th style="width:50px;">time</th>
         <th>home</th>
         <th>away</th>
+        <th>1x2</th>
+        <th>0-0</th>
+        <th>1-1</th>
+        <th>2-2</th>
         <th></th>
         <th>res</th>
         <th>res</th>
@@ -47,6 +55,10 @@
         <td>{{substr($d['match']->matchTime, 0, strlen($d['match']->matchTime)-3)}}</td>
         <td>{{$d['match']->home}}</td>
         <td>{{$d['match']->away}}</td>
+        <td>{{$d[5]}}</td>
+        <td>{{$d[6]}}</td>
+        <td>{{$d[7]}}</td>
+        <td>{{$d[8]}}</td>
         <td>@include('layouts.partials.xofy', ['x' => $d['conf'], 'y' => $d['all']])</td>
         <td>
             @if ($d['match']->resultShort != '-')
