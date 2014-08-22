@@ -179,7 +179,7 @@ class SettingsController extends BaseController
             Parser::parseMatchesForUSA($current, $next);
             Parser::parseLeagueSeriesUSA($league_details_id);
         } else {
-            Parser::parseLeagueStandings($league_details_id);
+//            Parser::parseLeagueStandings($league_details_id);
             Parser::parseMatchesForGroup($current, $next);
         }
         $str = Standings::where('league_details_id', '=', $league_details_id)

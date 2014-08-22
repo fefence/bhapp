@@ -7,14 +7,23 @@ class LivescoreController extends \BaseController
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
         //TODO parse from livescore
         $today = date('Y-m-d', time());
-        $ids = PPM::where('user_id', '=', Auth::user()->id)->lists('match_id');
+//        $ids = PPM::where('user_id', '=', Auth::user()->id)->lists('match_id');
 //        return $ids;
+        $leagues = Settings::where('user_id', '=', Auth::user()->id)
+            ->where('game_type_id', '>=', 5)
+            ->where('game_type_id', '<=', 8)
+            ->lists('league_details_id');
+        $ms = Match::where('matchDate', '<=', $todate)
+            ->where('matchDate', '>=', $fromdate)
+            ->whereIn('league_details_id', $leagues)
+            ->join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
+            ->lists('match.id');
         $pps = Games::where('user_id', '=', Auth::user()->id)->lists('match_id');
         $matches = Match::where('matchDate', '<=', $todate)
             ->join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
             ->where('matchDate', '>=', $fromdate)
-            ->where(function($query) use ($ids, $pps){
-                $query->whereIn('match.id', $ids)
+            ->where(function($query) use ($ms, $pps){
+                $query->whereIn('match.id', $ms)
                     ->orWhereIn('match.id', $pps);
             })
             ->orderBy('matchDate')
@@ -24,7 +33,7 @@ class LivescoreController extends \BaseController
         $res = array();
 //        return $matches;
         foreach($matches as $match) {
-            if (in_array($match->id, $ids)) {
+            if (in_array($match->id, $ms)) {
                 $game = PPM::where('match_id', '=', $match->id)
                     ->where('confirmed', '=', 1)
                     ->where('user_id', '=', Auth::user()->id)
