@@ -72,10 +72,10 @@ class Updater
         // Parser::parseMatchesForGroup($next);
 
         if ($gr->league_details_id == 112) {
-//            Parser::parseLeagueSeriesUSA($current->league_details_id);
+            Parser::parseLeagueSeriesUSA($current->league_details_id);
             Parser::parseMatchesForUSA($current, $next);
         } else {
-//            Parser::parseLeagueSeries($current->league_details_id);
+            Parser::parseLeagueSeries($current->league_details_id);
             Parser::parseMatchesForGroup($current, $next);
 
         }
