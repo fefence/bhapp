@@ -1,15 +1,6 @@
 <?php
 Route::get('/boo', function(){
-    $groups = Groups::where('state', '=', 2)->lists('id');
-    $games = Games::whereIn('games.groups_id', $groups)
-        ->join('match', 'match.id', '=', 'games.match_id')
-        ->where('resultShort', '=', '-')
-        ->select(DB::raw('games.*'))
-        ->get();
-    foreach($games as $game){
-        $game->current_length = Standings::find($game->standings_id)->streak;
-        $game->save();
-    }
+   SeriesController::calculatePPMSeries(74);
 //    return Checker::getAllMatches();
 //    return Parser::parseMatchesForGroup()
 //    return Updater::updateFree();
