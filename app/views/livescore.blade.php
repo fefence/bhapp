@@ -45,7 +45,7 @@
     <tr class="{{$d['match']->match_id}}">
         <td>{{date('d M', strtotime($d['match']->matchDate))}}</td>
         <td>{{substr($d['match']->matchTime, 0, strlen($d['match']->matchTime)-3)}}</td>
-        <td><img src="/images/{{strtoupper($d['match']->country)}}.png">&nbsp;{{$d['match']->displayName}}</td>
+        <td><img src="/images/{{strtoupper($d['match']->country)}}.png">&nbsp;<a href= @if(isset($d['game']) && ($d['game']->game_type_id > 4)) "/ppm/country/{{$d['match']->country}}/" @else "/group/{{$d['match']->league_details_id}}" @endif>{{$d['match']->displayName}}</a></td>
         <td><a href="/livescorematch/{{$d['match']->id}}">{{$d['match']->home}}</a></td>
         <td><a href="/livescorematch/{{$d['match']->id}}">{{$d['match']->away}}</a></td>
         <td>13/14</td>
