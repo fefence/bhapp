@@ -17,6 +17,7 @@ class LivescoreController extends \BaseController
             ->where('matchDate', '>=', $fromdate)
             ->whereIn('league_details_id', $leagues)
             ->join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
+            ->select('match.id as id')
             ->lists('match.id');
         $pps = Games::where('user_id', '=', Auth::user()->id)->lists('match_id');
         $matches = Match::where('matchDate', '<=', $todate)
