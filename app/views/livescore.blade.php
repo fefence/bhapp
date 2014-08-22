@@ -27,6 +27,7 @@
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
     </tr>
     <tr>
         <th style="width:60px;">date</th>
@@ -36,6 +37,7 @@
         <th>away</th>
         <th style="width: 50px;">s</th>
         <th>bet 1x2</th>
+        <th>l</th>
         <th style="width: 40px;">res</th>
         <th style="width: 40px;">res</th>
     </tr>
@@ -51,7 +53,9 @@
         <td>13/14</td>
         @if(isset($d['game']))
         <td>{{$d['game']->bet}}<span>@</span>{{$d['game']->odds}}</td>
+        <td>{{$d['game']->current_length}}</td>
         @else
+        <td></td>
         <td></td>
         @endif
         <td>

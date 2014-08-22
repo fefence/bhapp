@@ -224,6 +224,7 @@ class Updater
                 $game->bsf = $bsfpm;
                 if ($game->odds == null)
                     $game->odds = 3;
+                $game->current_length = Standings::find($st_id)->streak;
                 $game->save();
                 $game->income = $game->odds * $game->bet;
                 $game->save();
@@ -235,8 +236,8 @@ class Updater
                 if ($game->odds == null)
                     $game->odds = 3;
                 $game->special = 1;
+                $game->current_length = Standings::find($st_id)->streak;
                 $game->save();
-
                 $game->income = $game->odds * $game->bet;
                 $game->save();
             }

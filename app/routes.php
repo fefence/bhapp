@@ -1,6 +1,16 @@
 <?php
 Route::get('/boo', function(){
-    return Checker::getAllMatches();
+    $groups = Groups::where('state', '=', 2)->lists('id');
+    $games = Games::whereIn('games.groups_id', $groups)
+        ->join('match', 'match.id', '=', 'games.match_id')
+        ->where('resultShort', '=', '-')
+        ->select(DB::raw('games.*'))
+        ->get();
+    foreach($games as $game){
+        $game->current_length = Standings::find($game->standings_id)->streak;
+        $game->save();
+    }
+//    return Checker::getAllMatches();
 //    return Parser::parseMatchesForGroup()
 //    return Updater::updateFree();
 //    return Match::getScore(Match::find("IRLFElFp"));
