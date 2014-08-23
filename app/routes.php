@@ -1,6 +1,6 @@
 <?php
 Route::get('/boo', function(){
-//   SeriesController::calculatePPMSeries(74);
+   SeriesController::calculatePPMSeries(100);
 //    return Checker::getAllMatches();
 //    return Parser::parseMatchesForGroup()
 //    return Updater::updateFree();
