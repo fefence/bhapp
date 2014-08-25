@@ -23,7 +23,7 @@ class StringsUtil
             return array($big, $small);
         } else {
             $small = "";
-            $big = date('d M (D)', strtotime($fromdate)) . " to " . date('d-M-y (D)', strtotime($todate));
+            $big = date('d M (D)', strtotime($fromdate)) . " to " . date('d M (D)', strtotime($todate));
             return array($big, $small);
         }
     }

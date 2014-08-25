@@ -247,6 +247,11 @@ class GamesController extends \BaseController
             $game->save();
 
         }
+        if ($game_type_id > 4 && $game_type_id < 9) {
+            $game = PPM::find($game_id);
+        } else if ($game_type_id > 0 && $game_type_id < 5) {
+            $game = Games::find($game_id);
+        }
         return $game->bsf . "#" . $game->bet . "#" . $game->odds . "#" . $game->income . "#" . $bsf;
     }
 

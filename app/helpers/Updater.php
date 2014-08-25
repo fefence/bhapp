@@ -362,6 +362,7 @@ class Updater
                                 $newgame->current_length = $news->current_length;
                                 $newgame->income = 0;
                                 $newgame->save();
+//                                Parser::parseMatchOddsForGames([$newgame]);
                             }
                         }
                     } else {
