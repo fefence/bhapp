@@ -21,7 +21,7 @@ class PPMController extends \BaseController
         } else {
             $standings = array();
         }
-        $league = LeagueDetails::find($league_ids[0]);
+        $league = LeagueDetails::where('country', '=', $country)->where('ppm', '=', 1)->first();
 //        $datarr[1] = array();
         return View::make('ppm')->with(['country' => $league->country, 'datarr' => $datarr, 'standings' => $standings, 'ppm' => true, 'league_details_id' => -1, 'fromdate' => $fromdate, 'todate' => $todate, 'count' => $count, 'big' => $big, 'small' => $small, 'league' => $league, 'base' => 'ppm/country/' . $country]);
     }

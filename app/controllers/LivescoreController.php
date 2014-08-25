@@ -84,7 +84,8 @@ class LivescoreController extends \BaseController
         $dom->preserveWhiteSpace = FALSE;
         @$dom->loadHTML($html);
 
-        return Parser::parseLivescoreForMatch($dom);
+//        return $html;
+        return View::make('matchfeed')->with(['html' => Parser::parseLivescoreForMatch($dom)]);
         return $html;
     }
 }
