@@ -23,7 +23,7 @@ class LivescoreController extends \BaseController
         $matches = Match::where('matchDate', '<=', $todate)
             ->join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
             ->where('matchDate', '>=', $fromdate)
-            ->where(function($query) use ($ms, $pps){
+            ->where(function ($query) use ($ms, $pps) {
                 $query->whereIn('match.id', $ms)
                     ->orWhereIn('match.id', $pps);
             })
@@ -33,23 +33,35 @@ class LivescoreController extends \BaseController
             ->get();
         $res = array();
 //        return $matches;
-        foreach($matches as $match) {
+        foreach ($matches as $match) {
+            $res[$match->id] = array();
+            $res[$match->id]['streak'] = "";
             if (in_array($match->id, $ms)) {
                 $game = PPM::where('match_id', '=', $match->id)
                     ->where('confirmed', '=', 1)
                     ->where('user_id', '=', Auth::user()->id)
                     ->orderBy('id')
                     ->first();
+                if($game != null){
+                    $res[$match->id]['streak'] = $game->current_length;
+                }
             } else {
                 $game = Games::where('match_id', '=', $match->id)
                     ->where('confirmed', '=', 1)
                     ->where('user_id', '=', Auth::user()->id)
                     ->orderBy('id')
                     ->first();
+                if ($game != null) {
+                    $res[$match->id]['streak'] = Standings::where('league_details_id', '=', $match->league_details_id)
+                            ->where('team', '=', $match->home)
+                            ->first()->streak . "/" . Standings::where('league_details_id', '=', $match->league_details_id)
+                            ->where('team', '=', $match->away)
+                            ->first()->streak;
+                }
             }
-            $res[$match->id] = array();
             $res[$match->id]['match'] = $match;
             $res[$match->id]['game'] = $game;
+
         }
 //        return $res;
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, -1);
@@ -60,24 +72,25 @@ class LivescoreController extends \BaseController
         return View::make('livescore')->with(['matches' => $res, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small]);
     }
 
-    public static function matchScore($match_id) {
+    public static function matchScore($match_id)
+    {
 
-        $url = "http://d.livescore.in/x/feed/d_su_".$match_id."_en_4";
-        $curl = curl_init ( $url );
+        $url = "http://d.livescore.in/x/feed/d_su_" . $match_id . "_en_4";
+        $curl = curl_init($url);
 
-        curl_setopt( $curl, CURLOPT_URL, $url );
-        $header = array (
+        curl_setopt($curl, CURLOPT_URL, $url);
+        $header = array(
             'Accept-Encoding:gzip,deflate,sdch',
             "X-Fsign: SW9D1eZo",
             'User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.142 Safari/535.19',
         );
-        curl_setopt( $curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.142 Safari/535.19');
-        curl_setopt( $curl, CURLOPT_HTTPHEADER, $header );
-        curl_setopt( $curl, CURLOPT_REFERER, 'http://kat.ph' );
-        curl_setopt( $curl, CURLOPT_ENCODING, 'gzip,deflate,sdch' );
-        curl_setopt( $curl, CURLOPT_AUTOREFERER, true );
-        curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
-        curl_setopt( $curl, CURLOPT_TIMEOUT, 10 );
+        curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.142 Safari/535.19');
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($curl, CURLOPT_REFERER, 'http://kat.ph');
+        curl_setopt($curl, CURLOPT_ENCODING, 'gzip,deflate,sdch');
+        curl_setopt($curl, CURLOPT_AUTOREFERER, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 10);
 
         $html = curl_exec($curl);
         $dom = new DOMDocument;

@@ -25,7 +25,7 @@
         <th><input type="text" name="search_engine" class="search_init" placeholder="away"></th>
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
-        <th><input type="hidden"></th>
+<!--        <th><input type="hidden"></th>-->
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
     </tr>
@@ -37,7 +37,7 @@
         <th>away</th>
         <th style="width: 50px;">s</th>
         <th>bet 1x2</th>
-        <th>l</th>
+<!--        <th>l</th>-->
         <th style="width: 40px;">res</th>
         <th style="width: 40px;">res</th>
     </tr>
@@ -50,10 +50,10 @@
         <td><img src="/images/{{strtoupper($d['match']->country)}}.png">&nbsp;<a href= @if(isset($d['game']) && ($d['game']->game_type_id > 4)) "/ppm/country/{{$d['match']->country}}/" @else "/group/{{$d['match']->league_details_id}}" @endif>{{$d['match']->alias}}</a></td>
         <td><a href="/livescorematch/{{$d['match']->id}}">{{$d['match']->home}}</a></td>
         <td><a href="/livescorematch/{{$d['match']->id}}">{{$d['match']->away}}</a></td>
-        <td>13/14</td>
+        <td>{{$d['streak']}}</td>
         @if(isset($d['game']))
         <td>{{$d['game']->bet}}<span>@</span>{{$d['game']->odds}}</td>
-        <td>{{$d['game']->current_length}}</td>
+<!--        <td>{{$d['game']->current_length}}</td>-->
         @else
         <td></td>
         <td></td>
