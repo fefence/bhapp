@@ -36,7 +36,7 @@ class PPMController extends \BaseController
             $info[$league->country]['all'] = count(PPM::ppmForDatesCountry($fromdate, $todate, $league->country));
             $info[$league->country]['confirmed'] = PPM::ppmConfirmedForLeague($fromdate, $todate, $league);
         }
-        return View::make('ppmcountries')->with(['data' => $leagues, 'info' => $info, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small, 'all_link' => "ppmflat/$fromdate/$todate", 'ppm' => true]);
+        return View::make('ppmcountries')->with(['all_btn'=>'flat', 'data' => $leagues, 'info' => $info, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small, 'all_link' => "ppmflat/$fromdate/$todate", 'ppm' => true]);
     }
 
     public static function getOddsForCountry($country, $fromdate = "", $todate = "")
@@ -161,7 +161,7 @@ class PPMController extends \BaseController
             }
         }
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, -1);
-        return View::make('flat')->with(['matches' => $res, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small]);
+        return View::make('flat')->with(['disable_all' => true, 'matches' => $res, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small]);
     }
 
 }

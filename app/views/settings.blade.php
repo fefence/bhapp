@@ -2,7 +2,7 @@
 
 @section('breadcrumbs')
 <?php
-$list = array('pps' => URL::to("home"));
+$list = array();
 $active = 'settings';
 $elements = array('active' => $active, 'list' => $list);
 ?>
@@ -26,52 +26,50 @@ $elements = array('active' => $active, 'list' => $list);
     <div id='content' class="tab-content">
         <!-- tab::myleagues -->
         <div class="tab-pane active" id="myppsleagues">
-            <h6>PPS</h6>
 
             <div class="row">
                 <table class="table-bordered" style="margin-bottom: 20px; width: 100%;">
                     <tr>
-                        <th style="width: 15%;text-align: center;">Country::League</th>
-                        <th style="width: %;text-align: center;">1x2</th>
-                        <th style="width: %;text-align: center;">0:0</th>
-                        <th style="width: %;text-align: center;">1:1</th>
-                        <th style="width: %;text-align: center;">2:2</th>
-                    </tr>
+                        <?php $i = 0; ?>
                     @foreach($pps as $country=>$leagues)
                     @foreach($leagues as $name=>$s)
-
-                    <tr>
+                        @if ($i % 3 == 0)
+                            <tr>
+                        @endif
                         <td><p class="text-center"><img src="/images/{{strtoupper($country)}}.png"> {{$name}}</p></td>
-                        @for ($i = 1; $i < 5; $i ++)
                         <td style="padding-left: 10px;">
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="{{$s[0]}}-{{$i}}-opt" id="0" value="0" {{($s[$i]['auto'] == 0)?"checked":""}}>
+                                    <input type="radio" name="{{$s[0]}}-{{1}}-opt" id="0" value="0" {{($s[1]['auto'] == 0)?"checked":""}}>
                                     Disabled
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="{{$s[0]}}-{{$i}}-opt" id="1" value="1" {{($s[$i]['auto'] == 1)?"checked":""}}>
+                                    <input type="radio" name="{{$s[0]}}-{{1}}-opt" id="1" value="1" {{($s[1]['auto'] == 1)?"checked":""}}>
                                     Automatic
                                 </label>
-                                <input type="text" name="{{$s[0]}}-from-{{$i}}" id="{{$s[0]}}-from-{{$i}}" value="{{($s[1]['auto'] == 1)?$s[$i]['from']:''}}" style="width: 25px;"> to
-                                <input type="text" name="{{$s[0]}}-to-{{$i}}" id="{{$s[0]}}-to-{{$i}}" value="{{($s[1]['auto'] == 1)?$s[$i]['to']:''}}" style="width: 25px;"> at
-                                <input type="text" name="{{$s[0]}}-mul-{{$i}}" id="{{$s[0]}}-mul-{{$i}}" value="{{($s[1]['auto'] == 1)?$s[$i]['multiplier']:''}}" style="width: 25px;">
+                                <input type="text" name="{{$s[0]}}-from-{{1}}" id="{{$s[0]}}-from-{{1}}" value="{{($s[1]['auto'] == 1)?$s[1]['from']:''}}" style="width: 25px;"> to
+                                <input type="text" name="{{$s[0]}}-to-{{1}}" id="{{$s[0]}}-to-{{1}}" value="{{($s[1]['auto'] == 1)?$s[1]['to']:''}}" style="width: 25px;"> at
+                                <input type="text" name="{{$s[0]}}-mul-{{1}}" id="{{$s[0]}}-mul-{{1}}" value="{{($s[1]['auto'] == 1)?$s[1]['multiplier']:''}}" style="width: 25px;">
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="{{$s[0]}}-{{$i}}-opt" id="2" value="2" {{($s[$i]['auto'] == 2)?"checked":""}}>
+                                    <input type="radio" name="{{$s[0]}}-{{1}}-opt" id="2" value="2" {{($s[1]['auto'] == 2)?"checked":""}}>
                                     Fixed
                                 </label> >
-                                <input type="text" name="{{$s[0]}}-gt-{{$i}}" id="{{$s[0]}}-gt-{{$i}}" value="{{($s[1]['auto'] == 2)?$s[$i]['from']:''}}" style="width: 25px;"> at
-                                <input type="text" name="{{$s[0]}}-mult-{{$i}}" id="{{$s[0]}}-mult-{{$i}}" value="{{($s[1]['auto'] == 2)?$s[$i]['multiplier']:''}}" style="width: 25px;">
+                                <input type="text" name="{{$s[0]}}-gt-{{1}}" id="{{$s[0]}}-gt-{{1}}" value="{{($s[1]['auto'] == 2)?$s[1]['from']:''}}" style="width: 25px;"> at
+                                <input type="text" name="{{$s[0]}}-mult-{{1}}" id="{{$s[0]}}-mult-{{1}}" value="{{($s[1]['auto'] == 2)?$s[1]['multiplier']:''}}" style="width: 25px;">
                             </div>
                         </td>
-                        @endfor
+                        @if ($i % 3 == 2)
                     </tr>
-                    @endforeach
-                    @endforeach
+                        @endif
+                    <?php $i ++; ?>
+
+                        @endforeach
+                        @endforeach
+                    </tr>
                 </table>
             </div>
         </div>

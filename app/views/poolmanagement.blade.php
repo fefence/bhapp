@@ -3,7 +3,7 @@
 @section('breadcrumbs')
 	<!-- breadcrumbs -->
 	<?php
-		$list = array('pps' => URL::to("home"));
+		$list = array();
 		$active = 'pool';
 		$elements = array('active' => $active, 'list' => $list);
 	?>

@@ -4,7 +4,7 @@
 <!-- breadcrumbs -->
 
 <?php
-$list = array('pps' => URL::to("home"));
+$list = array();
 $active = 'freeview';
 $elements = array('active' => $active, 'list' => $list);
 ?>
