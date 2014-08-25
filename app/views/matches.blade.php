@@ -152,6 +152,27 @@ $i = 0;
 $i++;
 ?>
 @endforeach
+@if(isset($settings))
+<div class="row">
+    <form class="form-horizontal" role="form">
+        <div class="col-xs-2">
+            <input type="submit" value="edit" class="form-control btn-xs" id="input1">
+        </div>
+        <div class="col-xs-3">
+            <input type="text" class="form-control" id="input1" placeholder="from" value="{{$settings->from}}">
+        </div>
+        <div class="col-xs-2">
+            <input type="text" class="form-control" id="input2" placeholder="to" value="{{$settings->to}}">
+        </div>
+        <div class="col-xs-3">
+            <input type="text" class="form-control" id="input3" placeholder="multiplier"  value="{{$settings->multiplier}}">
+        </div>
+        <div class="col-xs-2">
+            <input type="submit" value="cancel" class="form-control btn-xs" id="input1">
+        </div>
+    </form>
+</div>
+@endif
 <script type="text/javascript">
 // $('#get_from_pool').on("click", function(){
 // 	var a = $('#amount').val();
