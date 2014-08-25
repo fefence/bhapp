@@ -77,8 +77,8 @@ $i = 0;
         <td class='text-muted'><em>{{$d->type}}</em></td>
 <!--        <td class='editabledd warning'>{{$d->bookmakerName}}</td>-->
         <td>{{$d->bsf}}</td>
-        <td @if($d->resultShort == '-') class='editable' @endif id="{{$d->game_type_id}}">{{$d->bet}}</td>
-        <td @if($d->resultShort == '-') class='editable oddsColumn' @endif id="{{$d->game_type_id}}">{{$d->odds}}</td>
+        <td @if($d->resultShort == '-') class='editable oddsColumn' @endif id="{{$d->game_type_id}}">{{$d->bet}}</td>
+        <td @if($d->resultShort == '-') class='editable' @endif id="{{$d->game_type_id}}">{{$d->odds}}</td>
         <td>{{$d->income}}</td>
         <td>{{round(($d->income - $d->bsf - $d->bet), 2, PHP_ROUND_HALF_UP)}}</td>
         <td>@if($d->resultShort == '-')  <a href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}" style="font-size: 130%;">+&nbsp<span style='display: none;'>{{$d->match_id}}</span></a>({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})

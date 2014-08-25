@@ -91,8 +91,8 @@ $i = 0;
         <td>{{$d->resultShort}}</td>
 <!--        <td class='text-muted'><em>{{$d->type}}</em></td>-->
         <td @if($d->resultShort == '-') class='editable' @endif id="{{$d->game_type_id}}">{{$d->bsf}}</td>
-        <td @if($d->resultShort == '-') class='editable' @endif id="{{$d->game_type_id}}">{{$d->bet}}</td>
-        <td @if($d->resultShort == '-') class='editable oddsColumn' @endif id="{{$d->game_type_id}}">{{$d->odds}}</td>
+        <td @if($d->resultShort == '-') class='editable oddsColumn' @endif id="{{$d->game_type_id}}">{{$d->bet}}</td>
+        <td @if($d->resultShort == '-') class='editable' @endif id="{{$d->game_type_id}}">{{$d->odds}}</td>
         <td>{{$d->income}}</td>
         <td>{{round(($d->income - $d->bsf - $d->bet), 2, PHP_ROUND_HALF_UP)}}</td>
         <td>@if($d->resultShort == '-')
@@ -154,26 +154,69 @@ $i++;
 @endforeach
 @if(isset($settings))
 <div class="row">
-    <form class="form-horizontal" role="form">
+    <form class="form-horizontal" role="form" action="" method="post" id="sett">
         <div class="col-xs-2">
-            <input type="submit" value="edit" class="form-control btn-xs" id="input1">
+            <input type="button" value="edit" onclick="return false;" class="form-control btn-xs" id="edit">
         </div>
         <div class="col-xs-3">
-            <input type="text" class="form-control" id="input1" placeholder="from" value="{{$settings->from}}">
+            <input type="text" class="form-control" name="from" id="from" placeholder="from" value="{{$settings->from}}" readonly="readonly">
         </div>
         <div class="col-xs-2">
-            <input type="text" class="form-control" id="input2" placeholder="to" value="{{$settings->to}}">
+            <input type="text" class="form-control" name="to" id="to" placeholder="to" value="{{$settings->to}}" readonly="readonly">
         </div>
         <div class="col-xs-3">
-            <input type="text" class="form-control" id="input3" placeholder="multiplier"  value="{{$settings->multiplier}}">
+            <input type="text" class="form-control" name="multiplier" id="multiplier" placeholder="multiplier"  value="{{$settings->multiplier}}" readonly="readonly">
+            <input type="hidden" name="league_details_id" value="{{$league->id}}">
         </div>
         <div class="col-xs-2">
-            <input type="submit" value="cancel" class="form-control btn-xs" id="input1">
+            <input type="submit" value="save" class="form-control btn-xs" id="subm" disabled>
         </div>
     </form>
 </div>
 @endif
 <script type="text/javascript">
+    $('#edit').on("click", function(){
+        if ( $(this).attr('value') == 'edit') {
+            $(this).attr({
+                value: 'cancel'
+            });
+            $("#sett").attr({
+                action: "/settings/saveforleague"
+            });
+            $("#from").attr({
+                readonly: false
+            });
+            $("#to").attr({
+                readonly: false
+            });
+            $("#multiplier").attr({
+                readonly: false
+            });
+            $("#subm").attr({
+                disabled: false
+            });
+        } else {
+            $(this).attr({
+                value: 'edit'
+            });
+            $("#sett").attr({
+                action: ""
+            });
+            $("#from").attr({
+                readonly: true
+            });
+            $("#to").attr({
+                readonly: true
+            });
+            $("#multiplier").attr({
+                readonly: true
+            });
+            $("#subm").attr({
+                disabled: true
+            });
+        }
+    });
+
 // $('#get_from_pool').on("click", function(){
 // 	var a = $('#amount').val();
 // 	$.post("/pools/get",

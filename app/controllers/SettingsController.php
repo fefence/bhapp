@@ -214,4 +214,26 @@ class SettingsController extends BaseController
         }
         return Redirect::back()->with("message", "League added");
     }
+
+    public static function saveSettingsForLeague() {
+        $league = LeagueDetails::find(Input::get('league_details_id'));
+        $setting = Settings::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $league->id, 'game_type_id' => 1]);
+//        $oldFrom = $setting->from;
+//        $oldTo = $setting->to;
+//        $oldMultiplier = $setting->multiplier;
+
+        $setting->from = Input::get('from');
+        $setting->to = Input::get('to');
+        $setting->multiplier = Input::get('multiplier');
+        $setting->save();
+        $pool = Pools::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $setting->league_details_id, 'game_type_id' => 1]);
+        $pool->save();
+        $group = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 2)->first(['id']);
+
+//        if ($group != NULL && $group->id != "" && ($oldMultiplier != $setting->multiplier || $oldFrom != $setting->from || $oldTo != $setting->to)) {
+            Updater::recalculateGroup($group->id, Auth::user()->id, 1);
+//        }
+
+        return Redirect::back();
+    }
 }

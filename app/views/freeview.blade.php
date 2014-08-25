@@ -86,8 +86,8 @@ $elements = array('active' => $active, 'list' => $list);
         <td>{{$d->resultShort}}</td>
         <td>{{$d->type}}</td>
         <td>{{$d->bsf}}</td>
-        <td class='editable warning' id="{{$d->team_id}}">{{$d->bet}}</td>
-        <td class='editable warning' id="{{$d->team_id}}">{{$d->odds}}</td>
+        <td class='editable oddsColumn' id="{{$d->team_id}}">{{$d->bet}}</td>
+        <td class='editable' id="{{$d->team_id}}">{{$d->odds}}</td>
         <td>{{$d->income}}</td>
         <td>{{round(($d->income - $d->bsf - $d->bet), 2, PHP_ROUND_HALF_UP)}}</td>
         <td><a href="/confirmfree/{{$d->games_id}}">+&nbsp<span style='display: none;'>{{$d->match_id}}</span></a>({{ (array_key_exists($d->match_id,
