@@ -268,14 +268,21 @@ class GamesController extends \BaseController
 
     public static function getGamesForGroupOffset($league_details_id, $offset)
     {
-        $groups = Groups::where('league_details_id', '=', $league_details_id)->where('state', '=', 1)->orderBy('id', 'desc')->get();
-        $i = 0;
-        foreach ($groups as $gr) {
-            $i++;
-            if ($i == $offset) {
-                break;
+        if ($offset == -1 || $offset == '-1') {
+            $gr = Groups::where('league_details_id', '=', $league_details_id)->where('state', '=', 3)->orderBy('id', 'desc')->first();
+        } else if ($offset == 0){
+            $gr = Groups::where('league_details_id', '=', $league_details_id)->where('state', '=', 2)->orderBy('id', 'desc')->first();
+        } else {
+            $groups = Groups::where('league_details_id', '=', $league_details_id)->where('state', '=', 1)->orderBy('id', 'desc')->get();
+            $i = 0;
+            foreach ($groups as $gr) {
+                $i++;
+                if ($i == $offset) {
+                    break;
+                }
             }
         }
+
         $pool = Pools::getPoolForUserLeague(Auth::user()->id, $league_details_id);
 
         if ($gr != null) {

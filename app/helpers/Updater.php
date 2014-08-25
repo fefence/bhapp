@@ -42,7 +42,8 @@ class Updater
 //                        Updater::recalculateGroup($match->groups_id, $game->user_id, $game->game_type_id);
 //                    }
                 }
-                if (Updater::isLastGameInGroup($match)) {
+                $ppm = LeagueDetails::find($match->league_details_id);
+                if (Updater::isLastGameInGroup($match) && $ppm != 1) {
                     $log = $log . " new group created for league: " . $match->league_details_id;
                     Updater::updateGroup($match->groups_id);
                 }
@@ -62,6 +63,7 @@ class Updater
 ////            }
 ////        }
         $gr = Groups::find($groups_id);
+
         $current = Groups::firstOrCreate(['league_details_id' => $gr->league_details_id, 'state' => 3, 'round' => ($gr->round + 1)]);
         $gr->state = 1;
         $gr->save();

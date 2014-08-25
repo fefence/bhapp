@@ -83,7 +83,7 @@ $i = 0;
         <td>{{round(($d->income - $d->bsf - $d->bet), 2, PHP_ROUND_HALF_UP)}}</td>
         <td>@if($d->resultShort == '-')  <a href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}" style="font-size: 130%;">+&nbsp<span style='display: none;'>{{$d->match_id}}</span></a>({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})
             @else
-            ({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})
+            ({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})<span style='display: none;'>{{$d->match_id}}</span>
             @endif
         </td>
     </tr>

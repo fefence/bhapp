@@ -23,7 +23,7 @@ class PPMController extends \BaseController
         }
         $league = LeagueDetails::find($league_ids[0]);
 //        $datarr[1] = array();
-        return View::make('ppm')->with(['datarr' => $datarr, 'standings' => $standings, 'ppm' => true, 'league_details_id' => -1, 'fromdate' => $fromdate, 'todate' => $todate, 'count' => $count, 'big' => $big, 'small' => $small, 'league' => $league, 'base' => 'ppm/country/' . $country]);
+        return View::make('ppm')->with(['country' => $league->country, 'datarr' => $datarr, 'standings' => $standings, 'ppm' => true, 'league_details_id' => -1, 'fromdate' => $fromdate, 'todate' => $todate, 'count' => $count, 'big' => $big, 'small' => $small, 'league' => $league, 'base' => 'ppm/country/' . $country]);
     }
 
     public function displayCountries($fromdate = "", $todate = "")
