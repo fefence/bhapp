@@ -1,6 +1,6 @@
 <?php
 Route::get('/boo', function(){
-   SeriesController::calculatePPMSeries(100);
+//    SeriesController::calculatePPMSeries(100);
 //    return Checker::getAllMatches();
 //    return Parser::parseMatchesForGroup()
 //    return Updater::updateFree();
@@ -8,6 +8,10 @@ Route::get('/boo', function(){
 //    return Parser::parseOdds(Match::find("IRLFElFp"));
 //        return LivescoreController::matchScore("IRLFElFp");
 //    return GamesController::getMatchOddsForAll('2014-08-19', '2014-08-19');
+});
+
+Route::get('/settings2', function(){
+   return View::make('settings2');
 });
 
 //free views

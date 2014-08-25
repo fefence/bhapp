@@ -48,6 +48,7 @@ class PPM extends Eloquent {
             ->where('matchDate', '<=', $todate)
             ->orderBy('matchDate')
             ->orderBy('matchTime')
+            ->orderBy('home')
             ->orderBy('game_type_id')
             ->select(DB::raw("`game_type`.*, `match`.*, `bookmaker`.*, `ppm`.*, `ppm`.id as games_id, `ppm`.`current_length` as 'streak', `leagueDetails`.country"))
             ->get();

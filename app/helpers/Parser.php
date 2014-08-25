@@ -5,9 +5,10 @@ use Illuminate\Database\Eloquent;
 class Parser
 {
 
-    public static function parseTimeDate($match) {
+    public static function parseTimeDate($match)
+    {
         $baseUrl = "http://www.betexplorer.com/soccer/poland/ekstraklasa/";
-        $url = $baseUrl."matchdetails.php?matchid=".$match->id;
+        $url = $baseUrl . "matchdetails.php?matchid=" . $match->id;
         $data = file_get_contents($url);
 
         $dom = new domDocument;
@@ -19,14 +20,14 @@ class Parser
         if ($tables->length > 0) {
             $date = $tables->item(0)->getElementsByTagName('tr')->item(0)->getElementsByTagName('th')->item(1)->nodeValue;
             $nums = explode('.', $date);
-            $strdate = $nums[2]."-".$nums[1]."-".$nums[0];
+            $strdate = $nums[2] . "-" . $nums[1] . "-" . $nums[0];
             $match->matchDate = $strdate;
         } else {
             return $url;
         }
         // echo "$matchId ";
 
-        $timestamp = strtotime(Match::parseTime($match->id)) + 60*60;
+        $timestamp = strtotime(Match::parseTime($match->id)) + 60 * 60;
         $match->matchTime = date('H:i:s', $timestamp);
         $match->save();
         return $match;
@@ -38,7 +39,7 @@ class Parser
         $oddsarr = array();
         foreach ($games as $game) {
             if ($game->game_type_id > 5) {
-                if(!array_key_exists($game->match_id, $oddsarr)) {
+                if (!array_key_exists($game->match_id, $oddsarr)) {
                     $oddsarr[$game->match_id] = Parser::parseOdds(Match::find($game->match_id));
                 }
                 if (count($oddsarr[$game->match_id]) == 0) {
@@ -357,7 +358,7 @@ class Parser
                 $match = Match::firstOrNew(array('id' => $id));
                 $match->home = $home;
                 $match->away = $away;
-                $timestamp = strtotime($date." ".$time) + 60 * 60;
+                $timestamp = strtotime($date . " " . $time) + 60 * 60;
                 $match->matchTime = date('H:i:s', $timestamp);
                 $match->matchDate = date('Y-m-d', $timestamp);
                 $match->groups_id = $group->id;
@@ -614,28 +615,35 @@ class Parser
 
     }
 
-    public static function parseOdds($match) {
+    public static function parseOdds($match)
+    {
         $league = LeagueDetails::find($match->league_details_id);
         $baseUrl = "http://www.oddsportal.com/soccer/";
-        $url = $baseUrl . $league->country . "/" . $league->fullName . "/".$match->id;
+        $url = $baseUrl . $league->country . "/" . $league->fullName . "/" . $match->id;
 //
 //        if (Parser::get_http_response_code($url) != "200") {
 //            return "Wrong league stats url! --> $url";
 //        }
         $data = file_get_contents($url);
         $matches = array();
-        preg_match ( '/xhash":"(?P<hash>[a-z0-9-A-Z]+)","/', $data , $matches );
+        preg_match('/xhash":"(?P<hash>[a-z0-9-A-Z]+)","/', $data, $matches);
         $hash = $matches['hash'];
 
-        $parse_url = "http://fb.oddsportal.com/feed/match/1-1-".$match->id."-8-2-".$hash.".dat";
+        $parse_url = "http://fb.oddsportal.com/feed/match/1-1-" . $match->id . "-8-2-" . $hash . ".dat";
         $json_data = file_get_contents($parse_url);
         $matches2 = array();
-        preg_match ( '/.dat\', (?P<json>.*)\)/', $json_data , $matches2);
+        preg_match('/.dat\', (?P<json>.*)\)/', $json_data, $matches2);
 
         $odds_arr = json_decode($matches2['json'], true);
-        $odds00 = $odds_arr['d']['oddsdata']["back"]['E-8-2-0-0-1']['odds'][16][0];
-        $odds11 = $odds_arr['d']['oddsdata']["back"]['E-8-2-0-0-3']['odds'][16][0];
-        $odds22 = $odds_arr['d']['oddsdata']["back"]['E-8-2-0-0-7']['odds'][16][0];
+        try {
+            $odds00 = $odds_arr['d']['oddsdata']["back"]['E-8-2-0-0-1']['odds'][16][0];
+            $odds11 = $odds_arr['d']['oddsdata']["back"]['E-8-2-0-0-3']['odds'][16][0];
+            $odds22 = $odds_arr['d']['oddsdata']["back"]['E-8-2-0-0-7']['odds'][16][0];
+        } catch (ErrorException $e) {
+            $odds00 = 3;
+            $odds11 = 3;
+            $odds22 = 3;
+        }
         return array(6 => $odds00, 7 => $odds11, 8 => $odds22);
     }
 

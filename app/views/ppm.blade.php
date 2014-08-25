@@ -4,7 +4,7 @@
 <!-- breadcrumbs -->
 <?php
 $list = array('ppm' => URL::to("/ppm"));
-$active = '<img src="/images/'.strtoupper($country).'.png"> '.$country;
+$active = '<img src="/images/'.strtoupper($league->country).'.png"> '.$league->country." <a href='http://www.betexplorer.com/soccer/".$league->country."/".$league->fullName."'>(betexpl)</a>";
 $elements = array('active' => $active, 'list' => $list);
 $i = 0;
 ?>
