@@ -90,6 +90,7 @@ Route::resource('sessions', 'SessionsController', ['only'  => ['create', 'store'
 //settings
 Route::get('/settings', 'SettingsController@display');
 Route::post('/settings/save', 'SettingsController@saveSettings');
+Route::post('/settings/saveforleague', 'SettingsController@saveSettings');
 Route::post('/settings/remove', 'SettingsController@remove');
 
 //home
