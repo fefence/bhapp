@@ -20,13 +20,11 @@ class LivescoreController extends \BaseController
             ->select('match.id as id')
             ->lists('match.id');
         $pps = Games::where('user_id', '=', Auth::user()->id)->lists('match_id');
+        $all_ids = array_merge($ms, $pps);
         $matches = Match::where('matchDate', '<=', $todate)
             ->join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
             ->where('matchDate', '>=', $fromdate)
-            ->where(function ($query) use ($ms, $pps) {
-                $query->whereIn('match.id', $ms)
-                    ->orWhereIn('match.id', $pps);
-            })
+            ->whereIn('match.id', $all_ids)
             ->orderBy('matchDate')
             ->orderBy('matchTime')
             ->select(DB::raw("`match`.*, `leagueDetails`.country, `leagueDetails`.displayName, `leagueDetails`.alias"))

@@ -53,9 +53,7 @@
         <td>{{$d['streak']}}</td>
         @if(isset($d['game']))
         <td>{{$d['game']->bet}}<span>@</span>{{$d['game']->odds}}</td>
-<!--        <td>{{$d['game']->current_length}}</td>-->
         @else
-        <td></td>
         <td></td>
         @endif
         <td>
