@@ -4,7 +4,7 @@
 	<!-- breadcrumbs -->
 
 	<?php
-		$list = array('ppm' => URL::to("home"));
+        $list = array('ppm' => URL::to("/ppm"));
 		$active = 'flat';
 		$elements = array('active' => $active, 'list' => $list);
 	?>
