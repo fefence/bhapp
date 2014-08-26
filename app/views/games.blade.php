@@ -35,7 +35,7 @@ $elements = array('active' => $active, 'list' => $list);
     <tbody>
     @foreach($data as $id=>$d)
     <tr class="{{$id}}">
-        <td><a href="/group/{{$id}}"><img src="/images/{{strtoupper($d['league']->country)}}.png"> {{$d['league']->displayName}}</a>&nbsp;(<a href="/group/{{$id}}/{{isset($fromdate)?$fromdate.'/':''}}{{isset($todate)?$todate:''}}">today</a>)</td>
+        <td><a href="/pps/group/{{$id}}"><img src="/images/{{strtoupper($d['league']->country)}}.png"> {{$d['league']->displayName}}</a>&nbsp;(<a href="/pps/group/{{$id}}/{{isset($fromdate)?$fromdate.'/':''}}{{isset($todate)?$todate:''}}">today</a>)</td>
         <td>@if(isset($d['prev'])) {{$d['prev']}} @endif</td>
         <td>@include('layouts.partials.xofy', ['x' => $d['conf'], 'y' => $d['today'], 'all' => $d['all']])</td>
         @foreach($d['filter'] as $filter=>$count)

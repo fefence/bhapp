@@ -58,7 +58,7 @@ class GamesController extends \BaseController
         if ($tail == "" || isset($offset)) {
             return View::make('matches')->with(['settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "grouphistory/$league_details_id/$offset", 'base_minus' => "grouphistory/$league_details_id/".($offset+1), 'base_plus' => "grouphistory/$league_details_id/".($offset-1), 'big' => "Round ".$gr->round, 'small' => "current", 'disable' => $disable]);
         }
-        return View::make('matches')->with(['settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "group/$league_details_id", 'big' => $big, 'small' => $small, 'disable' => $disable]);
+        return View::make('matches')->with(['settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "pps/group/$league_details_id", 'big' => $big, 'small' => $small, 'disable' => $disable]);
     }
 
     public static function confirmAllPPM($country, $fromdate, $todate)
@@ -328,7 +328,7 @@ class GamesController extends \BaseController
         $standings = Standings::where('league_details_id', '=', $league_details_id)->lists('place', 'team');
         $league = LeagueDetails::find($league_details_id);
 //        return $league;
-        return View::make('matches')->with(['tail' => "", 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "group/$league_details_id/", 'base_minus' => "grouphistory/$league_details_id/".($offset + 1), 'base_plus' => "grouphistory/$league_details_id/".($offset - 1), 'big' => "Round ".$gr->round, 'small' => "", 'disable' => $disable]);
+        return View::make('matches')->with(['tail' => "", 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/", 'base_minus' => "grouphistory/$league_details_id/".($offset + 1), 'base_plus' => "grouphistory/$league_details_id/".($offset - 1), 'big' => "Round ".$gr->round, 'small' => "", 'disable' => $disable]);
 
     }
 }

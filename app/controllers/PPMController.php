@@ -36,7 +36,7 @@ class PPMController extends \BaseController
             $info[$league->country]['all'] = count(PPM::ppmForDatesCountry($fromdate, $todate, $league->country));
             $info[$league->country]['confirmed'] = PPM::ppmConfirmedForLeague($fromdate, $todate, $league);
         }
-        return View::make('ppmcountries')->with(['all_btn'=>'flat', 'data' => $leagues, 'info' => $info, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small, 'all_link' => "ppmflat/$fromdate/$todate", 'ppm' => true]);
+        return View::make('ppmcountries')->with(['all_btn' => 'flat', 'data' => $leagues, 'info' => $info, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small, 'all_link' => "ppm/flat/$fromdate/$todate", 'ppm' => true]);
     }
 
     public static function getOddsForCountry($country, $fromdate = "", $todate = "")
@@ -113,13 +113,17 @@ class PPMController extends \BaseController
             ->where('game_type_id', '>=', 5)
             ->where('game_type_id', '<=', 8)
             ->lists('league_details_id');
-        $matches = Match::where('matchDate', '<=', $todate)
-            ->where('matchDate', '>=', $fromdate)
-            ->whereIn('league_details_id', $leagues)
-            ->join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
-            ->orderBy('matchTime')
-            ->select('leagueDetails.country', 'match.*')
-            ->get();
+        if (count($leagues) > 0) {
+            $matches = Match::where('matchDate', '<=', $todate)
+                ->where('matchDate', '>=', $fromdate)
+                ->whereIn('league_details_id', $leagues)
+                ->join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
+                ->orderBy('matchTime')
+                ->select('leagueDetails.country', 'match.*')
+                ->get();
+        } else {
+            $matches = array();
+        }
         $res = array();
         foreach ($matches as $m) {
             $all = $m->ppm()->where('user_id', '=', Auth::user()->id)
