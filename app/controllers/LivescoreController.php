@@ -13,12 +13,16 @@ class LivescoreController extends \BaseController
             ->where('game_type_id', '>=', 5)
             ->where('game_type_id', '<=', 8)
             ->lists('league_details_id');
-        $ms = Match::where('matchDate', '<=', $todate)
-            ->where('matchDate', '>=', $fromdate)
-            ->whereIn('league_details_id', $leagues)
-            ->join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
-            ->select('match.id as id')
-            ->lists('match.id');
+        if (count($leagues) > 0) {
+            $ms = Match::where('matchDate', '<=', $todate)
+                ->where('matchDate', '>=', $fromdate)
+                ->whereIn('league_details_id', $leagues)
+                ->join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
+                ->select('match.id as id')
+                ->lists('match.id');
+        } else {
+            $ms = array();
+        }
         $pps = Games::where('user_id', '=', Auth::user()->id)->lists('match_id');
         $all_ids = array_merge($ms, $pps);
         $matches = Match::where('matchDate', '<=', $todate)
