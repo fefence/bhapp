@@ -290,8 +290,9 @@ $(document).ready(function () {
         "sDom": '<"top"i>t<"bottom"><"clear">',
         "sPaginationType": "full_numbers",
         "aoColumnDefs": [
-            { 'bSortable': false, 'aTargets': [ 0, 1 ] }
-        ]
+            { 'bSortable': false, 'aTargets': [ 0 ] }
+        ],
+        "order": [[ 1, "asc" ], [ 2, "asc" ], [ 3, "asc" ]]
     });
 
     $("thead input").keyup(function () {

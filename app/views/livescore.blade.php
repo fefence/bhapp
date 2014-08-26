@@ -70,21 +70,6 @@
     </tbody>
 </table>
 <script type="text/javascript">
-    // $('#get_from_pool').on("click", function(){
-    // 	var a = $('#amount').val();
-    // 	$.post("/pools/get",
-    //            {
-    //                // "_token": $( this ).find( 'input[name=_token]' ).val(),
-    //                "league": $(this).parent().parent().attr("id"),
-    //                "game": $(this).parent().attr("id"),
-    //            },
-    //            function( data ) {
-    //                alert(data)
-    //                //do something with data/response returned by server
-    //            },
-    //            'json'
-    //        );
-    // });
 
     var asInitVals = new Array();
 
