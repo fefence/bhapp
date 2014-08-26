@@ -1,7 +1,7 @@
 <?php
 Route::get('/boo', function(){
 //    SeriesController::calculatePPMSeries(100);
-//    return Checker::getAllMatches();
+    return Checker::getAllMatches();
 //    return Parser::parseMatchesForGroup()
 //    return Updater::updateFree();
 //    return Match::getScore(Match::find("IRLFElFp"));
