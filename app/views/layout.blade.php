@@ -27,7 +27,7 @@
 			@yield('breadcrumbs')
 			@yield('pageHeader')
 			@yield('content')
-<!--			@include('layouts.partials.footer') -->
+			@include('layouts.partials.footer')
 			@include('layouts.partials.qtip')
 
 		</div>
