@@ -37,7 +37,7 @@ class UpdateDateTimeCommand extends Command {
      */
     public function fire()
     {
-
+        Checker::getAllMatches();
     }
 
     /**
