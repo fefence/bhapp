@@ -63,8 +63,8 @@ $i = 0;
         <td class="center"><img class="clickable" src="/images/plus-small.png"></td>
         <td>{{date('d M', strtotime($d->matchDate))}}</td>
         <td>{{substr($d->matchTime, 0, strlen($d->matchTime)-3)}}</td>
-        <td><a href="/ppmseries/{{$d->series_id}}">{{$d->home}} ({{$standings[$d->home]}})</a></td>
-        <td><a href="/ppmseries/{{$d->series_id}}">{{$d->away}} ({{$standings[$d->away]}})</a></td>
+        <td><a href="/ppm/series/{{$d->series_id}}">{{$d->home}} ({{$standings[$d->home]}})</a></td>
+        <td><a href="/ppm/series/{{$d->series_id}}">{{$d->away}} ({{$standings[$d->away]}})</a></td>
         <td>{{$d->streak}}</td>
         <td>
             @if ($d->resultShort != '-')

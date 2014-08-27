@@ -15,9 +15,9 @@ Route::get('/settings2', function(){
 });
 
 //free views
+Route::get('/free/manage', "FreeController@manage");
 Route::get('/free/{from?}/{to?}', "FreeController@display");
 Route::post('/savefree', "FreeController@saveTable");
-Route::get('/managefree', "FreeController@manage");
 Route::post('/saveteam', "FreeController@save");
 Route::get('/confirmfree/{game_id}', 'FreeController@confirmGame');
 Route::get('/deletefree/{game_id}', 'FreeController@deleteGame');
@@ -32,7 +32,7 @@ Route::post('/pools/get/{free?}', "PoolsController@poolsGet");
 Route::post('/pools/toacc/{free?}', "PoolsController@poolsToAccount");
 Route::post('/pools/insert/{free?}', "PoolsController@poolsInsert");
 Route::get('/pool', "PoolsController@managePools");
-Route::get('/poolflow', function(){
+Route::get('/pool/flow', function(){
     return View::make("poolflow");
 });
 
@@ -41,12 +41,12 @@ Route::get('/addleagues', "SettingsController@addLeaguesToPlay");
 Route::post('/saveleaguestoplay', "SettingsController@saveLeagues");
 
 //PPM views
+Route::get('/ppm/series/{id}', "PPMController@displaySeries");
 Route::get('/ppm/flat/{from?}/{to?}', "PPMController@displayFlatView");
 Route::get('/ppm/country/{country}/{from?}/{to?}', "PPMController@display");
 Route::get('/ppm/{from?}/{to?}', "PPMController@displayCountries");
 Route::get('/ppmall/{from?}/{to?}/odds', "PPMController@getOdds");
 Route::get('/ppm/{country}/{from}/{to}/odds', "PPMController@getOddsForCountry");
-Route::get('/ppmseries/{id}', "PPMController@displaySeries");
 Route::get('/confirmallppm/{country}/{from}/{to}', "GamesController@confirmAllPPM");
 
 //livescore
