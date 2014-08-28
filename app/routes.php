@@ -1,5 +1,5 @@
 <?php
-Route::get('/boo', function(){
+Route::get('/boo/{league}', function($league){
 //    SeriesController::calculatePPMSeries(100);
 //    return Checker::getAllMatches();
 //    return Parser::parseMatchesForGroup()
@@ -8,7 +8,8 @@ Route::get('/boo', function(){
 //    return Parser::parseOdds(Match::find("IRLFElFp"));
 //        return LivescoreController::matchScore("IRLFElFp");
 //    return GamesController::getMatchOddsForAll('2014-08-19', '2014-08-19');
-    return Updater::update();
+    $id = Groups::where('state', '=', 2)->where('league_details_id', '=', $league)->first()->id;
+    return Updater::updateGroup($id);
 });
 
 Route::get('/settings2', function(){
