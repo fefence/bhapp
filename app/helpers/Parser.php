@@ -571,8 +571,10 @@ class Parser
                     $m->league_details_id = $league_details_id;
                     $m->matchDate = $date;
                     $m->resultShort = '-';
+
 //                    $m->league_details_id = $league_details_id;
                     $m->save();
+                    Parser::parseTimeDate($m);
                 }
             }
         }
