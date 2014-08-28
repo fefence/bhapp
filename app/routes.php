@@ -1,13 +1,14 @@
 <?php
 Route::get('/boo', function(){
 //    SeriesController::calculatePPMSeries(100);
-    return Checker::getAllMatches();
+//    return Checker::getAllMatches();
 //    return Parser::parseMatchesForGroup()
 //    return Updater::updateFree();
 //    return Match::getScore(Match::find("IRLFElFp"));
 //    return Parser::parseOdds(Match::find("IRLFElFp"));
 //        return LivescoreController::matchScore("IRLFElFp");
 //    return GamesController::getMatchOddsForAll('2014-08-19', '2014-08-19');
+    return Updater::update();
 });
 
 Route::get('/settings2', function(){
@@ -29,6 +30,7 @@ Route::get('/detailsfree/{match}/', "DetailsController@detailsFree");
 
 //pool management
 Route::post('/pools/get/{free?}', "PoolsController@poolsGet");
+Route::post('/pools/reset', "PoolsController@resetPPSPool");
 Route::post('/pools/toacc/{free?}', "PoolsController@poolsToAccount");
 Route::post('/pools/insert/{free?}', "PoolsController@poolsInsert");
 Route::get('/pool', "PoolsController@managePools");
@@ -55,7 +57,7 @@ Route::get('/livescore/{from?}/{to?}', "LivescoreController@livescore");
 
 //Groups views
 Route::get('/pps/group/{id}/{fromdate?}/{todate?}', 'GamesController@getGamesForGroup');
-Route::get('/grouphistory/{id}/{offset}', 'GamesController@getGamesForGroupOffset');
+Route::get('/pps/group/history/{id}/{offset}', 'GamesController@getGamesForGroupOffset');
 Route::get('/groupodds/{groups_id}', 'GamesController@getMatchOddsForGames');
 Route::get('/ppsodds/{fromdate?}/{todate?}', 'GamesController@getMatchOddsForAll');
 

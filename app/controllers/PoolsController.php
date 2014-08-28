@@ -184,4 +184,30 @@ class PoolsController extends \BaseController
         }
         return Redirect::back()->with("message", $amount. "€ added to pool");
     }
+
+    public static function resetPPSPool() {
+        $id = Input::get('id');
+        $pool = Pools::find($id);
+        $main = CommonPools::where('user_id', '=', Auth::user()->id)->first();
+        $pool->profit = $pool->profit + $pool->account;
+        $main->profit = $main->profit + $pool->account;
+        $main->amount = $main->amount - $pool->amount;
+        $pool->amount = 0;
+        $main->amount = $main->account - $pool->account;
+        $pool->account = 0;
+        $pool->save();
+        $main->save();
+        $log = new PoolLog;
+        $log->pools_id = $pool->id;
+        $log->action = "reset";
+        $log->save();
+        $aLog = new ActionLog;
+        $aLog->type = "pools";
+        $aLog->action = "reset";
+        $aLog->element_id = $pool->id;
+        $aLog->save();
+
+        return Redirect::back()->with("message", "Pool reset recalc needed");
+
+    }
 }

@@ -42,7 +42,7 @@ class Updater
 //                        Updater::recalculateGroup($match->groups_id, $game->user_id, $game->game_type_id);
 //                    }
                 }
-                $ppm = LeagueDetails::find($match->league_details_id);
+                $ppm = LeagueDetails::find($match->league_details_id)->ppm;
                 if (Updater::isLastGameInGroup($match) && $ppm != 1) {
                     $log = $log . " new group created for league: " . $match->league_details_id;
                     Updater::updateGroup($match->groups_id);

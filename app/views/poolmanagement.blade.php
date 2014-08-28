@@ -57,7 +57,7 @@
                     <input type="hidden" name="id" value="{{$ppspool->id}}">
                 </form>
             </td>
-            <td><button class="btn btn-sm btn-warning insertbtn" type="button">+</button><button class="btn btn-sm btn-primary getbtn" type="button">-</button><button class="btn btn-sm btn-info accbtn" type="button">?</button></td>
+            <td><button class="btn btn-sm btn-warning insertbtn" type="button">+</button><button class="btn btn-sm btn-primary getbtn" type="button">-</button><button class="btn btn-sm btn-info accbtn" type="button">?</button><button class="btn btn-sm btn-danger resetbtn" type="button" value="!">!</button></td>
         </tr>
         @endforeach
     </table>
@@ -122,6 +122,22 @@
     </div>
 
 	<script type="text/javascript">
+        $(".resetbtn").on('click', function(){
+            if ($(this).attr("value") == "!") {
+                $(this).attr({
+                    value: "reset"
+                });
+                $(this).text = "reset";
+            } else {
+                var form = $(this).parent().siblings(".f").children("form");
+                form.attr('action', 'pools/reset');
+                form.submit();
+                $(this).attr({
+                    value: "!"
+                });
+                $(this).text = "!";
+            }
+        });
 		$(".getbtn").on('click', function(){
 			var form = $(this).parent().siblings(".f").children("form");
 			form.attr('action', 'pools/get');
