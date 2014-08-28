@@ -6,8 +6,27 @@ class Checker {
         $start = time();
         $all_groups = Groups::where('state', '=', 2)->lists('id');
         $all_matches = Match::whereIn('groups_id', $all_groups)->get();
+        $all_free = Match::join('freeplay', 'freeplay.match_id', '=', 'match.id')
+            ->where('resultShort', '=', '-')
+            ->select(DB::raw('`match`.*'))
+            ->get();
         $text = "";
         foreach ($all_matches as $m){
+            $time = $m->matchTime;
+            $date = $m->matchDate;
+            $match = Parser::parseTimeDate($m);
+            if ($time != $match->matchTime || $date != $match->matchDate) {
+                $body = "Updated date and time for ".$match->id." \nold value: $date $time \nnewvalue: ".$match->matchDate." ".$match->matchTime."<br>";
+                $text = $text.$body;
+                Mail::send('emails.email', ['data' => $body], function($message)
+                {
+                    $message->to('wpopowa@gmail.com', 'Vesela Popova')
+
+                        ->subject('Changed match date or time');
+                });
+            }
+        }
+        foreach ($all_free as $m){
             $time = $m->matchTime;
             $date = $m->matchDate;
             $match = Parser::parseTimeDate($m);
