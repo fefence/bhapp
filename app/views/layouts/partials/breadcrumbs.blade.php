@@ -27,6 +27,9 @@
         <a href="/confirmall/{{$group}}{{$tail}}">confirm all</a> |
         <a href="/groupodds/{{$group}}">refresh odds</a> |
         @endif
+        @if(isset($free) && $free == true && isset($fromdate) && isset($todate))
+        <a href="/freeodds/{{$fromdate}}/{{$todate}}">refresh odds</a> |
+        @endif
         @if(isset($ppm) && $ppm == true && isset($fromdate) && isset($todate))
         @if(isset($country))
         <a href="/confirmallppm/{{$country}}/{{$fromdate}}/{{$todate}}">confirm all</a> |

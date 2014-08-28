@@ -23,6 +23,7 @@ Route::post('/savefree', "FreeController@saveTable");
 Route::post('/saveteam', "FreeController@save");
 Route::get('/confirmfree/{game_id}', 'FreeController@confirmGame');
 Route::get('/deletefree/{game_id}', 'FreeController@deleteGame');
+Route::get('/freeodds/{fromdate}/{todate}', 'FreeController@refreshOdds');
 
 //details views
 Route::get('/details/ppm/{date}/{game}', "DetailsController@detailsPPM");

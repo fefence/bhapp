@@ -19,7 +19,7 @@ class FreeController extends \BaseController
             $standings = array();
         }
 
-        return View::make('freeview')->with(['data' => $games, 'standings' => $standings, 'league_details_id' => -1, 'fromdate' => $fromdate, 'todate' => $todate, 'count' => $count, 'big' => $big, 'small' => $small]);
+        return View::make('freeview')->with(['data' => $games, 'standings' => $standings, 'league_details_id' => -1, 'fromdate' => $fromdate, 'todate' => $todate, 'count' => $count, 'big' => $big, 'small' => $small, 'free' => true]);
 
     }
 
@@ -145,6 +145,23 @@ class FreeController extends \BaseController
         $free->delete();
         return Redirect::back()->with('message', 'Bet deleted');
 
+    }
+
+    public static function refreshOdds($fromdate = "", $todate = "") {
+        $start = time();
+        list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
+        $games = FreeGames::where('user_id', '=', Auth::user()->id)
+            ->join('match', 'match.id', '=', 'freeplay.match_id')
+//            ->where('game_type_id', '=', 5)
+            ->where('confirmed', '=', 0)
+            ->where('matchDate', '>=', $fromdate)
+            ->where('matchDate', '<=', $todate)
+            ->where('resultShort', '=', '-')
+            ->select([DB::raw('freeplay.id as id, freeplay.*')])
+            ->get();
+//        return $games;
+        Parser::parseMatchOddsForGames($games);
+        return Redirect::back()->with('message', 'Odds refreshed ' . (time() - $start) . " sec");
     }
 
 }
