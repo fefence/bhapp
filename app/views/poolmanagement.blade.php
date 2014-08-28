@@ -127,7 +127,7 @@
                 $(this).attr({
                     value: "reset"
                 });
-                $(this).text = "reset";
+                $(this).html("R");
             } else {
                 var form = $(this).parent().siblings(".f").children("form");
                 form.attr('action', 'pools/reset');
@@ -135,7 +135,7 @@
                 $(this).attr({
                     value: "!"
                 });
-                $(this).text = "!";
+                $(this).html("!");
             }
         });
 		$(".getbtn").on('click', function(){
