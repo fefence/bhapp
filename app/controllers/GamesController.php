@@ -56,7 +56,7 @@ class GamesController extends \BaseController
         $settings = Settings::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 1)->first();
 
         if ($tail == "" || isset($offset)) {
-            return View::make('matches')->with(['settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/history/$league_details_id/$offset", 'base_minus' => "pps/group/history/$league_details_id/".($offset+1), 'base_plus' => "pps/group/history/$league_details_id/".($offset-1), 'big' => "Round ".$gr->round, 'small' => "current", 'disable' => $disable]);
+            return View::make('matches')->with(['settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/$fromdate/$todate", 'base_minus' => "pps/group/history/$league_details_id/".($offset+1), 'base_plus' => "pps/group/history/$league_details_id/".($offset-1), 'big' => "Round ".$gr->round, 'small' => "current", 'disable' => $disable]);
         }
         return View::make('matches')->with(['settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "pps/group/$league_details_id", 'big' => $big, 'small' => $small, 'disable' => $disable]);
     }
@@ -260,12 +260,13 @@ class GamesController extends \BaseController
     public static function getMatchOddsForAll($fromdate = '', $todate = '')
     {
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
+        $data = LeagueDetails::getLeaguesWithMatches($fromdate, $todate);
+
         $games = User::find(Auth::user()->id)
             ->games()
             ->join('match', 'match.id', '=', 'games.match_id')
             ->where('resultShort', '=', '-')
-            ->where('matchDate', '>=', $fromdate)
-            ->where('matchDate', '<=', $todate)
+            ->whereIn('match.groups_id', array_keys($data))
             ->where('confirmed', '=', 0)
             ->select(DB::raw("games.*"))
             ->get();
@@ -328,7 +329,7 @@ class GamesController extends \BaseController
         $standings = Standings::where('league_details_id', '=', $league_details_id)->lists('place', 'team');
         $league = LeagueDetails::find($league_details_id);
 //        return $league;
-        return View::make('matches')->with(['tail' => "", 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/", 'base_minus' => "pps/group/history/$league_details_id/".($offset + 1), 'base_plus' => "pps/group/history/$league_details_id/".($offset - 1), 'big' => "Round ".$gr->round, 'small' => "", 'disable' => $disable]);
+        return View::make('matches')->with(['today_btn' => 'current', 'tail' => "", 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/", 'base_minus' => "pps/group/history/$league_details_id/".($offset + 1), 'base_plus' => "pps/group/history/$league_details_id/".($offset - 1), 'big' => "Round ".$gr->round, 'small' => "", 'disable' => $disable]);
 
     }
 }
