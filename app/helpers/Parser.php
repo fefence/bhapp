@@ -20,15 +20,18 @@ class Parser
         if ($tables->length > 0) {
             $date = $tables->item(0)->getElementsByTagName('tr')->item(0)->getElementsByTagName('th')->item(1)->nodeValue;
             $nums = explode('.', $date);
-            $strdate = $nums[2] . "-" . $nums[1] . "-" . $nums[0];
-            $match->matchDate = $strdate;
+            $date = $nums[2] . "-" . $nums[1] . "-" . $nums[0];
+//            $match->matchDate = $strdate;
         } else {
             return $url;
         }
         // echo "$matchId ";
 
-        $timestamp = strtotime(Match::parseTime($match->id)) + 60 * 60;
+        $timestamp = strtotime(Match::parseTime($match->id));
+        $time = date('H:i:s', $timestamp);
+        $timestamp = strtotime($date . " " . $time) + 60 * 60;
         $match->matchTime = date('H:i:s', $timestamp);
+        $match->matchDate = date('Y-m-d', $timestamp);
         $match->save();
         return $match;
     }

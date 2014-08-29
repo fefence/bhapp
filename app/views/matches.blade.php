@@ -70,7 +70,9 @@ $i = 0;
             @else
             {{$d->home}}
             @endif
+            @if(array_key_exists($d->home, $standings))
             ({{$standings[$d->home]}})
+            @endif
         </td>
         <td>
             @if ($d->team == $d->away)
@@ -78,7 +80,9 @@ $i = 0;
             @else
             {{$d->away}}
             @endif
+            @if(array_key_exists($d->away, $standings))
             ({{$standings[$d->away]}})
+            @endif
         </td>
         <td>{{$d->streak}}</td>
         <td>
