@@ -15,6 +15,7 @@ class FreeGames extends Eloquent{
             ->join('game_type', 'game_type.id', '=', 'freeplay.game_type_id')
             ->join('bookmaker', 'bookmaker.id', '=', 'freeplay.bookmaker_id')
             ->join('freeplay_teams', 'freeplay_teams.team_id', '=', "freeplay.team_id")
+            ->where('freeplay_teams.user_id', '=', Auth::user()->id)
             ->where('confirmed', '=', 0)
             ->where('matchDate', '>=', $fromdate)
             ->where('matchDate', '<=', $todate)
