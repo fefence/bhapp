@@ -206,7 +206,8 @@ class PoolsController extends \BaseController
         $aLog->action = "reset";
         $aLog->element_id = $pool->id;
         $aLog->save();
-
+        $gr = Groups::where('league_details_id', '=', $pool->league_details_id)->where('state', '=', 2)->first();
+        GamesController::recalculateGroup($gr->id);
         return Redirect::back()->with("message", "Pool reset recalc needed");
 
     }
