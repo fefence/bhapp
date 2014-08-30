@@ -31,7 +31,7 @@ class LivescoreController extends \BaseController
             ->whereIn('match.id', $all_ids)
             ->orderBy('matchDate')
             ->orderBy('matchTime')
-            ->select(DB::raw("`match`.*, `leagueDetails`.country, `leagueDetails`.displayName, `leagueDetails`.alias"))
+            ->select(DB::raw("`match`.*, `leagueDetails`.country, `leagueDetails`.displayName, `leagueDetails`.alias, `leagueDetails`.ppm"))
             ->get();
         $res = array();
 //        return $matches;
