@@ -108,7 +108,7 @@ $i = 0;
     </tr>
     @else
     @foreach($d as $dd)
-    <tr id="no">
+    <tr class="{{$dd->id}}" id="no">
         <td class="center"><img class="clickable" src="/images/plus-small.png"></td>
         <td>{{date('d M', strtotime($dd->matchDate))}}</td>
         <td>{{substr($dd->matchTime, 0, strlen($dd->matchTime)-3)}}</td>
@@ -276,6 +276,7 @@ function testAjax(team, mDate, game) {
 
 var asInitVals = new Array();
 
+
 $(document).ready(function () {
 
     var oTable = $("#matches0").dataTable({
@@ -298,6 +299,35 @@ $(document).ready(function () {
         ],
         "order": [[ 1, "asc" ], [ 2, "asc" ], [ 3, "asc" ]]
     });
+    var cls = "text-danger";
+
+    $('#matches0 tbody')
+        .on( 'mouseover', 'tr', function () {
+            $(this).addClass(cls);
+            $('#matches1 tbody .' + $(this).attr("class").split(' ')[0]).addClass(cls);
+            $('#matches0 tbody .' + $(this).attr("class").split(' ')[0]).addClass(cls);
+//            alert($(this).attr("class").split(' ')[0]);
+        } )
+        .on( 'mouseleave', 'tr', function () {
+            $(this).removeClass(cls);
+            $('#matches1 tbody .' + $(this).attr("class").split(' ')[0]).removeClass(cls);
+            $('#matches0 tbody .' + $(this).attr("class").split(' ')[0]).removeClass(cls);
+
+        } );
+
+    $('#matches1 tbody')
+        .on( 'mouseover', 'tr', function () {
+            $(this).addClass(cls);
+            $('#matches0 tbody .' + $(this).attr("class").split(' ')[0]).addClass(cls);
+            $('#matches1 tbody .' + $(this).attr("class").split(' ')[0]).addClass(cls);
+//            alert($(this).attr("class").split(' ')[0]);
+        } )
+        .on( 'mouseleave', 'tr', function () {
+            $(this).removeClass(cls);
+            $('#matches0 tbody .' + $(this).attr("class").split(' ')[0]).removeClass(cls);
+            $('#matches1 tbody .' + $(this).attr("class").split(' ')[0]).removeClass(cls);
+
+        } );
 
     $("thead input").keyup(function () {
         /* Filter on the column (the index) of this element */
