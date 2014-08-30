@@ -90,7 +90,7 @@ $elements = array('active' => $active, 'list' => $list);
         <td class='editable' id="{{$d->team_id}}">{{$d->odds}}</td>
         <td>{{$d->income}}</td>
         <td>{{round(($d->income - $d->bsf - $d->bet), 2, PHP_ROUND_HALF_UP)}}</td>
-        <td><a href="/confirmfree/{{$d->games_id}}">+&nbsp<span style='display: none;'>{{$d->match_id}}</span></a>({{ (array_key_exists($d->match_id,
+        <td><a href="/confirmfree/{{$d->games_id}}">+&nbsp<span style='display: none;'>{{$d->match_id}}#{{$d->team_id}}</span></a>({{ (array_key_exists($d->match_id,
             $count))?$count[$d->match_id]:$count[$d->id] }})
         </td>
     </tr>
@@ -112,13 +112,17 @@ function fnFormatDetails(oTable, nTr) {
     } else if (aData[4].indexOf("<strong>") > -1) {
         var re = new RegExp("<strong>(.*?)</strong>");
         var m = re.exec(aData[4]);
-        team = m[1];
+        team_arr = m[1].split("#");
+        var team = team_arr[1];
+        var match = team_arr[0];
     } else {
         team = 'ppm';
     }
     var re = new RegExp('display: none;">(.*?)</span>');
     var m = re.exec(aData[14]);
-    var id = m[1];
+    team_arr = m[1].split("#");
+    var team = team_arr[1];
+    var id = team_arr[0];
 //		alert(id);
     // var d = aData[1].replace(/\//g, '-');
     var promise = testAjax(team, id, aData[8]);
@@ -129,7 +133,7 @@ function fnFormatDetails(oTable, nTr) {
 }
 
 function testAjax(team, mDate, game) {
-    var url = "/detailsfree/" + mDate;
+    var url = "/detailsfree/" + mDate + "/" + team;
 //        alert(url);/
     return $.ajax({
         async: false,

@@ -17,10 +17,10 @@ class DetailsController extends \BaseController
         return View::make('ppmdetails')->with(['games' => $games]);
     }
 
-    public function detailsFree($match_id)
+    public function detailsFree($match_id, $team_id)
     {
 //        $match = Match::find($match_id);
-        $games = FreeGames::where('match_id', $match_id)->where('user_id', '=', Auth::user()->id)->get();
+        $games = FreeGames::where('team_id', $team_id)->where('match_id', $match_id)->where('user_id', '=', Auth::user()->id)->where('confirmed', '=', 1)->get();
         return View::make('ppmdetails')->with(['games' => $games]);
     }
 }

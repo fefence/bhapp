@@ -28,7 +28,7 @@ Route::get('/freeodds/{fromdate}/{todate}', 'FreeController@refreshOdds');
 //details views
 Route::get('/details/ppm/{date}/{game}', "DetailsController@detailsPPM");
 Route::get('/details/{team}/{date}', "DetailsController@details");
-Route::get('/detailsfree/{match}/', "DetailsController@detailsFree");
+Route::get('/detailsfree/{team}/{match}', "DetailsController@detailsFree");
 
 //pool management
 Route::post('/pools/get/{free?}', "PoolsController@poolsGet");

@@ -10,7 +10,7 @@ class FreeController extends \BaseController
         $count = array();
         $league_ids = FreeplayTeams::where('user_id', '=', Auth::user()->id)->lists('league_details_id');
         foreach ($games as $g) {
-            $count[$g->id] = FreeGames::where('user_id', '=', Auth::user()->id)->where('match_id', '=', $g->match_id)->where('confirmed', '=', 1)->where('game_type_id', '=', $g->game_type_id)->count();
+            $count[$g->id] = FreeGames::where('user_id', '=', Auth::user()->id)->where('match_id', '=', $g->match_id)->where('confirmed', '=', 1)->where('team_id', '=', $g->team_id)->where('game_type_id', '=', $g->game_type_id)->count();
         }
 
         if (count($league_ids) > 0) {

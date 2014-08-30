@@ -266,7 +266,7 @@ class GamesController extends \BaseController
             ->games()
             ->join('match', 'match.id', '=', 'games.match_id')
             ->where('resultShort', '=', '-')
-            ->whereIn('match.groups_id', array_keys($data))
+            ->whereIn('groups_id')
             ->where('confirmed', '=', 0)
             ->select(DB::raw("games.*"))
             ->get();
