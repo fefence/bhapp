@@ -19,7 +19,8 @@ class FreeGames extends Eloquent{
             ->where('confirmed', '=', 0)
             ->where('matchDate', '>=', $fromdate)
             ->where('matchDate', '<=', $todate)
-            ->orderBy('game_type_id')
+            ->orderBy('matchDate')
+            ->orderBy('matchTime')
             ->select(DB::raw("`game_type`.*, `match`.*, `bookmaker`.*, `freeplay`.*, `freeplay`.id as games_id, freeplay_teams.team"))
             ->get();
         return $games;
