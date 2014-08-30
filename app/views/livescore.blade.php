@@ -46,7 +46,11 @@
     @foreach($matches as $d)
     <tr class="{{$d['match']->match_id}}">
         <td>{{date('d M', strtotime($d['match']->matchDate))}}</td>
+        @if(isset($d['game']))
+        <td style="width:60px;"><strong>{{substr($d['match']->matchTime, 0, strlen($d['match']->matchTime)-3)}}</strong></td>
+        @else
         <td>{{substr($d['match']->matchTime, 0, strlen($d['match']->matchTime)-3)}}</td>
+        @endif
         <td><img src="/images/{{strtoupper($d['match']->country)}}.png">&nbsp;<a href= @if(isset($d['match']) && ($d['match']->ppm == 1)) "/ppm/country/{{$d['match']->country}}/{{$d['match']->matchDate}}/{{$d['match']->matchDate}}" @else "/pps/group/{{$d['match']->league_details_id}}" @endif>{{$d['match']->alias}}</a></td>
         <td><a href="/livescore/match/{{$d['match']->id}}">{{$d['match']->home}}</a></td>
         <td><a href="/livescore/match/{{$d['match']->id}}">{{$d['match']->away}}</a></td>
@@ -79,8 +83,7 @@
             "iDisplayLength": 100,
             "bJQueryUI": true,
             "sDom": '<"top"i>t<"bottom"><p"clear">',
-            "sPaginationType": "full_numbers"
-        });
+            "sPaginationType": "full_numbers",        });
     });
 </script>
 

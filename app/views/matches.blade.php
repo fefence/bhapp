@@ -303,13 +303,13 @@ $(document).ready(function () {
 
     $('#matches0 tbody')
         .on( 'mouseover', 'tr', function () {
-            $(this).addClass(cls);
+            $(this).children().addClass(cls);
             $('#matches1 tbody .' + $(this).attr("class").split(' ')[0]).addClass(cls);
             $('#matches0 tbody .' + $(this).attr("class").split(' ')[0]).addClass(cls);
 //            alert($(this).attr("class").split(' ')[0]);
         } )
         .on( 'mouseleave', 'tr', function () {
-            $(this).removeClass(cls);
+            $(this).children().removeClass(cls);
             $('#matches1 tbody .' + $(this).attr("class").split(' ')[0]).removeClass(cls);
             $('#matches0 tbody .' + $(this).attr("class").split(' ')[0]).removeClass(cls);
 
@@ -317,13 +317,13 @@ $(document).ready(function () {
 
     $('#matches1 tbody')
         .on( 'mouseover', 'tr', function () {
-            $(this).addClass(cls);
+            $(this).children().addClass(cls);
             $('#matches0 tbody .' + $(this).attr("class").split(' ')[0]).addClass(cls);
             $('#matches1 tbody .' + $(this).attr("class").split(' ')[0]).addClass(cls);
 //            alert($(this).attr("class").split(' ')[0]);
         } )
         .on( 'mouseleave', 'tr', function () {
-            $(this).removeClass(cls);
+            $(this).children().removeClass(cls);
             $('#matches0 tbody .' + $(this).attr("class").split(' ')[0]).removeClass(cls);
             $('#matches1 tbody .' + $(this).attr("class").split(' ')[0]).removeClass(cls);
 
