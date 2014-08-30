@@ -11,7 +11,6 @@ body {
   padding-top: 65px;
   padding-bottom: 10px;
 }
-
 .container .navbar-header,
 .container .navbar-collapse {
   margin-right: 0;
@@ -67,6 +66,9 @@ table th input:focus {
 }
 .row {
   margin: 0px !important;
+}
+.boldText {
+    font-weight: bold !important;
 }
 .linksUnder {
   text-align: center;
