@@ -5,8 +5,8 @@ class LivescoreController extends \BaseController
     public function livescore($fromdate = '', $todate = '')
     {
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
-        //TODO parse from livescore
-        $today = date('Y-m-d', time());
+        $todate2 = date('Y-m-d', strtotime($todate. ' + 1 days'));;
+
 //        $ids = PPM::where('user_id', '=', Auth::user()->id)->lists('match_id');
 //        return $ids;
         $leagues = Settings::where('user_id', '=', Auth::user()->id)
@@ -14,8 +14,16 @@ class LivescoreController extends \BaseController
             ->where('game_type_id', '<=', 8)
             ->lists('league_details_id');
         if (count($leagues) > 0) {
-            $ms = Match::where('matchDate', '<=', $todate)
-                ->where('matchDate', '>=', $fromdate)
+            $ms = Match::where(function ($q) use ($fromdate, $todate, $todate2) {
+                $q->where(function ($q) use ($fromdate, $todate, $todate2) {
+                    $q->where('matchDate', '>=', $fromdate)
+                        ->where('matchDate', '<=', $todate);
+                });
+                $q->orWhere(function ($q) use ($fromdate, $todate, $todate2) {
+                    $q->where('matchDate', '=', $todate2)
+                        ->where('matchTime', '<', '08:00:00');
+                });
+            })
                 ->whereIn('league_details_id', $leagues)
                 ->join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
                 ->select('match.id as id')
@@ -25,11 +33,19 @@ class LivescoreController extends \BaseController
         }
         $pps = Games::where('user_id', '=', Auth::user()->id)->lists('match_id');
         $all_ids = array_merge($ms, $pps);
-        $matches = Match::where('matchDate', '<=', $todate)
-            ->join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
-            ->where('matchDate', '>=', $fromdate)
+        $matches = Match::join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
+            ->where(function ($q) use ($fromdate, $todate, $todate2) {
+                $q->where(function ($q) use ($fromdate, $todate, $todate2) {
+                    $q->where('matchDate', '>=', $fromdate)
+                    ->where('matchDate', '<=', $todate);
+                });
+                $q->orWhere(function ($q) use ($fromdate, $todate, $todate2) {
+                    $q->where('matchDate', '=', $todate2)
+                        ->where('matchTime', '<', '08:00:00');
+                });
+            })
             ->whereIn('match.id', $all_ids)
-            ->orderBy('matchDate')
+            ->orderBy('matchDate', "asc")
             ->orderBy('matchTime')
             ->select(DB::raw("`match`.*, `leagueDetails`.country, `leagueDetails`.displayName, `leagueDetails`.alias, `leagueDetails`.ppm"))
             ->get();

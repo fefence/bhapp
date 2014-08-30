@@ -79,11 +79,7 @@
             "iDisplayLength": 100,
             "bJQueryUI": true,
             "sDom": '<"top"i>t<"bottom"><p"clear">',
-            "sPaginationType": "full_numbers",
-            "aoColumnDefs": [
-                { 'bSortable': false, 'aTargets': [ 0 ] }
-            ],
-            "order": [[ 1, "asc" ]]
+            "sPaginationType": "full_numbers"
         });
     });
 </script>
