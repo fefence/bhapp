@@ -84,7 +84,8 @@
             "iDisplayLength": 100,
             "bJQueryUI": true,
             "sDom": '<"top"i>t<"bottom"><p"clear">',
-            "sPaginationType": "full_numbers"
+            "sPaginationType": "full_numbers",
+            "aaSorting": []
         });
     });
 </script>
