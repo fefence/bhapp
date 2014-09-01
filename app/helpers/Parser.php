@@ -377,6 +377,7 @@ class Parser
         $curr = $current->matches()->orderBy('matchDate')->get();
 //        return $current;
         $firstOfNext = $next->matches()->orderBy('matchDate')->first();
+//        return $firstOfNext;
         foreach ($curr as $m) {
             if ($m->matchDate > $firstOfNext->matchDate) {
                 $m->groups_id = 0;

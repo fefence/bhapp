@@ -189,6 +189,17 @@ class PoolsController extends \BaseController
         $id = Input::get('id');
         $pool = Pools::find($id);
         $main = CommonPools::where('user_id', '=', Auth::user()->id)->first();
+        $log = new PoolLog;
+        $log->pools_id = $pool->id;
+        $log->action = "reset";
+        $log->save();
+        $aLog = new ActionLog;
+        $aLog->type = "pools";
+        $aLog->action = "reset";
+        $aLog->amount = $pool->account;
+        $aLog->element_id = $pool->id;
+        $aLog->save();
+
         $pool->profit = $pool->profit + $pool->account;
         $main->profit = $main->profit + $pool->account;
         $main->amount = $main->amount - $pool->amount;
@@ -197,15 +208,8 @@ class PoolsController extends \BaseController
         $pool->account = 0;
         $pool->save();
         $main->save();
-        $log = new PoolLog;
-        $log->pools_id = $pool->id;
-        $log->action = "reset";
-        $log->save();
-        $aLog = new ActionLog;
-        $aLog->type = "pools";
-        $aLog->action = "reset";
-        $aLog->element_id = $pool->id;
-        $aLog->save();
+
+
         $gr = Groups::where('league_details_id', '=', $pool->league_details_id)->where('state', '=', 2)->first();
         GamesController::recalculateGroup($gr->id);
         return Redirect::back()->with("message", "Pool reset recalc needed");

@@ -42,8 +42,8 @@ class Updater
 //                        Updater::recalculateGroup($match->groups_id, $game->user_id, $game->game_type_id);
 //                    }
                 }
-                $ppm = LeagueDetails::find($match->league_details_id)->ppm;
-                if (Updater::isLastGameInGroup($match) && $ppm != 1) {
+//                $ppm = LeagueDetails::find($match->league_details_id)->ppm;
+                if (Updater::isLastGameInGroup($match)) {
                     $log = $log . " new group created for league: " . $match->league_details_id;
                     Updater::updateGroup($match->groups_id);
                 }
@@ -64,7 +64,10 @@ class Updater
 ////        }
         $gr = Groups::find($groups_id);
 
-        $current = Groups::firstOrCreate(['league_details_id' => $gr->league_details_id, 'state' => 3, 'round' => ($gr->round + 1)]);
+        $current = Groups::where('league_details_id', '=', $gr->league_details_id)
+            ->where('state', '=', 3)
+            ->where('round', '=', ($gr->round + 1))
+            ->firstOrFail();
         $gr->state = 1;
         $gr->save();
         $current->state = 2;
@@ -309,18 +312,25 @@ class Updater
         $time = time();
         $matches = self::getPPMMatches();
         foreach ($matches as $match) {
-            $match = Match::updateMatchDetailsLivescore($match);
-//print_r($match);
-            if (Updater::isLastGameInGroup($match)) {
-                Updater::updateGroup($match->groups_id);
-            }
+//            $match = Match::updateMatchDetailsLivescore($match);
+////print_r($match);
+//            if (Updater::isLastGameInGroup($match)) {
+//                Updater::updateGroup($match->groups_id);
+//            }
             Parser::parseLeagueStandings($match->league_details_id);
             if ($match->resultShort != '-') {
                 for ($i = 5; $i < 9; $i++) {
+
                     $serie = Series::where('end_match_id', '=', $match->id)
                         ->where('active', '=', 1)
                         ->where('game_type_id', '=', $i)
                         ->first();
+                    if ($serie == null) {
+                        $serie = Series::where('active', '=', 1)
+                            ->where('league_details_id', '=', $match->league_details_id)
+                            ->where('game_type_id', '=', $i)
+                            ->first();
+                    }
 //                    print_r($serie);
 //                    dd($serie);
                     $next_matches = self::getNextPPMMatches($match);
@@ -328,7 +338,7 @@ class Updater
                         continue;
                     }
                     $next_match = self::getNextPPMMatch($match);
-//                    return $next_matches;
+//                    return $next_match;
                     $games = $match->ppm()->where('game_type_id', '=', $i)->get();
                     if (SeriesController::endSeries($match, $i)) {
                         $news = $serie->replicate();
@@ -339,13 +349,30 @@ class Updater
                         $serie->save();
                         $news->end_match_id = $next_match->id;
                         $news->save();
+                        $settings = Settings::where('league_details_id', '=', $match->league_details_id)->where('game_type_id', '=', $i)->get();
+                        foreach($settings as $stngs) {
+                            $confirmedppms = PPM::where('user_id', '=', $stngs->user_id)->where('match_id', '=', $match->id)->where('game_type_id', '=', $i)->where('confirmed', '=', 1)->get();
+                            if ($confirmedppms == null) {
+                                $pool = Pools::where('user_id', '=', $stngs->user_id)
+                                    ->where('league_details_id', '=', $match->league_details_id)
+                                    ->where('game_type_id', '=', $i)
+                                    ->first();
+                                $pool->amount = 0;
+                                $pool->profit = $pool->profit - $game->bsf;
+                                $pool->account = $pool->account - $game->bsf;
+                                $main = CommonPools::where('user_id', '=', $game->user_id)->first();
+                                $main->profit = $main->profit - $game->bsf;
+                                $main->account = $main->account - $game->bsf;
+                                $main->save();
+                            }
+                        }
                         foreach ($games as $game) {
                             $pool = Pools::where('user_id', '=', $game->user_id)
                                 ->where('league_details_id', '=', $match->league_details_id)
                                 ->where('game_type_id', '=', $i)
                                 ->first();
-                            $pool->amount = 0;
                             if ($game->confirmed == 1) {
+                                $pool->amount = $pool->amount - $game->bsf;
                                 $pool->profit = $pool->profit + $game->income - $game->bsf - $game->bet;
                                 $pool->account = $pool->account + $game->income;
                                 $main = CommonPools::where('user_id', '=', $game->user_id)->first();
