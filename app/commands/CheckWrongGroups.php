@@ -37,7 +37,7 @@ class CheckWrongGroups extends Command {
      */
     public function fire()
     {
-        Checker::getWrongGroups();
+        return Checker::getWrongGroups();
     }
 
     /**
