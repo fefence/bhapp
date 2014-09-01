@@ -90,8 +90,7 @@ $elements = array('active' => $active, 'list' => $list);
         <td class='editable' id="{{$d->team_id}}">{{$d->odds}}</td>
         <td>{{$d->income}}</td>
         <td>{{round(($d->income - $d->bsf - $d->bet), 2, PHP_ROUND_HALF_UP)}}</td>
-        <td><a href="/confirmfree/{{$d->games_id}}">+&nbsp<span style='display: none;'>{{$d->match_id}}#{{$d->team_id}}</span></a>({{ (array_key_exists($d->match_id,
-            $count))?$count[$d->match_id]:$count[$d->id] }})
+        <td><a role="button" class="btn btn-primary btn-xs" style="width: 50px" href="/confirmfree/{{$d->games_id}}">+&nbsp({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})<span style='display: none;'>{{$d->match_id}}#{{$d->team_id}}</span></a>
         </td>
     </tr>
 

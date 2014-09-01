@@ -1,25 +1,7 @@
 <?php
 Route::get('/boo', function(){
-//    SeriesController::calculatePPMSeries(100);
 //    return Checker::getAllMatches();
-//    $current = Groups::where('league_details_id', '=', 100)
-//        ->where('state', '=', 2)->first();
-//    $next = Groups::where('league_details_id', '=', 100)
-//        ->where('state', '=', 3)->first();
-////    return $next;
-//    if ($next != null && $current != null) {
-
-//    return Parser::parseMatchesForGroup(Groups::find(792), Groups::find(1644));
-//    }
-    return Updater::updatePPM();
-//    return Parser::parseMatchesForGroup()
-//    return Updater::updateFree();
-//    return Match::getScore(Match::find("IRLFElFp"));
-//    return Parser::parseOdds(Match::find("IRLFElFp"));
-//        return LivescoreController::matchScore("IRLFElFp");
-//    return GamesController::getMatchOddsForAll('2014-08-19', '2014-08-19');
-//    $id = Groups::where('state', '=', 2)->where('league_details_id', '=', $league)->first()->id;
-//    return Updater::updateGroup($id);
+    return Checker::getWrongGroups();
 });
 
 Route::get('/settings2', function(){

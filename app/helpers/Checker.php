@@ -20,7 +20,7 @@ class Checker
             $match = Parser::parseTimeDate($m);
             if ($time != $match->matchTime || $date != $match->matchDate) {
                 $send = true;
-                $body = "Updated date and time for " . $match->id . " \nold value: $date $time \nnewvalue: " . $match->matchDate . " " . $match->matchTime . "<br>";
+                $body = $match->id." ".$match->home." - ".$match->away." old value: $date $time new value: " . $match->matchDate . " " . $match->matchTime . "<br>";
                 $text = $text . $body;
             }
         }
@@ -30,7 +30,7 @@ class Checker
             $match = Parser::parseTimeDate($m);
             if ($time != $match->matchTime || $date != $match->matchDate) {
                 $send = true;
-                $body = $match->home." - ".$match->away." old value: $date $time new value: " . $match->matchDate . " " . $match->matchTime . "<br>";
+                $body = $match->id." ".$match->home." - ".$match->away." old value: $date $time new value: " . $match->matchDate . " " . $match->matchTime . "<br>";
                 $text = $text . $body;
             }
         }
@@ -43,4 +43,24 @@ class Checker
         }
         return $text;
     }
+
+    public static function getWrongGroups() {
+        $send = false;
+        $text = "Wrong groups for:<br>";
+        $groups = Groups::where('state', '=', 2)->groupBy('league_details_id')->select(DB::raw("count(*) as c, league_details_id"))->get();
+        foreach($groups as $gr) {
+            if ($gr->c > 1) {
+                $l = LeagueDetails::find($gr->league_details_id);
+                $text = $text."id: ".$l->id."  ".$l->country."  ".$l->displayName."<br>";
+            }
+        }
+        if ($send) {
+            Mail::send('emails.email', ['data' => $text], function ($message) {
+                $message->to(['wpopowa@gmail.com' => 'Vesela Popova'])
+                    ->subject('Wrong groups');
+            });
+        }
+        return $text;
+    }
+    
 } 

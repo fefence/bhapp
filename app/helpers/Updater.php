@@ -358,11 +358,11 @@ class Updater
                                     ->where('game_type_id', '=', $i)
                                     ->first();
                                 $pool->amount = 0;
-                                $pool->profit = $pool->profit - $game->bsf;
-                                $pool->account = $pool->account - $game->bsf;
-                                $main = CommonPools::where('user_id', '=', $game->user_id)->first();
-                                $main->profit = $main->profit - $game->bsf;
-                                $main->account = $main->account - $game->bsf;
+                                $pool->profit = $pool->profit - $pool->bsf;
+//                                $pool->account = $pool->account - $pool->bsf;
+                                $main = CommonPools::where('user_id', '=', $pool->user_id)->first();
+                                $main->profit = $main->profit - $pool->bsf;
+                                $main->amount = $main->amount - $pool->bsf;
                                 $main->save();
                             }
                         }
@@ -372,13 +372,15 @@ class Updater
                                 ->where('game_type_id', '=', $i)
                                 ->first();
                             if ($game->confirmed == 1) {
-                                $pool->amount = $pool->amount - $game->bsf;
-                                $pool->profit = $pool->profit + $game->income - $game->bsf - $game->bet;
-                                $pool->account = $pool->account + $game->income;
                                 $main = CommonPools::where('user_id', '=', $game->user_id)->first();
                                 $main->profit = $main->profit + $game->income - $game->bsf - $game->bet;
                                 $main->account = $main->account + $game->income;
+                                $main->amount = $main->amount - $game->bsf;
                                 $main->save();
+                                $pool->amount = $pool->amount - $game->bsf;
+                                $pool->profit = $pool->profit + $game->income - $game->bsf - $game->bet;
+                                $pool->account = $pool->account + $game->income;
+
                             }
                             $pool->save();
                             foreach ($next_matches as $n) {
