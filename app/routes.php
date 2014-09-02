@@ -9,7 +9,7 @@ Route::get('/boo', function(){
     foreach($matches as $m) {
         $games = PPM::where('match_id', '=', $m->id)->where('confirmed', '=', 0)->get();
         foreach($games as $game) {
-            PPMController::createPlaceholder($game);
+            PPMPlaceHolder::createPlaceholder($game);
         }
     }
 //    return Updater::updatePPM();

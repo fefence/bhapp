@@ -413,7 +413,7 @@ class Updater
                                     $newgame->income = 0;
                                     $newgame->save();
                                 }
-                                PPMController::createPlaceholder($newgame);
+                                PPMPlaceHolder::createPlaceholder($newgame);
 //                                Parser::parseMatchOddsForGames([$newgame]);
                             }
                         }
@@ -443,7 +443,7 @@ class Updater
                                 $newgame = PPM::firstOrNew(['user_id' => $sett->user_id, 'series_id' => $serie->id, 'match_id' => $n->id, 'game_type_id' => $i, 'country' => $serie->team, 'confirmed' => 0]);
                                 $newgame->bsf = ($pool->amount) / count($next_matches);
                                 $newgame->current_length = $serie->current_length;
-                                $placeholder = PPMController::getPlaceholder($newgame);
+                                $placeholder = PPMPlaceHolder::getPlaceholder($newgame);
                                 if ($placeholder != null) {
                                     $newgame->bet = $placeholder->bet;
                                     $newgame->odds = $placeholder->odds;
