@@ -11,8 +11,8 @@
         @if(Session::get('message') != null)
         <span id="flash" class="bg-success text-success">{{Session::get('message')}}</span>
         @endif
-        @if(Session::get('error') != null)
-        <span id="flash" class="bg-danger text-danger">{{Session::get('message')}}</span>
+        @if(Session::get('warning') != null)
+        <span id="flash" class="bg-danger text-danger">{{Session::get('warning')}}</span>
         @endif
 
         @if(isset($ppsall) && isset($fromdate) && isset($todate))

@@ -8,10 +8,17 @@ class PPMController extends \BaseController
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, '');
         $games = PPM::ppmForDatesCountry($fromdate, $todate, $country);
+        $placeholders = PPMPlaceHolder::placeholdersForDatesCountry($fromdate, $todate, $country);
+//        return $placeholders;
         $count = array();
+        $count_pl = array();
         $league_ids = array();
         foreach ($games as $g) {
             $count[$g->id] = User::find(Auth::user()->id)->ppm()->where('match_id', '=', $g->match_id)->where('confirmed', '=', 1)->where('game_type_id', '=', $g->game_type_id)->count();
+            array_push($league_ids, $g->league_details_id);
+        }
+        foreach ($placeholders as $g) {
+            $count_pl[$g->id] = User::find(Auth::user()->id)->ppm_placeholders()->where('match_id', '=', $g->match_id)->where('confirmed', '=', 1)->where('game_type_id', '=', $g->game_type_id)->count();
             array_push($league_ids, $g->league_details_id);
         }
         $datarr = array();
@@ -23,7 +30,7 @@ class PPMController extends \BaseController
         }
         $league = LeagueDetails::where('country', '=', $country)->where('ppm', '=', 1)->first();
 //        $datarr[1] = array();
-        return View::make('ppm')->with(['country' => $league->country, 'datarr' => $datarr, 'standings' => $standings, 'ppm' => true, 'league_details_id' => -1, 'fromdate' => $fromdate, 'todate' => $todate, 'count' => $count, 'big' => $big, 'small' => $small, 'league' => $league, 'base' => 'ppm/country/' . $country]);
+        return View::make('ppm')->with(['country' => $league->country, 'placeholders' => $placeholders, 'datarr' => $datarr, 'standings' => $standings, 'ppm' => true, 'league_details_id' => -1, 'fromdate' => $fromdate, 'todate' => $todate, 'count' => $count, 'countpl' => $count_pl, 'big' => $big, 'small' => $small, 'league' => $league, 'base' => 'ppm/country/' . $country]);
     }
 
     public function displayCountries($fromdate = "", $todate = "")
@@ -53,7 +60,13 @@ class PPMController extends \BaseController
             ->select([DB::raw('ppm.id as id, ppm.*')])
             ->get();
 //        return $games;
-        Parser::parseMatchOddsForGames($games);
+        $placeholders = PPMPlaceHolder::placeholdersForDatesCountry($fromdate, $todate, $country);
+
+        $err = Parser::parseMatchOddsForGames($games);
+        $err2 = Parser::parseMatchOddsForGames($placeholders);
+        if ($err || $err2) {
+            return Redirect::back()->with('warning', 'Odds not refreshed correctly');
+        }
         return Redirect::back()->with('message', 'Odds refreshed');
 
     }
@@ -166,6 +179,32 @@ class PPMController extends \BaseController
         }
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, -1);
         return View::make('flat')->with(['disable_all' => true, 'matches' => $res, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small]);
+    }
+
+    public static function createPlaceholder($game) {
+        $match = Match::find($game->match_id);
+        $nextMatches = Updater::getNextPPMMatches($match);
+        foreach($nextMatches as $next) {
+            $placeholder = PPMPlaceHolder::firstOrCreate(['user_id' => $game->user_id, 'match_id' => $next->id, 'game_type_id' => $game->game_type_id, 'country' => $game->country]);
+            $placeholder->bsf = $placeholder->bsf + $game->bsf + $game->bet;
+            $placeholder->current_length = $game->current_length + 1;
+            $placeholder->bookmaker_id = $game->bookmaker_id;
+            $placeholder->odds = 3;
+            $placeholder->series_id = $game->series_id;
+            $placeholder->active = 1;
+            $placeholder->save();
+            return $placeholder;
+        }
+
+    }
+
+    public static function getPlaceholder($game) {
+        return PPMPlaceHolder::where('user_id', '=', $game->user_id)
+            ->where('match_id', '=', $game->match_id)
+            ->where('game_type_id', '=', $game->game_type_id)
+            ->where('country', '=', $game->country)
+            ->where('confirmed', '=', 1)
+            ->first();
     }
 
 }

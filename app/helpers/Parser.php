@@ -39,6 +39,7 @@ class Parser
     public static function parseMatchOddsForGames($games)
     {
         // return "boo";
+        $warn = false;
         $oddsarr = array();
         foreach ($games as $game) {
             if ($game->game_type_id > 5) {
@@ -49,9 +50,13 @@ class Parser
                     continue;
                 }
                 $oddsX = $oddsarr[$game->match_id][$game->game_type_id];
-                $game->odds = $oddsX;
-                $game->income = $oddsX * $game->bet;
-                $game->save();
+                if ($oddsX == 0 || $oddsX == -1) {
+                    $warn = true;
+                } else {
+                    $game->odds = $oddsX;
+                    $game->income = $oddsX * $game->bet;
+                    $game->save();
+                }
                 continue 1;
             }
             $matchId = $game->match_id;
@@ -87,6 +92,7 @@ class Parser
                 }
             }
         }
+        return $warn;
     }
 
     public static function parseLeagueSeries($league_details_id)
@@ -621,12 +627,12 @@ class Parser
                                 if ($attr == "icon y-card participant-name") {
 //                                    array_push([''])
                                 }
-                                $parsed = $parsed.$attr . " ";
+                                $parsed = $parsed . $attr . " ";
                             }
-                            $parsed = $parsed.$col->nodeValue . " ";
+                            $parsed = $parsed . $col->nodeValue . " ";
                         }
                     }
-                    $parsed = $parsed."<br>";
+                    $parsed = $parsed . "<br>";
                 }
             }
         }
@@ -653,15 +659,20 @@ class Parser
         preg_match('/.dat\', (?P<json>.*)\)/', $json_data, $matches2);
 
         $odds_arr = json_decode($matches2['json'], true);
+//        return $odds_arr;
+//        $odds00 = 3;
+//        $odds11 = 3;
+//        $odds22 = 3;
         try {
             $odds00 = $odds_arr['d']['oddsdata']["back"]['E-8-2-0-0-1']['odds'][16][0];
             $odds11 = $odds_arr['d']['oddsdata']["back"]['E-8-2-0-0-3']['odds'][16][0];
             $odds22 = $odds_arr['d']['oddsdata']["back"]['E-8-2-0-0-7']['odds'][16][0];
         } catch (ErrorException $e) {
-            $odds00 = 3;
-            $odds11 = 3;
-            $odds22 = 3;
+            $odds00 = -1;
+            $odds11 = -1;
+            $odds22 = -1;
         }
+
         return array(6 => $odds00, 7 => $odds11, 8 => $odds22);
     }
 

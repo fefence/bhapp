@@ -77,15 +77,15 @@ class GamesController extends \BaseController
             ->select(DB::raw("`ppm`.*"))
             ->get();
         foreach ($games as $game) {
-            Games::confirmGame($game->id, $game->game_type_id);
+            Games::confirmGame($game->id, $game->game_type_id, false);
         }
         return Redirect::back()->with('message', 'Bet confirmed');
 //        return $games;
     }
 
-    public function confirmGame($game_id, $game_type_id)
+    public function confirmGame($game_id, $game_type_id, $pl = false)
     {
-        Games::confirmGame($game_id, $game_type_id);
+        Games::confirmGame($game_id, $game_type_id, $pl);
         return Redirect::back()->with('message', 'Bet confirmed');
     }
 
@@ -130,7 +130,7 @@ class GamesController extends \BaseController
 
         }
         foreach ($data as $game) {
-            Games::confirmGame($game->id, $game->game_type_id);
+            Games::confirmGame($game->id, $game->game_type_id, false);
         }
         return Redirect::back()->with("message", "All games confirmed");
     }
@@ -207,12 +207,19 @@ class GamesController extends \BaseController
 
     public function saveTable()
     {
+//        return Input::all();
         $game_id = Input::get('row_id');
         $game_type_id = Input::get('id');
         $col = Input::get('column');
-
+        $pl = false;
         if ($game_type_id > 4 && $game_type_id < 9) {
-            $game = PPM::find($game_id);
+            if (str_contains($game_id, '!')) {
+                $game_id = str_replace('!', '', $game_id);
+                $game = PPMPlaceHolder::find($game_id);
+                $pl = true;
+            } else {
+                $game = PPM::find($game_id);
+            }
         } else if ($game_type_id > 0 && $game_type_id < 5) {
             $game = Games::find($game_id);
             $col = $col + 1;
@@ -250,7 +257,11 @@ class GamesController extends \BaseController
 
         }
         if ($game_type_id > 4 && $game_type_id < 9) {
-            $game = PPM::find($game_id);
+            if ($pl) {
+                $game = PPMPlaceHolder::find($game_id);
+            } else {
+                $game = PPM::find($game_id);
+            }
         } else if ($game_type_id > 0 && $game_type_id < 5) {
             $game = Games::find($game_id);
         }

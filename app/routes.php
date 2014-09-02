@@ -1,7 +1,19 @@
 <?php
 Route::get('/boo', function(){
-//    return Checker::getAllMatches();
-    return Checker::getWrongGroups();
+//    $game = PPM::find(3533);
+//    return PPMPlaceHolder::getForGame($game);
+//    return PPMController::createPlaceholder($game);
+
+//    return Updater::update();
+    $matches = Updater::getPPMMatches();
+    foreach($matches as $m) {
+        $games = PPM::where('match_id', '=', $m->id)->where('confirmed', '=', 0)->get();
+        foreach($games as $game) {
+            PPMController::createPlaceholder($game);
+        }
+    }
+//    return Updater::updatePPM();
+//    return PPMController::getPlaceholders($game);
 });
 
 Route::get('/settings2', function(){
@@ -60,7 +72,7 @@ Route::get('/ppsodds/{fromdate?}/{todate?}', 'GamesController@getMatchOddsForAll
 
 //games actions
 Route::post('/save', 'GamesController@saveTable');
-Route::get('/confirm/{game_id}/{game_type_id}', 'GamesController@confirmGame');
+Route::get('/confirm/{game_id}/{game_type_id}/{placeholder?}', 'GamesController@confirmGame');
 Route::get('/delete/{game_id}/{game_type_id}', 'GamesController@deleteGame');
 Route::get('/addgame/{groups_id}/{standings_id}/{match_id}', 'GamesController@addGame');
 Route::get('/confirmall/{group_id}/{fromdate?}/{todate?}', 'GamesController@confirmAllGames');

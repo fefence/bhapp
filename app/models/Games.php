@@ -133,7 +133,7 @@ class Games extends Eloquent
     }
 
 
-    public static function confirmGame($game_id, $game_type_id)
+    public static function confirmGame($game_id, $game_type_id, $pl)
     {
         $aLog = new ActionLog;
         $aLog->action = "confirm";
@@ -141,8 +141,18 @@ class Games extends Eloquent
             $game = Games::find($game_id);
             $aLog->type = "pps";
         } else if ($game_type_id >= 5 && $game_type_id < 9) {
-            $game = PPM::find($game_id);
-            $aLog->type = "ppm";
+            if ($pl) {
+                $game = PPMPlaceHolder::find($game_id);
+                $aLog->type = "ppm_placeholder";
+            } else {
+                $game = PPM::find($game_id);
+                $aLog->type = "ppm";
+                $plh = PPMPlaceHolder::getForGame($game);
+                if ($plh != null) {
+                    $plh->bsf = $plh->bsf + $game->bet;
+                    $plh->save();
+                }
+            }
         }
         $aLog->amount = $game->bet;
         $aLog->element_id = $game->id;

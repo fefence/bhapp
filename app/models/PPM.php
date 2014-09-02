@@ -55,6 +55,8 @@ class PPM extends Eloquent {
         return $games;
     }
 
+
+
     public static function ppmLeaguesForDates($fromdate, $todate)
     {
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);

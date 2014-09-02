@@ -58,7 +58,6 @@ $i = 0;
     </thead>
     <tbody>
     @foreach($data as $d)
-    @if(isset($d->match_id))
     <tr class="{{$d->match_id}}" id="{{isset($d->games_id)?$d->games_id:''}}">
         <td class="center"><img class="clickable" src="/images/plus-small.png"></td>
         <td>{{date('d M', strtotime($d->matchDate))}}</td>
@@ -87,9 +86,31 @@ $i = 0;
             @endif
         </td>
     </tr>
-    @endif
     @endforeach
-
+    @foreach($placeholders as $d)
+    <tr class="{{$d->match_id}}" id="{{isset($d->games_id)?$d->games_id.'!':''}}">
+        <td class="center"><img class="clickable" src="/images/plus-small.png"></td>
+        <td>{{date('d M', strtotime($d->matchDate))}}</td>
+        <td>{{substr($d->matchTime, 0, strlen($d->matchTime)-3)}}</td>
+        <td><a href="/ppm/series/{{$d->series_id}}">{{$d->home}} </a></td>
+        <td><a href="/ppm/series/{{$d->series_id}}">{{$d->away}} </a></td>
+        <td>{{$d->streak}}</td>
+        <td>-</td>
+        <td>{{$d->resultShort}}</td>
+        <td class='text-muted'><em>{{$d->type}}</em></td>
+        <!--        <td class='editabledd warning'>{{$d->bookmakerName}}</td>-->
+        <td>{{$d->bsf}}</td>
+        <td class='editable oddsColumn' id="{{$d->game_type_id}}">{{$d->bet}}</td>
+        <td class='editable' id="{{$d->game_type_id}}">{{$d->odds}}</td>
+        <td>{{$d->income}}</td>
+        <td>{{round(($d->income - $d->bsf - $d->bet), 2, PHP_ROUND_HALF_UP)}}</td>
+        <td>@if($d->resultShort == '-')  <a role="button" class="btn btn-primary btn-xs" style="width: 50px" href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}/true" style="font-size: 130%;">+&nbsp({{ (array_key_exists($d->match_id, $countpl))?$countpl[$d->match_id]:$countpl[$d->id] }})<span style='display: none;'>{{$d->match_id}}</span></a>
+            @else
+            ({{ (array_key_exists($d->match_id, $countpl))?$countpl[$d->match_id]:$countpl[$d->id] }})<span style='display: none;'>{{$d->match_id}}</span>
+            @endif
+        </td>
+    </tr>
+    @endforeach
     </tbody>
 </table>
 <?php
@@ -226,23 +247,6 @@ $(document).ready(function () {
         "height": "25px",
         "width": "40px",
         "value": ""
-    });
-
-    oTable.$('td.editabledd').editable('#', {
-        "callback": function (sValue, y) {
-            var aPos = oTable.fnGetPosition(this);
-            var arr = sValue.split("#");
-
-            //oTable.fnUpdate( arr[0], aPos[0], 7 );
-        },
-        "submitdata": function (value, settings) {
-            return {
-                "row_id": this.parentNode.getAttribute('id'),
-                "column": oTable.fnGetPosition(this)[2]
-            };
-        },
-        "height": "25px",
-        "width": "40px"
     });
 
     $('#matches0 tbody').on('click', '.clickable', function () {
