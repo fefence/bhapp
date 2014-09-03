@@ -5,14 +5,14 @@ Route::get('/boo', function(){
 //    return PPMController::createPlaceholder($game);
 
 //    return Updater::update();
-//    $matches = Updater::getPPMMatches();
-//    foreach($matches as $m) {
-//        $games = PPM::where('match_id', '=', $m->id)->where('confirmed', '=', 0)->get();
-//        foreach($games as $game) {
-//            PPMPlaceHolder::createPlaceholder($game);
-//        }
-//    }
-    return Updater::updatePPM();
+    $matches = Updater::getPPMMatches();
+    foreach($matches as $m) {
+        $games = PPM::where('match_id', '=', $m->id)->where('confirmed', '=', 0)->get();
+        foreach($games as $game) {
+            PPMPlaceHolder::createPlaceholder($game);
+        }
+    }
+//    return Updater::updatePPM();
 //    return PPMController::getPlaceholders($game);
 });
 
