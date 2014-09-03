@@ -92,9 +92,9 @@ $i = 0;
         <td class="center"><img class="clickable" src="/images/plus-small.png"></td>
         <td>{{date('d M', strtotime($d->matchDate))}}</td>
         <td>{{substr($d->matchTime, 0, strlen($d->matchTime)-3)}}</td>
-        <td><a href="/ppm/series/{{$d->series_id}}">{{$d->home}} </a></td>
-        <td><a href="/ppm/series/{{$d->series_id}}">{{$d->away}} </a></td>
-        <td>{{$d->streak}}</td>
+        <td class='text-muted'>{{$d->home}} ({{$standings[$d->home]}})</td>
+        <td class='text-muted'>{{$d->away}} ({{$standings[$d->away]}})</td>
+        <td>-</td>
         <td>-</td>
         <td>{{$d->resultShort}}</td>
         <td class='text-muted'><em>{{$d->type}}</em></td>

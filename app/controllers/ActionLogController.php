@@ -74,6 +74,18 @@ class ActionLogController extends \BaseController{
                     $res[$log->id]['descr'] = "no pool found";
                 }
             }
+            if ($log->type == 'ppm_placeholder') {
+                try {
+                    $game = PPMPlaceHolder  ::find($log->element_id);
+                    $match = $game->match;
+                    $res[$log->id]['descr'] = $match->home.'-'.$match->away;
+                    $res[$log->id]['user'] = User::find($game->user_id)->name;
+                } catch (ErrorException $e) {
+                    $match = null;
+                    $res[$log->id]['user'] = "unknown";
+                    $res[$log->id]['descr'] = "no game found";
+                }
+            }
         }
 //        return $res;
         return View::make('actionlog')->with(['data' => $res, 'base_minus' => '', 'base_plus' => '']);

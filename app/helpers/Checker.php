@@ -37,7 +37,7 @@ class Checker
         $text = $text . " execution time: " . (time() - $start) . " sec for " . count($all_matches) . " matches.";
         if ($send) {
             Mail::send('emails.email', ['data' => $text], function ($message) {
-                $message->to(['wpopowa@gmail.com' => 'Vesela Popova', 'ludataaa@mail.bg' => 'Deniz Murat'])
+                $message->to(['wpopowa@gmail.com' => 'Vesela Popova', 'fefence@gmail.com' => 'Deniz Murat'])
                     ->subject('Changed match date or time');
             });
         }

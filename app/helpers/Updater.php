@@ -458,7 +458,7 @@ class Updater
                                     $newgame->income = 0;
                                     $newgame->save();
                                 }
-                                PPMController::createPlaceholder($newgame);
+                                PPMPlaceHolder::createPlaceholder($newgame);
                             }
                         }
                     }
