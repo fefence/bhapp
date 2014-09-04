@@ -32,7 +32,7 @@
         <th style="width: 80px;">country</th>
         <th style="width: 40px;">l</th>
         <th style="width: 40px;">game</th>
-        <th style="width: 60px;">type</th>
+        <th style="width: 40px;">type</th>
         <th>action</th>
         <th>description</th>
     </tr>
@@ -61,7 +61,8 @@
             "iDisplayLength": 100,
             "bJQueryUI": true,
             "sDom": '<"top"i>t<"bottom"><p"clear">',
-            "sPaginationType": "full_numbers"
+            "sPaginationType": "full_numbers",
+            "aaSorting": []
         });
 
 

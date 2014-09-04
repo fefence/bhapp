@@ -145,7 +145,7 @@ class Games extends Eloquent
         } else if ($game_type_id >= 5 && $game_type_id < 9) {
             if ($pl) {
                 $game = PPMPlaceHolder::find($game_id);
-                $aLog->type = "ppm_placeholder";
+                $aLog->type = "ppm_pl";
             } else {
                 $game = PPM::find($game_id);
                 $aLog->type = "ppm";

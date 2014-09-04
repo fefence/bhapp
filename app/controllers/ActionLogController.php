@@ -17,6 +17,7 @@ class ActionLogController extends \BaseController{
             ->select(DB::raw("action_log.*, leagueDetails.*, game_type.type as game_type"))
             ->where('user_id', '=', Auth::user()->id)
             ->where('created_at', '<=', $todate)
+            ->orderBy('created_at', "desc")
             ->get();
         return View::make('actionlog')->with(['data' => $logs, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small]);
     }
