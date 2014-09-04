@@ -10,7 +10,8 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">tools <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li class="{{Request::path() == 'poolmanagement' ? 'active' : '';}}"><a href="{{URL::to('/pool')}}">pool</a></li>
+                        <li class="{{Request::path() == 'pool' ? 'active' : '';}}"><a href="{{URL::to('/pool')}}">pool</a></li>
+                        <li class="{{Request::path() == 'log' ? 'active' : '';}}"><a href="{{URL::to('/log')}}">log</a></li>
                         <li class="{{Request::path() == 'countries' ? 'active' : '';}}"><a href="{{ URL::to('countries') }}">stats</a></li>
                         <li class="divider"></li>
                         <li class="dropdown-header">Simulators</li>

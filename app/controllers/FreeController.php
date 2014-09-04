@@ -107,6 +107,12 @@ class FreeController extends \BaseController
         $aLog->type = "free";
         $aLog->amount = $free->bet;
         $aLog->element_id = $free->id;
+        $team = FreeplayTeams::where('team_id', '=', $free->team_id)->where('user_id', '=', $free->user_id)->first()->team;
+        $match = Match::find($free->match_id);
+        $aLog->description = $match->home." - ".$match->away." confirmed ".$free->bet."@".$free->odds." series for ".$team;
+        $aLog->user_id = $free->user_id;
+        $aLog->game_type_id = $free->game_type_id;
+        $aLog->league_details_id = $match->league_details_id;
         $aLog->save();
 
         $pool = FreePool::where('user_id', '=', $free->user_id)
@@ -142,7 +148,14 @@ class FreeController extends \BaseController
         $main->account = $main->account + $free->bet;
         $pool->account = $pool->account + $free->bet;
         $pool->save();
+        $team = FreeplayTeams::where('team_id', '=', $free->team_id)->where('user_id', '=', $free->user_id)->first()->team;
+        $match = Match::find($free->match_id);
+        $aLog->description = $match->home." - ".$match->away." deleted ".$free->bet."@".$free->odds." series for ".$team;
+        $aLog->user_id = $free->user_id;
+        $aLog->game_type_id = $free->game_type_id;
+        $aLog->league_details_id = $match->league_details_id;
         $free->delete();
+
         return Redirect::back()->with('message', 'Bet deleted');
 
     }

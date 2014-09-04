@@ -28,6 +28,7 @@ class PoolsController extends \BaseController
             $pool = FreePool::find($id);
         }
         $main = CommonPools::where('user_id', '=', Auth::user()->id)->first();
+        $old = $pool->amount;
         $pool->amount = $pool->amount - $amount;
         $main->in_transit = $main->in_transit + $amount;
         $pool->save();
@@ -39,9 +40,13 @@ class PoolsController extends \BaseController
         $log->save();
         $aLog = new ActionLog;
         $aLog->type = "pools";
-        $aLog->action = "-";
+        $aLog->action = "substract";
         $aLog->amount = $amount;
         $aLog->element_id = $pool->id;
+        $aLog->user_id = $pool->user_id;
+        $aLog->description = $amount." removed. Old value ".$old.", new value ".$pool->amount;
+        $aLog->league_details_id = $pool->league_details_id;
+        $aLog->game_type_id = $pool->game_type_id;
         $aLog->save();
         if ($free == "false" && $pool->game_type_id >= 5 && $pool->game_type_id <= 8) {
             $ppms = PPM::join('match', 'match.id', '=', 'ppm.match_id')
@@ -82,6 +87,8 @@ class PoolsController extends \BaseController
             $pool = FreePool::find($id);
         }
         $main = CommonPools::where('user_id', '=', Auth::user()->id)->first();
+        $old_pool = $pool->amount;
+        $old_account = $pool->account;
         $pool->amount = $pool->amount - $amount;
         $pool->account = $pool->account + $amount;
         $main->account = $main->account + $amount;
@@ -89,16 +96,15 @@ class PoolsController extends \BaseController
 //        $main->in_transit = $main->in_transit + $amount;
         $pool->save();
         $main->save();
-        $log = new PoolLog;
-        $log->pools_id = $pool->id;
-        $log->amount = $amount;
-        $log->action = "-";
-        $log->save();
         $aLog = new ActionLog;
         $aLog->type = "pools";
         $aLog->action = "to account";
         $aLog->amount = $amount;
         $aLog->element_id = $pool->id;
+        $aLog->user_id = $pool->user_id;
+        $aLog->description = $amount." removed. Old pool ".$old_pool.", new pool ".$pool->amount.". Old account ".$old_account.", new account ".($old_account + $amount);
+        $aLog->league_details_id = $pool->league_details_id;
+        $aLog->game_type_id = $pool->game_type_id;
         $aLog->save();
         if ($free == "false" && $pool->game_type_id >= 5 && $pool->game_type_id <= 8) {
             $ppms = PPM::join('match', 'match.id', '=', 'ppm.match_id')
@@ -141,6 +147,7 @@ class PoolsController extends \BaseController
             $pool = FreePool::find($id);
         }
         $main = CommonPools::where('user_id', '=', Auth::user()->id)->first();
+        $old = $pool->amount;
         $pool->amount = $pool->amount + $amount;
         $main->in_transit = $main->in_transit - $amount;
         $pool->save();
@@ -152,9 +159,13 @@ class PoolsController extends \BaseController
         $log->save();
         $aLog = new ActionLog;
         $aLog->type = "pools";
-        $aLog->action = "+";
-        $aLog->amount = $amount;
+        $aLog->action = "add";
+//        $aLog->amount = $amount;
         $aLog->element_id = $pool->id;
+        $aLog->user_id = $pool->user_id;
+        $aLog->description = $amount." added. Old value ".$old.", new value ".$pool->amount;
+        $aLog->league_details_id = $pool->league_details_id;
+        $aLog->game_type_id = $pool->game_type_id;
         $aLog->save();
         if ($free == "false" && $pool->game_type_id >= 5 && $pool->game_type_id <= 8) {
             $ppms = PPM::join('match', 'match.id', '=', 'ppm.match_id')
@@ -198,6 +209,10 @@ class PoolsController extends \BaseController
         $aLog->action = "reset";
         $aLog->amount = $pool->account;
         $aLog->element_id = $pool->id;
+        $aLog->user_id = $pool->user_id;
+        $aLog->league_details_id = $pool->league_details_id;
+        $aLog->description = "Pool reset. Pool removed ".$pool->amount.", profit added ".$pool->account;
+        $aLog->game_type_id = $pool->game_type_id;
         $aLog->save();
 
         $pool->profit = $pool->profit + $pool->account;

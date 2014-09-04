@@ -135,11 +135,13 @@ class Games extends Eloquent
 
     public static function confirmGame($game_id, $game_type_id, $pl)
     {
+        $series = "";
         $aLog = new ActionLog;
         $aLog->action = "confirm";
         if ($game_type_id < 5) {
             $game = Games::find($game_id);
             $aLog->type = "pps";
+            $series = Standings::find($game->standings_id)->team;
         } else if ($game_type_id >= 5 && $game_type_id < 9) {
             if ($pl) {
                 $game = PPMPlaceHolder::find($game_id);
@@ -153,12 +155,18 @@ class Games extends Eloquent
                     $plh->save();
                 }
             }
+            $series = $game->country;
         }
+        $league = Match::find($game->match_id);
+        $aLog->description = $league->home." - ".$league->away." confirmed ".$game->bet."@".$game->odds." series for ".$series." length ".$game->current_length." ";
+        $aLog->user_id = $game->user_id;
+        $aLog->game_type_id = $game->game_type_id;
+        $aLog->league_details_id = $league->league_details_id;
         $aLog->amount = $game->bet;
         $aLog->element_id = $game->id;
         $aLog->save();
 
-        $league = Match::find($game->match_id);
+
         $pool = Pools::where('user_id', '=', $game->user_id)
             ->where('league_details_id', '=', $league->league_details_id)
             ->where('game_type_id', '=', $game_type_id)
@@ -183,14 +191,21 @@ class Games extends Eloquent
         if ($game_type_id < 5) {
             $game = Games::find($game_id);
             $aLog->type = "pps";
+            $series = Standings::find($game->standings_id)->team;
+
         } else if ($game_type_id >= 5 && $game_type_id < 9) {
             $game = PPM::find($game_id);
             $aLog->type = "ppm";
+            $series = $game->country;
         }
+        $league = Match::find($game->match_id);
+        $aLog->description = $league->home." - ".$league->away." deleted ".$game->bet."@".$game->odds." series for ".$series." length ".$game->current_length." ";
+        $aLog->user_id = $game->user_id;
+        $aLog->game_type_id = $game->game_type_id;
+        $aLog->league_details_id = $league->league_details_id;
         $aLog->amount = $game->bet;
         $aLog->element_id = $game->id;
         $aLog->save();
-        $league = Match::find($game->match_id);
         $pool = Pools::where('user_id', '=', $game->user_id)
             ->where('league_details_id', '=', $league->league_details_id)
             ->where('game_type_id', '=', $game_type_id)

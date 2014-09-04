@@ -12,7 +12,7 @@
 @stop
 
 @section('pageHeader')
-	@include('layouts.partials.pageheader', array('calendar' => true, 'big' => 'Action log', 'small' => ''))
+	@include('layouts.partials.pageheader', array('calendar' => true, 'big' => $big, 'small' => $small))
 @stop
 
 @section('content')
@@ -20,30 +20,33 @@
     <thead>
     <tr>
         <th><input type="text" name="search_engine" class="search_init" placeholder="date"></th>
-        <th><input type="text" name="search_engine" class="search_init" placeholder="user"></th>
+        <th><input type="text" name="search_engine" class="search_init" placeholder="country"></th>
+        <th><input type="text" name="search_engine" class="search_init" placeholder="league"></th>
+        <th><input type="text" name="search_engine" class="search_init" placeholder="game type"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="type"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="action"></th>
-        <th><input type="text" name="search_engine" class="search_init" placeholder="amount"></th>
         <th><input type="text" name="search_engine" class="search_init" placeholder="description"></th>
     </tr>
     <tr>
-        <th>date</th>
-        <th>user</th>
-        <th>type</th>
+        <th style="width: 140px;">date</th>
+        <th style="width: 80px;">country</th>
+        <th style="width: 40px;">l</th>
+        <th style="width: 40px;">game</th>
+        <th style="width: 60px;">type</th>
         <th>action</th>
-        <th>amount</th>
         <th>description</th>
     </tr>
     </thead>
     <tbody>
     @foreach($data as $id => $d)
     <tr>
-        <td>{{$d['log']->created_at}}</td>
-        <td>{{$d['user']}}</td>
-        <td>{{$d['log']->type}}</td>
-        <td>{{$d['log']->action}}</td>
-        <td>{{$d['log']->amount}}</td>
-        <td>{{$d['descr']}}</td>
+        <td>{{$d->created_at}}</td>
+        <td>{{$d->country}}</td>
+        <td>{{$d->alias}}</td>
+        <td>{{$d->game_type}}</td>
+        <td>{{$d->type}}</td>
+        <td>{{$d->action}}</td>
+        <td>{{$d->description}}</td>
     </tr>
     @endforeach
 

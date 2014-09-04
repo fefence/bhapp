@@ -57,7 +57,11 @@ class SettingsController extends BaseController
                             $aLog = new ActionLog;
                             $aLog->type = "settings";
                             $aLog->action = "disable";
-                            $aLog->amount = 0;
+                            $aLog->league_details_id = $setting->league_details_id;
+                            $aLog->game_type_id = $setting->game_type_id;
+                            $aLog->user_id = $setting->user_id;
+                            $aLog->description = "Disable pps";
+//                            $aLog->amount = 0;
                             $aLog->element_id = $setting->id;
                             $aLog->save();
                         }
@@ -72,7 +76,11 @@ class SettingsController extends BaseController
                             $aLog = new ActionLog;
                             $aLog->type = "settings";
                             $aLog->action = "change multiplier";
-                            $aLog->amount = $setting->multiplier;
+//                            $aLog->amount = $setting->multiplier;
+                            $aLog->league_details_id = $setting->league_details_id;
+                            $aLog->game_type_id = $setting->game_type_id;
+                            $aLog->user_id = $setting->user_id;
+                            $aLog->description = "Change 'multiplier' from $oldMultiplier to ". $setting->multiplier;
                             $aLog->element_id = $setting->id;
                             $aLog->save();
                         }
@@ -80,7 +88,11 @@ class SettingsController extends BaseController
                             $aLog = new ActionLog;
                             $aLog->type = "settings";
                             $aLog->action = "change from";
-                            $aLog->amount = $setting->from;
+                            $aLog->league_details_id = $setting->league_details_id;
+                            $aLog->game_type_id = $setting->game_type_id;
+                            $aLog->user_id = $setting->user_id;
+                            $aLog->description = "Change 'from' from $oldFrom to ". $setting->from;
+//                            $aLog->amount = $setting->from;
                             $aLog->element_id = $setting->id;
                             $aLog->save();
                         }
@@ -88,7 +100,11 @@ class SettingsController extends BaseController
                             $aLog = new ActionLog;
                             $aLog->type = "settings";
                             $aLog->action = "change to";
-                            $aLog->amount = $setting->to;
+                            $aLog->league_details_id = $setting->league_details_id;
+                            $aLog->game_type_id = $setting->game_type_id;
+                            $aLog->user_id = $setting->user_id;
+                            $aLog->description = "Change 'to' from $oldTo to ". $setting->to;
+//                            $aLog->amount = $setting->to;
                             $aLog->element_id = $setting->id;
                             $aLog->save();
                         }
@@ -107,8 +123,12 @@ class SettingsController extends BaseController
                     $setting->save();
                     $aLog = new ActionLog;
                     $aLog->type = "settings";
-                    $aLog->action = "add ppm league";
-                    $aLog->amount = $arr[0];
+                    $aLog->action = "enable ppm";
+//                    $aLog->amount = $arr[0];
+                    $aLog->league_details_id = $arr[0];
+                    $aLog->game_type_id = $arr[1];
+                    $aLog->user_id = $s->user_id;
+                    $aLog->description = "Enable ppm";
                     $aLog->element_id = $setting->id;
                     $aLog->save();
                 }
@@ -158,8 +178,12 @@ class SettingsController extends BaseController
                 }
                 $aLog = new ActionLog;
                 $aLog->type = "settings";
-                $aLog->action = "disable ppm league";
-                $aLog->amount = $s->game_type_id;
+                $aLog->action = "disable ppm";
+                $aLog->league_details_id = $s->league_details_id;
+                $aLog->game_type_id = $s->game_type_id;
+                $aLog->user_id = $s->user_id;
+                $aLog->description = "Disable ppm";
+//                $aLog->amount = $s->game_type_id;
                 $aLog->element_id = $s->league_details_id;
                 $aLog->save();
                 $s->delete();

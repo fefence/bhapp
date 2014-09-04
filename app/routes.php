@@ -1,5 +1,6 @@
 <?php
 Route::get('/boo', function(){
+    Parser::parseMatchesForGroup(Groups::find(828), Groups::find(840));
 //    $game = PPM::find(3533);
 //    return PPMPlaceHolder::getForGame($game);
 //    return PPMController::createPlaceholder($game);
