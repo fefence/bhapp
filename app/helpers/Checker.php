@@ -20,7 +20,8 @@ class Checker
             $match = Parser::parseTimeDate($m);
             if ($time != $match->matchTime || $date != $match->matchDate) {
                 $send = true;
-                $body = $match->id." ".$match->home." - ".$match->away." old value: $date $time new value: " . $match->matchDate . " " . $match->matchTime . "<br>";
+                $league = LeagueDetails::find($match->league_details_id);
+                $body = "[".$match->id."] ".$league->country." ".$league->displayName." ".$match->home." - ".$match->away." old value: $date $time new value: " . $match->matchDate . " " . $match->matchTime . "<br>";
                 $text = $text . $body;
             }
         }
@@ -30,7 +31,8 @@ class Checker
             $match = Parser::parseTimeDate($m);
             if ($time != $match->matchTime || $date != $match->matchDate) {
                 $send = true;
-                $body = $match->id." ".$match->home." - ".$match->away." old value: $date $time new value: " . $match->matchDate . " " . $match->matchTime . "<br>";
+                $league = LeagueDetails::find($match->league_details_id);
+                $body = "[".$match->id."] ".$league->country." ".$league->displayName." ".$match->home." - ".$match->away." old value: $date $time new value: " . $match->matchDate . " " . $match->matchTime . "<br>";
                 $text = $text . $body;
             }
         }
