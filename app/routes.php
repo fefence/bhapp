@@ -1,6 +1,20 @@
 <?php
 Route::get('/boo', function(){
-    Parser::parseMatchesForGroup(Groups::find(828), Groups::find(840));
+    $ppms = LeagueDetails::where('ppm', '=', 1)->get();
+    foreach($ppms as $ppm) {
+        $gr = Groups::where('state', '=', 2)->where('league_details_id', '=', $ppm->id)->first();
+        $str = Standings::where('league_details_id', '=', $gr->league_details_id)
+            ->select(DB::raw('streak, count(*) as c'))
+            ->groupBy('streak')
+            ->get();
+        foreach ($str as $s) {
+            $g = GroupToStreaks::firstOrNew(['groups_id' => $gr->id, 'streak_length' => $s->streak]);
+            $g->streak_count = $s->c;
+            $g->save();
+        }
+        echo $gr->league_details_id. " ";
+    }
+//    Parser::parseMatchesForGroup(Groups::find(828), Groups::find(840));
 //    $game = PPM::find(3533);
 //    return PPMPlaceHolder::getForGame($game);
 //    return PPMController::createPlaceholder($game);

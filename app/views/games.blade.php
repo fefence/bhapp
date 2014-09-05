@@ -19,30 +19,32 @@ $elements = array('active' => $active, 'list' => $list);
     <thead>
     <tr>
         <th><input type="text" name="search_engine" class="search_init" placeholder="league"></th>
+<!--        <th><input type="hidden"></th>-->
         <th><input type="hidden"></th>
-        <th><input type="hidden"></th>
-        <th><input type="hidden"></th>
-        <th><input type="hidden"></th>
+<!--        <th><input type="hidden"></th>-->
+<!--        <th><input type="hidden"></th>-->
     </tr>
     <tr>
         <th>league</th>
-        <th>bsf</th>
+<!--        <th>bsf</th>-->
         <th>conf</th>
-        <th>-</th>
-        <th>+</th>
+<!--        <th>-</th>-->
+<!--        <th>+</th>-->
     </tr>
     </thead>
     <tbody>
     @foreach($data as $id=>$d)
     <tr class="{{$id}}">
         <td><a href="/pps/group/{{$id}}"><img src="/images/{{strtoupper($d['league']->country)}}.png"> {{$d['league']->displayName}}</a>&nbsp;(<a href="/pps/group/{{$id}}/{{isset($fromdate)?$fromdate.'/':''}}{{isset($todate)?$todate:''}}">today</a>)</td>
-        <td>@if(isset($d['prev'])) {{$d['prev']}} @endif</td>
+<!--        <td>@if(isset($d['prev'])) {{$d['prev']}} @endif</td>-->
         <td>@include('layouts.partials.xofy', ['x' => $d['conf'], 'y' => $d['today'], 'all' => $d['all']])</td>
-        @foreach($d['filter'] as $filter=>$count)
-        <td>
-            {{$count}}
-        </td>
-        @endforeach
+<!--        @foreach($d['filter'] as $filter=>$count)-->
+<!--        <td>-->
+<!--            {{$count}}-->
+<!--        </td>-->
+<!--        @endforeach-->
+<!--    <tr></tr>-->
+<!--    <tr></tr>-->
     </tr>
     @endforeach
     </tbody>

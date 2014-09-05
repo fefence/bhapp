@@ -39,7 +39,8 @@ class Settings extends Eloquent
                 $ppm[$l->country][7] = Settings::where('league_details_id', '=', $l->id)->where('game_type_id', '=', 7)->where('user_id', '=', Auth::user()->id)->first();
                 $ppm[$l->country][8] = Settings::where('league_details_id', '=', $l->id)->where('game_type_id', '=', 8)->where('user_id', '=', Auth::user()->id)->first();
 
-            } else if ($l->pps == 1){
+            }
+            if ($l->pps == 1){
                 if (!array_key_exists($l->country, $pps)) {
                     $pps[$l->country] = array();
                 }

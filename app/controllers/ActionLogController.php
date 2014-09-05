@@ -3,7 +3,6 @@
 class ActionLogController extends \BaseController{
 
     public static function display($fromdate = "", $todate ='') {
-//        list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
         if ($fromdate == "") {
             $fromdate = date("Y-m-d H:i:s", time()-15*24*60*60);
         } else {
