@@ -1,34 +1,5 @@
 <?php
 Route::get('/boo', function(){
-    $ppms = LeagueDetails::where('ppm', '=', 1)->get();
-    foreach($ppms as $ppm) {
-        $gr = Groups::where('state', '=', 2)->where('league_details_id', '=', $ppm->id)->first();
-        $str = Standings::where('league_details_id', '=', $gr->league_details_id)
-            ->select(DB::raw('streak, count(*) as c'))
-            ->groupBy('streak')
-            ->get();
-        foreach ($str as $s) {
-            $g = GroupToStreaks::firstOrNew(['groups_id' => $gr->id, 'streak_length' => $s->streak]);
-            $g->streak_count = $s->c;
-            $g->save();
-        }
-        echo $gr->league_details_id. " ";
-    }
-//    Parser::parseMatchesForGroup(Groups::find(828), Groups::find(840));
-//    $game = PPM::find(3533);
-//    return PPMPlaceHolder::getForGame($game);
-//    return PPMController::createPlaceholder($game);
-
-//    return Updater::update();
-//    $matches = Updater::getPPMMatches();
-//    foreach($matches as $m) {
-//        $games = PPM::where('match_id', '=', $m->id)->where('confirmed', '=', 0)->get();
-//        foreach($games as $game) {
-//            PPMPlaceHolder::createPlaceholder($game);
-//        }
-//    }
-//    return Updater::updatePPM();
-//    return PPMController::getPlaceholders($game);
 });
 
 Route::get('/settings2', function(){

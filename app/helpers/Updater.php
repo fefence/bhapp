@@ -90,9 +90,7 @@ class Updater
             ->groupBy('streak')
             ->get();
         foreach ($str as $s) {
-            $g = new GroupToStreaks();
-            $g->groups_id = $gr->id;
-            $g->streak_length = $s->streak;
+            $g = GroupToStreaks::firstOrNew(['groups_id' => $gr->id, 'streak_length' => $s->streak]);
             $g->streak_count = $s->c;
             $g->save();
         }
