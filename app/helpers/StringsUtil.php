@@ -5,6 +5,8 @@ class StringsUtil
 
     public static function calculateHeading($fromdate, $todate, $league_details_id)
     {
+        $fromdate = explode(" ", $fromdate)[0];
+        $todate = explode(" ", $todate)[0];
         if ($fromdate == $todate && $fromdate == date('Y-m-d', time())) {
             $small = "today";
             $big = date('d M (D)', time());
