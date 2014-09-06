@@ -22,16 +22,12 @@ $elements = array('active' => $active, 'list' => $list);
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
-        <th><input type="hidden"></th>
-        <th><input type="hidden"></th>
     </tr>
     <tr>
         <th>league</th>
         <th>prev. bsf</th>
         <th>current bsf</th>
         <th>conf</th>
-        <th>+</th>
-        <th>-</th>
     </tr>
     </thead>
     <tbody>
@@ -41,9 +37,6 @@ $elements = array('active' => $active, 'list' => $list);
         <td>@if(isset($d['prev']) && $d['prev'] != null) {{$d['prev']}} @endif</td>
         <td>@if(isset($d['bsf']) && $d['bsf'] != null) {{$d['bsf']}} @endif</td>
         <td>@include('layouts.partials.xofy', ['x' => $d['conf'], 'y' => $d['today'], 'all' => $d['all']])</td>
-        @foreach($d['filter'] as $f)
-            <td>{{$f}}</td>
-        @endforeach
     </tr>
     @endforeach
     </tbody>

@@ -55,10 +55,11 @@ class GamesController extends \BaseController
         $league = LeagueDetails::find($league_details_id);
         $settings = Settings::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 1)->first();
 
+        $plusminus = GroupController::getMatchesCountForChangedSettings(Auth::user()->id, $league_details_id, $gr->id);
         if ($tail == "" || isset($offset)) {
-            return View::make('matches')->with(['settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/$fromdate/$todate", 'base_minus' => "pps/group/history/$league_details_id/" . ($offset + 1), 'base_plus' => "pps/group/history/$league_details_id/" . ($offset - 1), 'big' => "Round " . $gr->round, 'small' => "current", 'disable' => $disable]);
+            return View::make('matches')->with(['plus' => $plusminus[0],'minus'=>$plusminus[1],'settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/$fromdate/$todate", 'base_minus' => "pps/group/history/$league_details_id/" . ($offset + 1), 'base_plus' => "pps/group/history/$league_details_id/" . ($offset - 1), 'big' => "Round " . $gr->round, 'small' => "current", 'disable' => $disable]);
         }
-        return View::make('matches')->with(['settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "pps/group/$league_details_id", 'big' => $big, 'small' => $small, 'disable' => $disable]);
+        return View::make('matches')->with(['plus' => $plusminus[0],'minus'=>$plusminus[1],'settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "pps/group/$league_details_id", 'big' => $big, 'small' => $small, 'disable' => $disable]);
     }
 
     public static function confirmAllPPM($country, $fromdate, $todate)

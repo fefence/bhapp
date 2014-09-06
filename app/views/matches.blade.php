@@ -160,15 +160,23 @@ $i++;
 <div class="row">
     <form class="form-horizontal" role="form" action="" method="post" id="sett">
         <div class="col-xs-2">
+            <div class="input-group">
+                <span class="input-group-addon">+</span>
+                <input type="text" class="form-control" value="{{$plus}}" disabled>
+                <span class="input-group-addon">-</span>
+                <input type="text" class="form-control" value="{{$minus}}" disabled>
+            </div>
+        </div>
+        <div class="col-xs-2">
             <input type="button" value="edit" onclick="return false;" class="form-control btn-xs" id="edit">
         </div>
-        <div class="col-xs-3">
+        <div class="col-xs-2">
             <input type="text" class="form-control" name="from" id="from" placeholder="from" value="{{$settings->from}}" readonly="readonly">
         </div>
         <div class="col-xs-2">
             <input type="text" class="form-control" name="to" id="to" placeholder="to" value="{{$settings->to}}" readonly="readonly">
         </div>
-        <div class="col-xs-3">
+        <div class="col-xs-2">
             <input type="text" class="form-control" name="multiplier" id="multiplier" placeholder="multiplier"  value="{{$settings->multiplier}}" readonly="readonly">
             <input type="hidden" name="league_details_id" value="{{$league->id}}">
         </div>
