@@ -42,6 +42,15 @@ class PPMController extends \BaseController
         foreach ($leagues as $league) {
             $info[$league->country]['all'] = count(PPM::ppmForDatesCountry($fromdate, $todate, $league->country));
             $info[$league->country]['confirmed'] = PPM::ppmConfirmedForLeague($fromdate, $todate, $league);
+            $info[$league->country][5] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 5)->first(['current_length'])->current_length;
+            $info[$league->country][6] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 6)->first(['current_length'])->current_length;
+            $info[$league->country][7] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 7)->first(['current_length'])->current_length;
+            $info[$league->country][8] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 8)->first(['current_length'])->current_length;
+            $info[$league->country][55] = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 5)->first(['amount'])->amount;
+            $info[$league->country][66] = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 6)->first(['amount'])->amount;
+            $info[$league->country][77] = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 7)->first(['amount'])->amount;
+            $info[$league->country][88] = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 8)->first(['amount'])->amount;
+
         }
         return View::make('ppmcountries')->with(['all_btn' => 'flat', 'data' => $leagues, 'info' => $info, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small, 'all_link' => "ppm/flat/$fromdate/$todate", 'ppm' => true]);
     }
