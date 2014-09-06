@@ -485,7 +485,7 @@ class Updater
                             $league = LeagueDetails::find($match->league_details_id);
                             $text = "<a href='".URL::to("/") . "/confirmallppm/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate."'>" . $n->home . " - " . $n->away . "</a><br>";
                             foreach ($ppms as $ppm) {
-                                $text = $text . "<p>".$ppm->type . " Length: " . $ppm->current_length . "<br>BSF: " . $ppm->bsf . "<br> Bet: ".$ppm->bet."<br>Odds: ".$ppm->odds."<br>Profit: ".($ppm->income - $ppm->bet - $ppm->bsf)."</p>";
+                                $text = $text . "<p>".$ppm->type . " Length: " . $ppm->current_length . "<br>BSF: " . $ppm->bsf . "€<br> Bet: ".$ppm->bet."€<br>Odds: ".$ppm->odds."<br>Profit: ".($ppm->income - $ppm->bet - $ppm->bsf)."€</p>";
                             }
                             $text = $text."<a href='". URL::to("/") . "/ppm/country/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate."'>Go to group</a>";
                             Mail::send('emails.email', ['data' => $text], function ($message) use ($user, $league) {
