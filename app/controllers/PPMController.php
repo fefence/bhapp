@@ -49,7 +49,6 @@ class PPMController extends \BaseController
     public static function getOddsForCountry($country, $fromdate = "", $todate = "")
     {
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
-//        return $fromdate;
         $games = PPM::where('user_id', '=', Auth::user()->id)
             ->join('match', 'match.id', '=', 'ppm.match_id')
             ->where('confirmed', '=', 0)
@@ -59,7 +58,6 @@ class PPMController extends \BaseController
             ->where('resultShort', '=', '-')
             ->select([DB::raw('ppm.id as id, ppm.*')])
             ->get();
-//        return $games;
         $placeholders = PPMPlaceHolder::placeholdersForDatesCountry($fromdate, $todate, $country);
 
         $err = Parser::parseMatchOddsForGames($games);
@@ -77,7 +75,6 @@ class PPMController extends \BaseController
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
         $games = PPM::where('user_id', '=', Auth::user()->id)
             ->join('match', 'match.id', '=', 'ppm.match_id')
-//            ->where('game_type_id', '=', 5)
             ->where('confirmed', '=', 0)
             ->where('matchDate', '>=', $fromdate)
             ->where('matchDate', '<=', $todate)

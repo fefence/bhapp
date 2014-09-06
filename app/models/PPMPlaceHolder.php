@@ -13,6 +13,7 @@ class PPMPlaceHolder extends Eloquent{
     }
 
     public static function getForGame($game) {
+//        return $game;
         return PPMPlaceHolder::where('user_id', '=', $game->user_id)
             ->where('series_id', '=', $game->series_id)
             ->where('confirmed', '=', 0)
@@ -48,7 +49,11 @@ class PPMPlaceHolder extends Eloquent{
         $nextMatches = Updater::getNextPPMMatches($match);
         foreach($nextMatches as $next) {
             $placeholder = PPMPlaceHolder::firstOrCreate(['user_id' => $game->user_id, 'match_id' => $next->id, 'game_type_id' => $game->game_type_id, 'country' => $game->country]);
-            $placeholder->bsf = $placeholder->bsf + $game->bsf + $game->bet;
+            if ($game->confirmed == 1) {
+                $placeholder->bsf = $placeholder->bsf + $game->bsf + $game->bet;
+            } else {
+                $placeholder->bsf = $placeholder->bsf + $game->bsf;
+            }
             $placeholder->current_length = $game->current_length + 1;
             $placeholder->bookmaker_id = $game->bookmaker_id;
             $placeholder->odds = 3;
@@ -66,6 +71,6 @@ class PPMPlaceHolder extends Eloquent{
             ->where('game_type_id', '=', $game->game_type_id)
             ->where('country', '=', $game->country)
             ->where('confirmed', '=', 1)
-            ->first();
+            ->get();
     }
 }

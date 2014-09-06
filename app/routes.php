@@ -1,5 +1,10 @@
 <?php
 Route::get('/boo', function(){
+//    $ppms = PPM::where("match_id", '=', "0fmE98Vr")->where('confirmed', '=', 1)->get();
+//    foreach($ppms as $ppm) {
+//        PPMPlaceHolder::createPlaceholder($ppm);
+//    }
+    return Updater::updatePPM();
 });
 
 Route::get('/settings2', function(){

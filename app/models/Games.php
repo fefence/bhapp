@@ -182,6 +182,7 @@ class Games extends Eloquent
         $nGame->save();
         $game->confirmed = 1;
         $game->save();
+        return $nGame;
     }
 
     public static function deleteGame($game_id, $game_type_id)
@@ -196,6 +197,11 @@ class Games extends Eloquent
         } else if ($game_type_id >= 5 && $game_type_id < 9) {
             $game = PPM::find($game_id);
             $aLog->type = "ppm";
+            $plh = PPMPlaceHolder::getForGame($game);
+            if ($plh != null) {
+                $plh->bsf = $plh->bsf - $game->bet;
+                $plh->save();
+            }
             $series = $game->country;
         }
         $league = Match::find($game->match_id);

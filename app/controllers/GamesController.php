@@ -56,7 +56,7 @@ class GamesController extends \BaseController
         $settings = Settings::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 1)->first();
 
         if ($tail == "" || isset($offset)) {
-            return View::make('matches')->with(['settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/$fromdate/$todate", 'base_minus' => "pps/group/history/$league_details_id/".($offset+1), 'base_plus' => "pps/group/history/$league_details_id/".($offset-1), 'big' => "Round ".$gr->round, 'small' => "current", 'disable' => $disable]);
+            return View::make('matches')->with(['settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/$fromdate/$todate", 'base_minus' => "pps/group/history/$league_details_id/" . ($offset + 1), 'base_plus' => "pps/group/history/$league_details_id/" . ($offset - 1), 'big' => "Round " . $gr->round, 'small' => "current", 'disable' => $disable]);
         }
         return View::make('matches')->with(['settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "pps/group/$league_details_id", 'big' => $big, 'small' => $small, 'disable' => $disable]);
     }
@@ -79,14 +79,33 @@ class GamesController extends \BaseController
         foreach ($games as $game) {
             Games::confirmGame($game->id, $game->game_type_id, false);
         }
-        return Redirect::back()->with('message', 'Bet confirmed');
+        try {
+            return Redirect::back()->with('message', 'Bet confirmed');
+        } catch (InvalidArgumentException $e) {
+            return Redirect::to(URL::to("/ppm/country/" . $country . "/" . $fromdate . "/" . $todate));
+
+        }
 //        return $games;
     }
 
     public function confirmGame($game_id, $game_type_id, $pl = false)
     {
         Games::confirmGame($game_id, $game_type_id, $pl);
-        return Redirect::back()->with('message', 'Bet confirmed');
+        try {
+            return Redirect::back()->with('message', 'Bet confirmed');
+        } catch (InvalidArgumentException $e) {
+            if ($game_type_id < 5) {
+                $game = Games::find($game_id);
+                $match = $game->match;
+                return Redirect::to(URL::to("/pps/group/" . $match->league_details_id . "/" . $match->matchDate . "/" . $match->matchDate));
+            } else {
+                $game = PPM::find($game_id);
+                $match = $game->match;
+                $league = LeagueDetails::find($match->league_details_id);
+                return Redirect::to(URL::to("/ppm/country/" . $league->country . "/" . $match->matchDate . "/" . $match->matchDate));
+            }
+
+        }
     }
 
     public function deleteGame($game_id, $game_type_id)
@@ -130,7 +149,7 @@ class GamesController extends \BaseController
 
         }
         foreach ($data as $game) {
-            Games::confirmGame($game->id, $game->game_type_id, false);
+            Games::confirmGame($game->id, $game->game_type_id);
         }
         return Redirect::back()->with("message", "All games confirmed");
     }
@@ -289,7 +308,7 @@ class GamesController extends \BaseController
     {
         if ($offset == -1 || $offset == '-1') {
             $gr = Groups::where('league_details_id', '=', $league_details_id)->where('state', '=', 3)->orderBy('id', 'desc')->first();
-        } else if ($offset == 0){
+        } else if ($offset == 0) {
             $gr = Groups::where('league_details_id', '=', $league_details_id)->where('state', '=', 2)->orderBy('id', 'desc')->first();
             $base_active = 'true';
         } else {
@@ -340,7 +359,7 @@ class GamesController extends \BaseController
         $standings = Standings::where('league_details_id', '=', $league_details_id)->lists('place', 'team');
         $league = LeagueDetails::find($league_details_id);
 //        return $league;
-        return View::make('matches')->with(['today_btn' => 'current', 'tail' => "", 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/", 'base_minus' => "pps/group/history/$league_details_id/".($offset + 1), 'base_plus' => "pps/group/history/$league_details_id/".($offset - 1), 'big' => "Round ".$gr->round, 'small' => "", 'disable' => $disable]);
+        return View::make('matches')->with(['today_btn' => 'current', 'tail' => "", 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/", 'base_minus' => "pps/group/history/$league_details_id/" . ($offset + 1), 'base_plus' => "pps/group/history/$league_details_id/" . ($offset - 1), 'big' => "Round " . $gr->round, 'small' => "", 'disable' => $disable]);
 
     }
 }
