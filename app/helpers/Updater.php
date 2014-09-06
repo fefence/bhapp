@@ -461,7 +461,7 @@ class Updater
                     }
 
                 }
-                for ($i = 2; $i < 3; $i++) {
+                for ($i = 1; $i < 5; $i++) {
                     foreach ($next_matches as $next) {
                         $conf = PPM::where('match_id', '=', $next->id)
                             ->where('bet', '<>', 0)

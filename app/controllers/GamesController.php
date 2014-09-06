@@ -72,7 +72,9 @@ class GamesController extends \BaseController
             ->where('resultShort', '=', '-')
 //            ->where('bet', '<>', '0')
             ->lists('game_type_id');
-
+        if (count($conf) == 0) {
+            $conf = [-1];
+        }
         $games = PPM::where('user_id', '=', Auth::user()->id)
             ->whereNotIn('game_type_id', $conf)
             ->join('match', 'match.id', '=', 'ppm.match_id')
@@ -136,7 +138,7 @@ class GamesController extends \BaseController
         $matches = Games::where('groups_id', '=', $group_id)
             ->where('user_id', '=', Auth::user()->id)
             ->where('confirmed', '=', 1)
-            ->lists('match_id');
+            ->lists('standings_id');
         if (count($matches) == 0) {
             $matches = [-1];
         }
@@ -144,7 +146,7 @@ class GamesController extends \BaseController
             $data = Games::where('groups_id', '=', $group_id)
                 ->where('user_id', '=', Auth::user()->id)
                 ->where('confirmed', '=', 0)
-                ->whereNotIn('match_id', $matches)
+                ->whereNotIn('standings_id', $matches)
                 ->get(['games.id', 'game_type_id']);
 
         } else {
@@ -160,7 +162,7 @@ class GamesController extends \BaseController
 
         }
         foreach ($data as $game) {
-            Games::confirmGame($game->id, $game->game_type_id);
+            Games::confirmGame($game->id, $game->game_type_id, false);
         }
         return Redirect::back()->with("message", "All games confirmed");
     }
