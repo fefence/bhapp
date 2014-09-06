@@ -197,7 +197,8 @@ $i++;
                 readonly: false
             });
             $("#subm").attr({
-                disabled: false
+                disabled: false,
+                class: "form-control btn-xs btn-primary"
             });
         } else {
             $(this).attr({
@@ -216,7 +217,8 @@ $i++;
                 readonly: true
             });
             $("#subm").attr({
-                disabled: true
+                disabled: true,
+                class: "form-control btn-xs"
             });
         }
     });

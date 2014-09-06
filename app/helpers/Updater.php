@@ -88,6 +88,7 @@ class Updater
         $ids = Settings::where('league_details_id', '=', $current->league_details_id)->where('game_type_id', '<=', 4)->lists('user_id');
         foreach ($ids as $id) {
             Updater::recalculateGroup($current->id, $id, 1);
+
         }
     }
 
@@ -163,6 +164,7 @@ class Updater
             ->first(['from', 'to', 'multiplier', 'auto']);
         $from = $setting->from;
         $teams = array();
+        $bigger_than = 0;
         if ($setting->auto == '2') {
             $teams = Standings::where('league_details_id', '=', $gr->league_details_id)
                 ->where('streak', '>=', $from)->lists('team', 'id');
@@ -175,10 +177,12 @@ class Updater
                     if ($count->count() < $from) {
                         $teams = Standings::where('league_details_id', '=', $gr->league_details_id)
                             ->where('streak', '>=', $i - 1)->lists('team', 'id');
+                        $bigger_than = $i - 1;
                         break 1;
                     } else {
                         $teams = Standings::where('league_details_id', '=', $gr->league_details_id)
                             ->where('streak', '>=', $i)->lists('team', 'id');
+                        $bigger_than = $i;
                     }
                     break 1;
                 }
@@ -191,6 +195,10 @@ class Updater
         $pool = User::find($user_id)->pools()->where('league_details_id', '=', $gr->league_details_id)
             ->where('game_type_id', '=', $game_type_id)
             ->first();
+        $gr_to_bsf = GroupToBSF::firstOrNew(['user_id' => $user_id, 'groups_id' => $groups_id]);
+        $gr_to_bsf->bsf = $pool->amount;
+        $gr_to_bsf->streak_bigger_than = $bigger_than;
+        $gr_to_bsf->save();
         if (count($teams) > 0) {
             $bsfpm = $pool->amount / count($teams);
             $bpm = $pool->amount * $setting->multiplier / count($teams);

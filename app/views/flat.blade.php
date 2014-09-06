@@ -103,9 +103,7 @@ $elements = array('active' => $active, 'list' => $list);
             "bJQueryUI": true,
             "sDom": '<"top"i>t<"bottom"><"clear">',
             "sPaginationType": "full_numbers",
-            "aoColumnDefs": [
-                { 'bSortable': false, 'aTargets': [ 0, 1 ] }
-            ]
+            "aaSorting": []
         });
     });
 </script>

@@ -27,9 +27,9 @@
                 <li class="dropdown">
                 </li>
                 @if(isset($pool))
-                <li><p class="navbar-text"><span class="text-default">A: <span id="pool">{{$pool->account}}</span> </span>
-                    </p></li>
-                <li><p class="navbar-text"><span class="text-default">P: {{$pool->amount}}</span></p></li>
+                <li><p class="navbar-text"><span class="text-default"><abbr title="Profit">{{$pool->profit}}</abbr></span></p></li>
+                <li><p class="navbar-text"><span class="text-default"><span id="pool"><abbr title="Account state">{{$pool->account}}</abbr></span></span></p></li>
+                <li><p class="navbar-text"><span class="text-default"><abbr title="Pool">{{$pool->amount}}</abbr></span></p></li>
                 @else
                 @if(isset($global))
                 <li><p class="navbar-text"><span class="text-success">{{$global->account}}</span></p></li>
