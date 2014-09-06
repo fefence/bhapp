@@ -63,7 +63,18 @@ class GamesController extends \BaseController
 
     public static function confirmAllPPM($country, $fromdate, $todate)
     {
+        $conf = PPM::where('user_id', '=', Auth::user()->id)
+            ->join('match', 'match.id', '=', 'ppm.match_id')
+            ->where('confirmed', '=', 1)
+            ->where('ppm.country', '=', $country)
+            ->where('matchDate', '>=', $fromdate)
+            ->where('matchDate', '<=', $todate)
+            ->where('resultShort', '=', '-')
+//            ->where('bet', '<>', '0')
+            ->lists('game_type_id');
+
         $games = PPM::where('user_id', '=', Auth::user()->id)
+            ->whereNotIn('game_type_id', $conf)
             ->join('match', 'match.id', '=', 'ppm.match_id')
             ->where('confirmed', '=', 0)
             ->where('ppm.country', '=', $country)

@@ -361,7 +361,7 @@ class Updater
                                 PPMPlaceHolder::createPlaceholder($newgame);
                                 $placeholders = PPMPlaceHolder::getPlaceholder($newgame);
                                 if (count($placeholders) > 0) {
-                                    foreach($placeholders as $placeholder) {
+                                    foreach ($placeholders as $placeholder) {
                                         $newgame->bet = $placeholder->bet;
                                         $newgame->odds = $placeholder->odds;
                                         $newgame->income = $placeholder->income;
@@ -424,7 +424,7 @@ class Updater
                                 PPMPlaceHolder::createPlaceholder($newgame);
                                 $placeholders = PPMPlaceHolder::getPlaceholder($newgame);
                                 if (count($placeholders) > 0) {
-                                    foreach($placeholders as $placeholder) {
+                                    foreach ($placeholders as $placeholder) {
                                         $newgame->bet = $placeholder->bet;
                                         $newgame->odds = $placeholder->odds;
                                         $newgame->income = $placeholder->income;
@@ -461,7 +461,7 @@ class Updater
                     }
 
                 }
-                for ($i = 1; $i < 5; $i++) {
+                for ($i = 2; $i < 3; $i++) {
                     foreach ($next_matches as $next) {
                         $conf = PPM::where('match_id', '=', $next->id)
                             ->where('bet', '<>', 0)
@@ -473,9 +473,9 @@ class Updater
                         }
                         $ppms = PPM::where('match_id', '=', $next->id)
                             ->where('bet', '<>', 0)
-                            ->where('confirmed', '=', 0)
+//                            ->where('confirmed', '=', 0)
                             ->where('user_id', '=', $i)
-                            ->whereNotIn('game_type_id', $conf)
+//                            ->whereNotIn('game_type_id', $conf)
                             ->join('game_type', 'game_type.id', '=', 'ppm.game_type_id')
                             ->select(DB::raw("ppm.*, game_type.type as type"))
                             ->orderBy('game_type_id')
@@ -483,14 +483,20 @@ class Updater
 //                        return $ppms;
                         if (count($ppms) > 0) {
                             $league = LeagueDetails::find($match->league_details_id);
-                            $text = "<a href='".URL::to("/") . "/confirmallppm/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate."'>" . $n->home . " - " . $n->away . "</a><br>";
+                            $text = "<a href='" . URL::to("/") . "/confirmallppm/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate . "'>" . $n->home . " - " . $n->away . "</a><br>";
                             foreach ($ppms as $ppm) {
-                                $text = $text . "<p>".$ppm->type . " Length: " . $ppm->current_length . "<br>BSF: " . $ppm->bsf . "€<br> Bet: ".$ppm->bet."€<br>Odds: ".$ppm->odds."<br>Profit: ".($ppm->income - $ppm->bet - $ppm->bsf)."€</p>";
+                                if (in_array($ppm->game_type_id, $conf)) {
+                                    if ($ppm->confirmed == 1) {
+                                        $text = $text . "<p>" . $ppm->type . " Length: " . $ppm->current_length . " (confirmed)<br>BSF: " . $ppm->bsf . "€<br> Bet: " . $ppm->bet . "€<br>Odds: " . $ppm->odds . "<br>Profit: " . ($ppm->income - $ppm->bet - $ppm->bsf) . "€</p>";
+                                    }
+                                } else {
+                                    $text = $text . "<p>" . $ppm->type . " Length: " . $ppm->current_length . "<br>BSF: " . $ppm->bsf . "€<br> Bet: " . $ppm->bet . "€<br>Odds: " . $ppm->odds . "<br>Profit: " . ($ppm->income - $ppm->bet - $ppm->bsf) . "€</p>";
+                                }
                             }
-                            $text = $text."<a href='". URL::to("/") . "/ppm/country/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate."'>Go to group</a>";
+                            $text = $text . "<a href='" . URL::to("/") . "/ppm/country/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate . "'>Go to group</a>";
                             Mail::send('emails.email', ['data' => $text], function ($message) use ($user, $league) {
                                 $message->to([$user->email => $user->name])
-                                    ->subject("PPM games available for confirm [".$league->country."]");
+                                    ->subject("PPM games available for confirm [" . $league->country . "]");
                             });
                         }
                     }
