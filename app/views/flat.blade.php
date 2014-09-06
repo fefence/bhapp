@@ -1,18 +1,18 @@
 @extends('layout')
 
 @section('breadcrumbs')
-	<!-- breadcrumbs -->
+<!-- breadcrumbs -->
 
-	<?php
-        $list = array('ppm' => URL::to("/ppm"));
-		$active = 'flat';
-		$elements = array('active' => $active, 'list' => $list);
-	?>
-	@include('layouts.partials.breadcrumbs', array('elements' => $elements))
+<?php
+$list = array('ppm' => URL::to("/ppm"));
+$active = 'flat';
+$elements = array('active' => $active, 'list' => $list);
+?>
+@include('layouts.partials.breadcrumbs', array('elements' => $elements))
 @stop
 
 @section('pageHeader')
-	@include('layouts.partials.pageheader', array('calendar' => true, 'big' => $big, 'small' => $small))
+@include('layouts.partials.pageheader', array('calendar' => true, 'big' => $big, 'small' => $small))
 @stop
 
 @section('content')
@@ -51,8 +51,13 @@
     @foreach($matches as $key => $d)
     <tr>
         <td><img src="/images/{{strtoupper($d['match']->country)}}.png"></td>
+        @if ($d['conf'] == $d['all'] && $d['all'] != '-')
+        <td><strong>{{date('d M', strtotime($d['match']->matchDate))}}</strong></td>
+        <td><strong>{{substr($d['match']->matchTime, 0, strlen($d['match']->matchTime)-3)}}</strong></td>
+        @else
         <td>{{date('d M', strtotime($d['match']->matchDate))}}</td>
         <td>{{substr($d['match']->matchTime, 0, strlen($d['match']->matchTime)-3)}}</td>
+        @endif
         <td>{{$d['match']->home}}</td>
         <td>{{$d['match']->away}}</td>
         <td>{{$d[5]}}</td>
@@ -99,7 +104,7 @@
             "sDom": '<"top"i>t<"bottom"><"clear">',
             "sPaginationType": "full_numbers",
             "aoColumnDefs": [
-                { 'bSortable': false, 'aTargets': [ 0,1 ] }
+                { 'bSortable': false, 'aTargets': [ 0, 1 ] }
             ]
         });
     });

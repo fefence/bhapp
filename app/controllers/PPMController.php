@@ -146,13 +146,17 @@ class PPMController extends \BaseController
         $res = array();
         foreach ($matches as $m) {
             $all = $m->ppm()->where('user_id', '=', Auth::user()->id)
+                ->where('confirmed', '=', 0)
                 ->count();
             $conf = $m->ppm()->where('user_id', '=', Auth::user()->id)
+                ->groupBy('ppm.match_id')
                 ->where('confirmed', '=', 1)
-                ->count();
+                ->select(DB::raw('count(distinct(ppm.game_type_id)) as c'))
+                ->pluck('c');
+            $conf = ($conf == null)?0:$conf;
             $res[$m->id] = array();
             $res[$m->id]['match'] = $m;
-            $res[$m->id]['all'] = $all - $conf;
+            $res[$m->id]['all'] = $all;
             $res[$m->id]['conf'] = $conf;
             if ($all == 0) {
                 $res[$m->id]['all'] = '-';
