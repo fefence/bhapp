@@ -304,12 +304,13 @@ class GamesController extends \BaseController
     {
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
         $data = LeagueDetails::getLeaguesWithMatches($fromdate, $todate);
-
+        $ids = array_keys($data);
+//        return $ids;
         $games = User::find(Auth::user()->id)
             ->games()
             ->join('match', 'match.id', '=', 'games.match_id')
             ->where('resultShort', '=', '-')
-            ->whereIn('groups_id')
+            ->whereIn('match.groups_id', $ids)
             ->where('confirmed', '=', 0)
             ->select(DB::raw("games.*"))
             ->get();
