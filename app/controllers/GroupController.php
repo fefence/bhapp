@@ -29,7 +29,8 @@ class GroupController extends \BaseController
                 ->join('match', 'match.id', '=', 'games.match_id')
                 ->where('matchDate', '>=', $fromdate)
                 ->where('matchDate', '<=', $todate)
-                ->count();
+                ->select(DB::raw('count(distinct(games.standings_id)) as c'))
+                ->pluck('c');
             $all_series = Standings::where('league_details_id', '=', $league->id)->count();
             $playing = $curr_group->matches()->count();
             $res[$league->id]['filter'] = array();

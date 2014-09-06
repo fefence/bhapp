@@ -76,7 +76,7 @@ class PPM extends Eloquent {
     public static function ppmConfirmedForLeague($fromdate, $todate, $league)
     {
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
-        return PPM::where('user_id', '=', Auth::user()->id)
+        $c = PPM::where('user_id', '=', Auth::user()->id)
             ->join('match', 'match.id', '=', 'ppm.match_id')
             ->join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
             ->join('game_type', 'game_type.id', '=', 'ppm.game_type_id')
@@ -86,7 +86,11 @@ class PPM extends Eloquent {
             ->where('team', '=', $league->country)
             ->where('matchDate', '>=', $fromdate)
             ->where('matchDate', '<=', $todate)
-            ->count();
+            ->groupBy('ppm.match_id')
+//            ->distinct('ppm.game_type_id')
+            ->select(DB::raw('count(distinct(ppm.game_type_id)) as c'))
+            ->pluck('c');
+        return ($c == null)?0:$c;
     }
 
     public static function getPPMForMatchType($type, $match)
