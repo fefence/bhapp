@@ -4,7 +4,10 @@ Route::get('/boo', function(){
 //    foreach($ppms as $ppm) {
 //        PPMPlaceHolder::createPlaceholder($ppm);
 //    }
-    return Updater::updatePPM();
+//    return Updater::updatePPM();
+    $curr = Groups::where('league_details_id', '=', 53)->where('state', '=', 2)->first();
+    $next = Groups::where('league_details_id', '=', 53)->where('state', '=', 3)->first();
+    Parser::parseMatchesForGroup($curr, $next);
 });
 
 Route::get('/settings2', function(){

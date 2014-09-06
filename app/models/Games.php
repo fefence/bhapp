@@ -173,11 +173,12 @@ class Games extends Eloquent
             ->first();
         $main = CommonPools::where('user_id', '=', $game->user_id)->first();
 
-        $main->account = $main->account - $game->bet;
-        $main->save();
-        $pool->account = $pool->account - $game->bet;
-        $pool->save();
-
+        if (!$pl) {
+            $main->account = $main->account - $game->bet;
+            $main->save();
+            $pool->account = $pool->account - $game->bet;
+            $pool->save();
+        }
         $nGame = $game->replicate();
         $nGame->save();
         $game->confirmed = 1;
