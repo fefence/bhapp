@@ -77,7 +77,11 @@ $i = 0;
 <!--        <td class='editabledd warning'>{{$d->bookmakerName}}</td>-->
         <td>{{$d->bsf}}</td>
         <td @if($d->resultShort == '-') class='editable oddsColumn' @endif id="{{$d->game_type_id}}">{{$d->bet}}</td>
+        @if ($d->odds == 0 || $d->odds == -1)
+        <td style="background-color: #F8E0E6;" @if($d->resultShort == '-') class='editable' @endif id="{{$d->game_type_id}}">3.00</td>
+        @else
         <td @if($d->resultShort == '-') class='editable' @endif id="{{$d->game_type_id}}">{{$d->odds}}</td>
+        @endif
         <td>{{$d->income}}</td>
         <td>{{round(($d->income - $d->bsf - $d->bet), 2, PHP_ROUND_HALF_UP)}}</td>
         <td>@if($d->resultShort == '-')  <a role="button" @if ($count[$d->id] != 0) class="btn btn-default btn-xs" @else class="btn btn-primary btn-xs" @endif style="width: 50px" href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}" style="font-size: 130%;">+&nbsp({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})<span style='display: none;'>{{$d->match_id}}</span></a>
@@ -118,6 +122,7 @@ $i++;
 ?>
 @endforeach
 <script type="text/javascript">
+
 // $('#get_from_pool').on("click", function(){
 // 	var a = $('#amount').val();
 // 	$.post("/pools/get",
@@ -227,7 +232,6 @@ $(document).ready(function () {
             oTable.fnUpdate(arr[3], aPos[0], 12);
             var a = arr[3] - arr[0] - arr[1];
             oTable.fnUpdate(a.toFixed(2), aPos[0], 13);
-
             if (arr[4] != "") {
                 if (parseFloat(arr[4]) != parseFloat($("#pool").text())) {
                     $("#curr").html(" <strong>(" + arr[4] + ")</strong>");

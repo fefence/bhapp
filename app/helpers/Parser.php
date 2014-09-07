@@ -52,6 +52,8 @@ class Parser
                 $oddsX = $oddsarr[$game->match_id][$game->game_type_id];
                 if ($oddsX == 0 || $oddsX == -1) {
                     $warn = true;
+                    $game->odds = $oddsX;
+                    $game->save();
                 } else {
                     $game->odds = $oddsX;
                     $game->income = $oddsX * $game->bet;
@@ -59,6 +61,9 @@ class Parser
                 }
                 continue 1;
             }
+            $warn = true;
+            $game->odds = -1;
+            $game->save();
             $matchId = $game->match_id;
             // return $matchId;
             $bookmaker = Bookmaker::find($game->bookmaker_id);

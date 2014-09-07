@@ -96,7 +96,11 @@ $i = 0;
 <!--        <td class='text-muted'><em>{{$d->type}}</em></td>-->
         <td @if($d->resultShort == '-') class='editable' @endif id="{{$d->game_type_id}}">{{$d->bsf}}</td>
         <td @if($d->resultShort == '-') class='editable oddsColumn' @endif id="{{$d->game_type_id}}">{{$d->bet}}</td>
-        <td @if($d->resultShort == '-') class='editable' @endif id="{{$d->game_type_id}}">{{$d->odds}}</td>
+        @if ($d->odds == 0 || $d->odds == -1)
+            <td style="background-color: #F8E0E6;" @if($d->resultShort == '-') class='editable' @endif id="{{$d->game_type_id}}">3.00</td>
+        @else
+            <td @if($d->resultShort == '-') class='editable' @endif id="{{$d->game_type_id}}">{{$d->odds}}</td>
+        @endif
         <td>{{$d->income}}</td>
         <td>{{round(($d->income - $d->bsf - $d->bet), 2, PHP_ROUND_HALF_UP)}}</td>
         <td>@if($d->resultShort == '-')
