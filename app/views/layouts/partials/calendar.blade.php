@@ -15,7 +15,20 @@
         <a href="/{{$base}}/{{date('Y-m-d', strtotime($fromdate) + 86400)}}/{{date('Y-m-d', strtotime($fromdate) + 86400)}}" class="btn btn-default">></a>
     </span>
 	@else
-	<span><a href="/{{$base_minus}}" class="btn btn-default"><</a></span>&nbsp;<span><a href="/{{$base}}" class="btn btn-default">@if(isset($today_btn)) {{$today_btn}} @else today @endif</a>&nbsp;<a href="/{{$base_plus}}" class="btn btn-default">></a>
+	<span>
+        <a href="/{{$base_minus}}" class="btn btn-default"><</a>
+    </span>
+    <span>
+        <a href="/{{$base}}" class="btn btn-default">@if(isset($today_btn)) {{$today_btn}} @else today @endif</a>
+    </span>
+    @if(isset($all_btn) || !isset($hide_all) || $hide_all == false)
+    <span>
+        <a href="/{{isset($all_link)?$all_link:$base}}" @if(isset($all_active)) class="btn btn-default active" @else class="btn btn-default" @endif>@if(isset($all_btn)) {{$all_btn}} @else all @endif</a>
+    </span>
+    @endif
+    <span>
+        <a href="/{{$base_plus}}" class="btn btn-default">></a>
+    </span>
 	@endif
 </div>
 <form id="dateform" action="{{$base}}" method="get"></form>
