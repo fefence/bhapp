@@ -25,9 +25,11 @@ class FreeController extends \BaseController
 
     public static function manage()
     {
-        $teams = FreeplayTeams::where('user_id', '=', Auth::user()->id)
+        $teams = FreeplayTeams::where('freeplay_teams.user_id', '=', Auth::user()->id)
             ->join('leagueDetails', 'leagueDetails.id', '=', 'freeplay_teams.league_details_id')
             ->join('standings', 'standings.team', '=', 'freeplay_teams.team')
+            ->join('free_pool', 'free_pool.team_id', '=', 'freeplay_teams.team_id')
+            ->where('free_pool.user_id', '=', Auth::user()->id)
             ->get();
         return View::make('managefree')->with(['data' => $teams]);
     }
@@ -153,6 +155,7 @@ class FreeController extends \BaseController
         $aLog = new ActionLog;
         $aLog->action = "delete";
         $aLog->type = "free";
+        $aLog->amount = $free->bet;
         $aLog->element_id = $free->id;
         $pool = FreePool::where('user_id', '=', $free->user_id)
             ->where('team_id', '=', $free->team_id)
@@ -167,8 +170,6 @@ class FreeController extends \BaseController
         $aLog->user_id = $free->user_id;
         $aLog->game_type_id = $free->game_type_id;
         $aLog->league_details_id = $match->league_details_id;
-        $aLog->save();
-
         $free->delete();
 
         return Redirect::back()->with('message', 'Bet deleted');
