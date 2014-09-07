@@ -19,7 +19,7 @@ class FreeController extends \BaseController
             $standings = array();
         }
 
-        return View::make('freeview')->with(['data' => $games, 'standings' => $standings, 'league_details_id' => -1, 'fromdate' => $fromdate, 'todate' => $todate, 'count' => $count, 'big' => $big, 'small' => $small, 'free' => true]);
+        return View::make('freeview')->with(['hide_all' => true, 'data' => $games, 'standings' => $standings, 'league_details_id' => -1, 'fromdate' => $fromdate, 'todate' => $todate, 'count' => $count, 'big' => $big, 'small' => $small, 'free' => true]);
 
     }
 

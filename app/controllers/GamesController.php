@@ -57,7 +57,7 @@ class GamesController extends \BaseController
 
         $plusminus = GroupController::getMatchesCountForChangedSettings(Auth::user()->id, $league_details_id, $gr->id);
         if ($tail == "" || isset($offset)) {
-            return View::make('matches')->with(['plus' => $plusminus[0],'minus'=>$plusminus[1],'settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/$fromdate/$todate", 'base_minus' => "pps/group/history/$league_details_id/" . ($offset + 1), 'base_plus' => "pps/group/history/$league_details_id/" . ($offset - 1), 'big' => "Round " . $gr->round, 'small' => "current", 'disable' => $disable]);
+            return View::make('matches')->with(['plus' => $plusminus[0],'minus'=>$plusminus[1],'settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/$fromdate/$todate", 'base_minus' => "pps/group/$league_details_id/" . ($offset + 1), 'base_plus' => "pps/group/$league_details_id/" . ($offset - 1), 'big' => "Round " . $gr->round, 'small' => "current", 'disable' => $disable]);
         }
         return View::make('matches')->with(['plus' => $plusminus[0],'minus'=>$plusminus[1],'settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "pps/group/$league_details_id", 'big' => $big, 'small' => $small, 'disable' => $disable]);
     }
@@ -333,11 +333,13 @@ class GamesController extends \BaseController
 
     public static function getGamesForGroupOffset($league_details_id, $offset)
     {
+        $current_active = false;
         if ($offset == -1 || $offset == '-1') {
             $gr = Groups::where('league_details_id', '=', $league_details_id)->where('state', '=', 3)->orderBy('id', 'desc')->first();
         } else if ($offset == 0) {
-            $gr = Groups::where('league_details_id', '=', $league_details_id)->where('state', '=', 2)->orderBy('id', 'desc')->first();
-            $base_active = 'true';
+//            $gr = Groups::where('league_details_id', '=', $league_details_id)->where('state', '=', 2)->orderBy('id', 'desc')->first();
+//            $current_active = true;
+            return Redirect::to("/pps/group/$league_details_id");
         } else {
             $groups = Groups::where('league_details_id', '=', $league_details_id)->where('state', '=', 1)->orderBy('id', 'desc')->get();
             $i = 0;
@@ -386,7 +388,7 @@ class GamesController extends \BaseController
         $standings = Standings::where('league_details_id', '=', $league_details_id)->lists('place', 'team');
         $league = LeagueDetails::find($league_details_id);
 //        return $league;
-        return View::make('matches')->with(['today_btn' => 'current', 'tail' => "", 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/", 'base_minus' => "pps/group/history/$league_details_id/" . ($offset + 1), 'base_plus' => "pps/group/history/$league_details_id/" . ($offset - 1), 'big' => "Round " . $gr->round, 'small' => "", 'disable' => $disable]);
+        return View::make('matches')->with(['current_active' => $current_active, 'today_btn' => 'current', 'tail' => "", 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/", 'base_minus' => "pps/group/$league_details_id/" . ($offset + 1), 'base_plus' => "pps/group/$league_details_id/" . ($offset - 1), 'big' => "Round " . $gr->round, 'small' => "", 'disable' => $disable]);
 
     }
 

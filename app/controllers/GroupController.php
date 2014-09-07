@@ -51,7 +51,7 @@ class GroupController extends \BaseController
 
         }
 //        return $res;
-        return View::make('games')->with(['data' => $res, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small, 'ppsall' => true]);
+        return View::make('games')->with(['hide_all' => true, 'data' => $res, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small, 'ppsall' => true]);
     }
 
 

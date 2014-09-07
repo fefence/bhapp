@@ -1,6 +1,19 @@
 <div class="col-xs-3" style="padding-top:1px;text-align:right;">
 	@if(isset($fromdate) && isset($todate))
-	<span><a href="/{{$base}}/{{date('Y-m-d', strtotime($fromdate) - 86400)}}/{{date('Y-m-d', strtotime($fromdate) - 86400)}}" class="btn btn-default"><</a></span>&nbsp;<span><a href="/{{$base}}/{{date('Y-m-d', time())}}/{{date('Y-m-d', time())}}" class="btn btn-default">@if(isset($today_btn)) {{$today_btn}} @else today @endif</a></span><span><a href="/{{isset($all_link)?$all_link:$base}}" class="btn btn-default">@if(isset($all_btn)) {{$all_btn}} @else all @endif</a></span>&nbsp;<span><a href="/{{$base}}/{{date('Y-m-d', strtotime($fromdate) + 86400)}}/{{date('Y-m-d', strtotime($fromdate) + 86400)}}" class="btn btn-default">></a></span>
+	<span>
+        <a href="/{{$base}}/{{date('Y-m-d', strtotime($fromdate) - 86400)}}/{{date('Y-m-d', strtotime($fromdate) - 86400)}}" class="btn btn-default"><</a>
+    </span>
+    <span>
+        <a href="/{{$base}}/{{date('Y-m-d', time())}}/{{date('Y-m-d', time())}}" @if($fromdate == date('Y-m-d', time()) || (isset($current_active) && $current_active == true))  class="btn btn-default active" @else class="btn btn-default" @endif>@if(isset($today_btn)) {{$today_btn}} @else today @endif</a>
+    </span>
+    @if(isset($all_btn) || !isset($hide_all) || $hide_all == false)
+    <span>
+        <a href="/{{isset($all_link)?$all_link:$base}}" class="btn btn-default">@if(isset($all_btn)) {{$all_btn}} @else all @endif</a>
+    </span>
+    @endif
+    <span>
+        <a href="/{{$base}}/{{date('Y-m-d', strtotime($fromdate) + 86400)}}/{{date('Y-m-d', strtotime($fromdate) + 86400)}}" class="btn btn-default">></a>
+    </span>
 	@else
 	<span><a href="/{{$base_minus}}" class="btn btn-default"><</a></span>&nbsp;<span><a href="/{{$base}}" class="btn btn-default">@if(isset($today_btn)) {{$today_btn}} @else today @endif</a>&nbsp;<a href="/{{$base_plus}}" class="btn btn-default">></a>
 	@endif

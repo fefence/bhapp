@@ -46,11 +46,18 @@ class PPMController extends \BaseController
             $info[$league->country][6] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 6)->first(['current_length'])->current_length;
             $info[$league->country][7] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 7)->first(['current_length'])->current_length;
             $info[$league->country][8] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 8)->first(['current_length'])->current_length;
-            $info[$league->country][55] = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 5)->first(['amount'])->amount;
-            $info[$league->country][66] = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 6)->first(['amount'])->amount;
-            $info[$league->country][77] = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 7)->first(['amount'])->amount;
-            $info[$league->country][88] = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 8)->first(['amount'])->amount;
-
+            try{
+                $p = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 5)->first(['amount']);
+                $info[$league->country][55] = ($p == null)?0:$p->amount;
+                $p =Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 6)->first(['amount']);
+                $info[$league->country][66] = ($p == null)?0:$p->amount;
+                $p = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 7)->first(['amount']);
+                $info[$league->country][77] = ($p == null)?0:$p->amount;
+                $p = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 8)->first(['amount']);
+                $info[$league->country][88] = ($p == null)?0:$p->amount;
+            } catch (ErrorException $e) {
+                return $league;
+            }
         }
         return View::make('ppmcountries')->with(['all_btn' => 'flat', 'data' => $leagues, 'info' => $info, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small, 'all_link' => "ppm/flat/$fromdate/$todate", 'ppm' => true]);
     }
@@ -188,7 +195,7 @@ class PPMController extends \BaseController
             }
         }
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, -1);
-        return View::make('flat')->with(['disable_all' => true, 'matches' => $res, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small]);
+        return View::make('flat')->with(['hide_all' => true, 'matches' => $res, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small, 'base' => 'ppm/flat']);
     }
 
 }

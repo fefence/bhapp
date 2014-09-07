@@ -78,7 +78,7 @@ Route::get('/livescore/match/{match_id}', "LivescoreController@matchScore");
 Route::get('/livescore/{from?}/{to?}', "LivescoreController@livescore");
 
 //Groups views
-Route::get('/pps/group/history/{id}/{offset}', 'GamesController@getGamesForGroupOffset');
+Route::get('/pps/group/{id}/{offset}', 'GamesController@getGamesForGroupOffset');
 Route::get('/pps/group/{id}/{fromdate?}/{todate?}', 'GamesController@getGamesForGroup');
 Route::get('/groupodds/{groups_id}', 'GamesController@getMatchOddsForGames');
 Route::get('/ppsodds/{fromdate?}/{todate?}', 'GamesController@getMatchOddsForAll');

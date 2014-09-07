@@ -98,7 +98,7 @@ class LivescoreController extends \BaseController
 //            Match::getScore($match);
 //        }
 //        return $matches;
-        return View::make('livescore')->with(['matches' => $res, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small]);
+        return View::make('livescore')->with(['hide_all' => true, 'matches' => $res, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small]);
     }
 
     public static function matchScore($match_id)
