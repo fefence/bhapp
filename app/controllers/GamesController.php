@@ -245,7 +245,7 @@ class GamesController extends \BaseController
         $games = Games::getGamesForGroupUser($groups_id, Auth::user()->id);
         $warn = Parser::parseMatchOddsForGames($games);
         if ($warn) {
-            return Redirect::back()->with('error', 'Odds not retrieved');
+            return Redirect::back()->with('warning', 'Odds not retrieved');
         }
         return Redirect::back()->with('message', 'Odds retrieved');
     }

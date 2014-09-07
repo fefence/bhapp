@@ -61,7 +61,6 @@ class Parser
                 }
                 continue 1;
             }
-            $warn = true;
             $game->odds = -1;
             $game->save();
             $matchId = $game->match_id;
@@ -95,6 +94,9 @@ class Parser
                         }
                     }
                 }
+            }
+            if ($game->odds == 0 || $game->odds == -1) {
+                $warn = true;
             }
         }
         return $warn;
