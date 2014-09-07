@@ -5,7 +5,6 @@ class SettingsController extends BaseController
 
     public function display()
     {
-        // $settings = Settings::where('user_id', '=', Auth::user()->id);
         $settings = Settings::getSettingsAsArray();
         return View::make('settings')->with(array('ppm' => $settings[1], 'pps' => $settings[0], 'save' => true));
     }
@@ -19,13 +18,10 @@ class SettingsController extends BaseController
                 if ($dd != '') {
                     $gr = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 2)->first();
                     if ($gr == null) {
-//                        return $league;
                         continue;
                     }
                     $match_count = $gr->matches()->where('resultShort', '<>', '-')->count();
                     if ($match_count > 0) {
-//                        continue;
-//                        return Redirect::back()->with('error', $league->displayName." has more matches from the round");
                     }
                     $setting = Settings::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $league->id, 'game_type_id' => $i]);
                     $oldFrom = $setting->from;
@@ -38,9 +34,7 @@ class SettingsController extends BaseController
                         $setting->multiplier = Input::get($league->id . '-mul-' . $i);
                         $setting->save();
                         $pool = Pools::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $setting->league_details_id, 'game_type_id' => $i]);
-//                        return $pool;
                         $pool->save();
-//                        return $pool;
                     } else if ($dd == '2') {
                         $setting->from = Input::get($league->id . '-gt-' . $i);
                         $setting->to = 0;
@@ -51,7 +45,7 @@ class SettingsController extends BaseController
                     } else if ($dd == '0') {
                         $pool = Pools::where('user_id', '=', Auth::user()->id)->where('league_details_id', '=', $setting->league_details_id)->where('game_type_id', '=', $i)->first();
                         if ($pool != null) {
-                            if($pool->amount == 0 && $pool->income == 0 && $pool->profit == 0 && $pool->account == 0) {
+                            if ($pool->amount == 0 && $pool->income == 0 && $pool->profit == 0 && $pool->account == 0) {
                                 $pool->delete();
                             }
                             $aLog = new ActionLog;
@@ -61,7 +55,6 @@ class SettingsController extends BaseController
                             $aLog->game_type_id = $setting->game_type_id;
                             $aLog->user_id = $setting->user_id;
                             $aLog->description = "Disable pps";
-//                            $aLog->amount = 0;
                             $aLog->element_id = $setting->id;
                             $aLog->save();
                         }
@@ -76,11 +69,10 @@ class SettingsController extends BaseController
                             $aLog = new ActionLog;
                             $aLog->type = "settings";
                             $aLog->action = "change multiplier";
-//                            $aLog->amount = $setting->multiplier;
                             $aLog->league_details_id = $setting->league_details_id;
                             $aLog->game_type_id = $setting->game_type_id;
                             $aLog->user_id = $setting->user_id;
-                            $aLog->description = "Change 'multiplier' from $oldMultiplier to ". $setting->multiplier;
+                            $aLog->description = "Change 'multiplier' from $oldMultiplier to " . $setting->multiplier;
                             $aLog->element_id = $setting->id;
                             $aLog->save();
                         }
@@ -91,7 +83,7 @@ class SettingsController extends BaseController
                             $aLog->league_details_id = $setting->league_details_id;
                             $aLog->game_type_id = $setting->game_type_id;
                             $aLog->user_id = $setting->user_id;
-                            $aLog->description = "Change 'from' from $oldFrom to ". $setting->from;
+                            $aLog->description = "Change 'from' from $oldFrom to " . $setting->from;
 //                            $aLog->amount = $setting->from;
                             $aLog->element_id = $setting->id;
                             $aLog->save();
@@ -103,7 +95,7 @@ class SettingsController extends BaseController
                             $aLog->league_details_id = $setting->league_details_id;
                             $aLog->game_type_id = $setting->game_type_id;
                             $aLog->user_id = $setting->user_id;
-                            $aLog->description = "Change 'to' from $oldTo to ". $setting->to;
+                            $aLog->description = "Change 'to' from $oldTo to " . $setting->to;
 //                            $aLog->amount = $setting->to;
                             $aLog->element_id = $setting->id;
                             $aLog->save();
@@ -132,7 +124,6 @@ class SettingsController extends BaseController
                     $aLog->element_id = $setting->id;
                     $aLog->save();
                 }
-//                $setting = Settings::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $arr[0], 'game_type_id' => $arr[1]]);
                 $setting->from = 0;
                 $setting->to = 0;
                 $setting->multiplier = 0;
@@ -141,7 +132,7 @@ class SettingsController extends BaseController
                 $pool = Pools::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $arr[0], 'game_type_id' => $arr[1]]);
                 $pool->save();
                 Updater::addPPMMatchForUser($arr[0], $arr[1], Auth::user()->id);
-                if(!array_key_exists($arr[0], $enabled)) {
+                if (!array_key_exists($arr[0], $enabled)) {
                     $enabled[$arr[0]] = array();
                 }
                 array_push($enabled[$arr[0]], $arr[1]);
@@ -153,12 +144,8 @@ class SettingsController extends BaseController
             ->where('user_id', '=', Auth::user()->id)
             ->get();
 
-//        return $enabled;
-        foreach($ppmSettings as $s) {
-            if (!array_key_exists($s->league_details_id, $enabled) || (array_key_exists($s->league_details_id, $enabled) && !in_array($s->game_type_id, $enabled[$s->league_details_id]))){
-//                return $enabled[$s->league_details_id];
-//                echo $s->league_details_id." ".$s->game_type_id;
-//                echo ""
+        foreach ($ppmSettings as $s) {
+            if (!array_key_exists($s->league_details_id, $enabled) || (array_key_exists($s->league_details_id, $enabled) && !in_array($s->game_type_id, $enabled[$s->league_details_id]))) {
                 $p = Pools::where('user_id', '=', Auth::user()->id)
                     ->where('league_details_id', '=', $s->league_details_id)
                     ->where('game_type_id', '=', $s->game_type_id)
@@ -173,7 +160,7 @@ class SettingsController extends BaseController
                     ->where('user_id', '=', $s->user_id)
                     ->select('ppm.*')
                     ->get();
-                foreach($todelete as $d) {
+                foreach ($todelete as $d) {
                     $d->delete();
                 }
                 $aLog = new ActionLog;
@@ -189,7 +176,6 @@ class SettingsController extends BaseController
                 $s->delete();
             }
         }
-//        return $enabled;
         return Redirect::back()->with('message', "Settings saved");
     }
 
@@ -203,14 +189,13 @@ class SettingsController extends BaseController
             Parser::parseMatchesForUSA($current, $next);
             Parser::parseLeagueSeriesUSA($league_details_id);
         } else {
-//            Parser::parseLeagueStandings($league_details_id);
             Parser::parseMatchesForGroup($current, $next);
         }
         $str = Standings::where('league_details_id', '=', $league_details_id)
             ->select(DB::raw('streak, count(*) as c'))
             ->groupBy('streak')
             ->get();
-        foreach($str as $s) {
+        foreach ($str as $s) {
             $g = new GroupToStreaks();
             $g->groups_id = $current->id;
             $g->streak_length = $s->streak;
@@ -239,13 +224,10 @@ class SettingsController extends BaseController
         return Redirect::back()->with("message", "League added");
     }
 
-    public static function saveSettingsForLeague() {
+    public static function saveSettingsForLeague()
+    {
         $league = LeagueDetails::find(Input::get('league_details_id'));
         $setting = Settings::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $league->id, 'game_type_id' => 1]);
-//        $oldFrom = $setting->from;
-//        $oldTo = $setting->to;
-//        $oldMultiplier = $setting->multiplier;
-
         $setting->from = Input::get('from');
         $setting->to = Input::get('to');
         $setting->multiplier = Input::get('multiplier');
@@ -253,10 +235,7 @@ class SettingsController extends BaseController
         $pool = Pools::firstOrNew(['user_id' => Auth::user()->id, 'league_details_id' => $setting->league_details_id, 'game_type_id' => 1]);
         $pool->save();
         $group = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 2)->first(['id']);
-
-//        if ($group != NULL && $group->id != "" && ($oldMultiplier != $setting->multiplier || $oldFrom != $setting->from || $oldTo != $setting->to)) {
-            Updater::recalculateGroup($group->id, Auth::user()->id, 1);
-//        }
+        Updater::recalculateGroup($group->id, Auth::user()->id, 1);
 
         return Redirect::back();
     }

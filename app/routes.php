@@ -35,12 +35,15 @@ Route::get('/log/{from?}/{to?}', "ActionLogController@display");
 
 //free views
 Route::get('/free/manage', "FreeController@manage");
+Route::get('/free/show/{team_id}', 'FreeController@showTeam');
+Route::get('/free/hide/{team_id}', 'FreeController@hideTeam');
 Route::get('/free/{from?}/{to?}', "FreeController@display");
 Route::post('/savefree', "FreeController@saveTable");
 Route::post('/saveteam', "FreeController@save");
 Route::get('/confirmfree/{game_id}', 'FreeController@confirmGame');
-Route::get('/deletefree/{game_id}', 'FreeController@deleteGame');
+Route::get('/deletefree/{game_id}/{game_type?}', 'FreeController@deleteGame');
 Route::get('/freeodds/{fromdate}/{todate}', 'FreeController@refreshOdds');
+
 
 //details views
 Route::get('/details/ppm/{date}/{game}', "DetailsController@detailsPPM");

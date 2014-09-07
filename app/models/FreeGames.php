@@ -17,6 +17,7 @@ class FreeGames extends Eloquent{
             ->join('freeplay_teams', 'freeplay_teams.team_id', '=', "freeplay.team_id")
             ->where('freeplay_teams.user_id', '=', Auth::user()->id)
             ->where('confirmed', '=', 0)
+            ->where('hidden', '=', 0)
             ->where('matchDate', '>=', $fromdate)
             ->where('matchDate', '<=', $todate)
             ->orderBy('matchDate')

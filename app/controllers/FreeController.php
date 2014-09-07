@@ -25,7 +25,11 @@ class FreeController extends \BaseController
 
     public static function manage()
     {
-        return View::make('managefree');
+        $teams = FreeplayTeams::where('user_id', '=', Auth::user()->id)
+            ->join('leagueDetails', 'leagueDetails.id', '=', 'freeplay_teams.league_details_id')
+            ->join('standings', 'standings.team', '=', 'freeplay_teams.team')
+            ->get();
+        return View::make('managefree')->with(['data' => $teams]);
     }
 
     public static function save()
@@ -42,6 +46,15 @@ class FreeController extends \BaseController
         $team = FreeplayTeams::firstOrNew(['user_id' => Auth::user()->id, 'team_id' => $team_id, 'league_details_id' => $league->id, 'team' => $parsed[0]]);
         $team->match_id = $parsed[1];
         $team->save();
+        $aLog = new ActionLog;
+        $aLog->type = "free";
+        $aLog->action = "add";
+        $aLog->element_id = $team->id;
+        $aLog->user_id = Auth::user()->id;
+        $aLog->league_details_id = $league->id;
+        $aLog->description = $team->team." added to free play view";
+        $aLog->game_type_id = 1;
+        $aLog->save();
         $game = FreeGames::firstOrNew(['user_id' => Auth::user()->id, 'team_id' => $team_id, 'match_id' => $parsed[1]]);
         $game->bsf = 0;
         $game->game_type_id = 1;
@@ -55,7 +68,8 @@ class FreeController extends \BaseController
         return Redirect::back()->with("message", "saved");
     }
 
-    public static function saveTable() {
+    public static function saveTable()
+    {
         $game_id = Input::get('row_id');
         $team_id = Input::get('id');
         $value = Input::get('value');
@@ -99,17 +113,17 @@ class FreeController extends \BaseController
 //        return FreeGames::find($game_id);
     }
 
-    public static function confirmGame($game_id) {
+    public static function confirmGame($game_id)
+    {
         $free = FreeGames::find($game_id);
 
         $aLog = new ActionLog;
         $aLog->action = "confirm";
         $aLog->type = "free";
-        $aLog->amount = $free->bet;
         $aLog->element_id = $free->id;
         $team = FreeplayTeams::where('team_id', '=', $free->team_id)->where('user_id', '=', $free->user_id)->first()->team;
         $match = Match::find($free->match_id);
-        $aLog->description = $match->home." - ".$match->away." confirmed ".$free->bet."@".$free->odds." series for ".$team;
+        $aLog->description = $match->home . " - " . $match->away . " confirmed " . $free->bet . "@" . $free->odds . " series for " . $team;
         $aLog->user_id = $free->user_id;
         $aLog->game_type_id = $free->game_type_id;
         $aLog->league_details_id = $match->league_details_id;
@@ -132,15 +146,14 @@ class FreeController extends \BaseController
 
     }
 
-    public static function deleteGame($game_id) {
+    public static function deleteGame($game_id)
+    {
         $free = FreeGames::find($game_id);
 
         $aLog = new ActionLog;
         $aLog->action = "delete";
         $aLog->type = "free";
-        $aLog->amount = $free->bet;
         $aLog->element_id = $free->id;
-        $aLog->save();
         $pool = FreePool::where('user_id', '=', $free->user_id)
             ->where('team_id', '=', $free->team_id)
             ->first();
@@ -150,17 +163,20 @@ class FreeController extends \BaseController
         $pool->save();
         $team = FreeplayTeams::where('team_id', '=', $free->team_id)->where('user_id', '=', $free->user_id)->first()->team;
         $match = Match::find($free->match_id);
-        $aLog->description = $match->home." - ".$match->away." deleted ".$free->bet."@".$free->odds." series for ".$team;
+        $aLog->description = $match->home . " - " . $match->away . " deleted " . $free->bet . "@" . $free->odds . " series for " . $team;
         $aLog->user_id = $free->user_id;
         $aLog->game_type_id = $free->game_type_id;
         $aLog->league_details_id = $match->league_details_id;
+        $aLog->save();
+
         $free->delete();
 
         return Redirect::back()->with('message', 'Bet deleted');
 
     }
 
-    public static function refreshOdds($fromdate = "", $todate = "") {
+    public static function refreshOdds($fromdate = "", $todate = "")
+    {
         $start = time();
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
         $games = FreeGames::where('user_id', '=', Auth::user()->id)
@@ -176,5 +192,44 @@ class FreeController extends \BaseController
         Parser::parseMatchOddsForGames($games);
         return Redirect::back()->with('message', 'Odds refreshed ' . (time() - $start) . " sec");
     }
+
+    public static function showTeam($team_id)
+    {
+        $team = FreeplayTeams::where('team_id', '=', $team_id)
+            ->where('user_id', '=', Auth::user()->id)
+            ->first();
+        $team->hidden = 0;
+        $team->save();
+        $aLog = new ActionLog;
+        $aLog->type = "free";
+        $aLog->action = "show";
+        $aLog->element_id = $team->id;
+        $aLog->user_id = Auth::user()->id;
+        $aLog->league_details_id = $team->league_details_id;
+        $aLog->description = $team->team." shown in free play view";
+        $aLog->game_type_id = 1;
+        $aLog->save();
+        return Redirect::back()->with('message', $team->team . " shown");
+    }
+
+    public static function hideTeam($team_id)
+    {
+        $team = FreeplayTeams::where('team_id', '=', $team_id)
+            ->where('user_id', '=', Auth::user()->id)
+            ->first();
+        $team->hidden = 1;
+        $team->save();
+        $aLog = new ActionLog;
+        $aLog->type = "free";
+        $aLog->action = "hide";
+        $aLog->element_id = $team->id;
+        $aLog->user_id = Auth::user()->id;
+        $aLog->league_details_id = $team->league_details_id;
+        $aLog->description = $team->team." hidden from free play view";
+        $aLog->game_type_id = 1;
+        $aLog->save();
+        return Redirect::back()->with('message', $team->team . " hidden");
+    }
+
 
 }
