@@ -5,7 +5,7 @@
                 <li class="{{Request::path() == 'pps' ? 'active' : '';}}"><a href="{{ URL::to('pps') }}">pps</a></li>
                 <li class="{{Request::path() == 'ppm' ? 'active' : '';}}"><a href="{{URL::to('/ppm')}}">ppm</a></li>
                 <li class="{{Request::path() == 'livescore' ? 'active' : '';}}"><a href="{{URL::to('/livescore')}}">live</a></li>
-                <li class="{{Request::path() == 'free' ? 'active' : '';}}"><a href="{{URL::to('/free')}}">free</a></li>
+                <li class="{{Request::path() == 'free' ? 'active' : '';}}"><a href="{{URL::to('/free')}}">free <span class="badge">@if(isset($free_count) && $free_count != 0){{$free_count}}@endif</span></a></li>
 
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">tools <b class="caret"></b></a>

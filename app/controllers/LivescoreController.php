@@ -32,7 +32,9 @@ class LivescoreController extends \BaseController
             $ms = array();
         }
         $pps = Games::where('user_id', '=', Auth::user()->id)->lists('match_id');
-        $all_ids = array_merge($ms, $pps);
+        $free = FreeGames::where('user_id', '=', Auth::user()->id)->lists('match_id');
+
+        $all_ids = array_merge(array_merge($ms, $pps), $free);
         $matches = Match::join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
             ->where(function ($q) use ($fromdate, $todate, $todate2) {
                 $q->where(function ($q) use ($fromdate, $todate, $todate2) {
@@ -56,6 +58,15 @@ class LivescoreController extends \BaseController
             $res[$match->id]['streak'] = "";
             if (in_array($match->id, $ms)) {
                 $game = PPM::where('match_id', '=', $match->id)
+                    ->where('confirmed', '=', 1)
+                    ->where('user_id', '=', Auth::user()->id)
+                    ->orderBy('id')
+                    ->first();
+                if($game != null){
+                    $res[$match->id]['streak'] = $game->current_length;
+                }
+            } if (in_array($match->id, $free)) {
+                $game = FreeGames::where('match_id', '=', $match->id)
                     ->where('confirmed', '=', 1)
                     ->where('user_id', '=', Auth::user()->id)
                     ->orderBy('id')

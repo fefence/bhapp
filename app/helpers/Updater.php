@@ -537,6 +537,7 @@ class Updater
                         $game->bookmaker_id = 1;
                         $game->income = 0;
                         $game->odds = 3;
+                        $game->current_length = $standings->streak;
                         $game->save();
                     }
                 }

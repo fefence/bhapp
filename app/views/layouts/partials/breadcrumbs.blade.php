@@ -28,7 +28,6 @@
         <a href="/groupodds/{{$group}}">refresh odds</a> |
         @endif
         @if(isset($free) && $free == true && isset($fromdate) && isset($todate))
-        <a href="/free/manage">manage</a> |
         <a href="/freeodds/{{$fromdate}}/{{$todate}}">refresh odds</a> |
         @endif
         @if(isset($ppm) && $ppm == true && isset($fromdate) && isset($todate))
@@ -42,7 +41,13 @@
         @if(isset($save) && $save)
         <a id="save" href="#" class="text-danger">save</a> |
         @endif
-        <span>{{ Auth::user()->name }} | <a href="/settings">settings</a> | <a href="/logout">log out</a></span>
+        {{ Auth::user()->name }} |
+        @if(isset($free) && $free == true && isset($fromdate) && isset($todate))
+            <a href="/free/manage">manage</a> |
+        @else
+            <a href="/settings">settings</a> |
+        @endif
+        <a href="/logout">log out</a>
     </div>
 </div>
 

@@ -6,7 +6,17 @@ class BaseController extends Controller {
 			$global = CommonPools::where('user_id', '=', Auth::user()->id)->first();
 		    View::share('global', $global);	
 		    View::share('base', Request::segment('1'));
-		}
+            $free = FreeGames::join('match', 'match.id', '=', 'freeplay.match_id')
+                ->join('freeplay_teams', 'freeplay_teams.team_id', '=', 'freeplay.team_id')
+                ->where('matchDate', '=', date("Y-m-d", time()))
+                ->where('freeplay.user_id', '=', Auth::user()->id)
+                ->where('freeplay_teams.user_id', '=', Auth::user()->id)
+                ->where('confirmed', '=', 0)
+                ->where('hidden', '=', 0)
+                ->count();
+            View::share('free_count', $free);
+
+        }
 	}
 
 	/**
