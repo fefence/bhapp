@@ -1,6 +1,9 @@
 @extends('layout')
 
 @section('content')
+@if ($current_game != null)
+<a href="/pps/remove/{{$current_game->id}}/{{$current_game->groups_id}}">remove from group</a>
+@endif
 <table class="table-bordered noMargin noPadding matchDetails">
 	<tr>
 		<th style="width: 26%;">{{$hometeam}} last 10 matches</th>

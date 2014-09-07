@@ -6,8 +6,18 @@ class DetailsController extends \BaseController
     {
         $match = Match::find($match_id);
         $games = Games::confirmedGamesForMatch($match, Auth::user()->id, $team);
+        $currentGame = null;
+        if (count($games) == 0) {
+            $currentGame = Games::where('user_id', '=', Auth::user()->id)
+                ->where('match_id', '=', $match->id)
+                ->where('confirmed', '=', 0)
+                ->join('standings', 'standings.id', '=', 'games.standings_id')
+                ->where('team', '=', $team)
+                ->first(['games.id', 'groups_id']);
+//            return $currentGame;
+        }
         list($home, $matchesH, $away, $matchesA, $h2h) = Match::getMatchesForTeams($match);
-        return View::make('details')->with(['data' => $games, 'home' => $matchesH, 'hometeam' => $home, 'awayteam' => $away, 'away' => $matchesA, 'h2h' => $h2h, 'team' => $team]);
+        return View::make('details')->with(['current_game' => $currentGame, 'data' => $games, 'home' => $matchesH, 'hometeam' => $home, 'awayteam' => $away, 'away' => $matchesA, 'h2h' => $h2h, 'team' => $team]);
     }
 
     public function detailsPPM($match_id, $type)

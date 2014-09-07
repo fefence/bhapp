@@ -131,6 +131,15 @@ class GamesController extends \BaseController
     public function addGame($groups_id, $standings_id, $match_id)
     {
         Games::addGame($groups_id, $standings_id, Auth::user()->id, $match_id);
+        $bsfsum = 0;
+        $games = Games::where('match.groups_id', '=', $groups_id)
+            ->join('match', 'games.match_id', '=', 'match.id')
+            ->where('resultShort', '=', '-')
+            ->select(DB::raw('`games`.*, `match`.league_details_id'))
+            ->where('user_id', '=', Auth::user()->id)
+            ->where('confirmed', '=', 0)
+            ->get();
+        GamesController::basicRecalc($games, $bsfsum);
         return Redirect::back()->with('message', 'New game added');
     }
 
@@ -376,5 +385,42 @@ class GamesController extends \BaseController
 //        return $league;
         return View::make('matches')->with(['today_btn' => 'current', 'tail' => "", 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/", 'base_minus' => "pps/group/history/$league_details_id/" . ($offset + 1), 'base_plus' => "pps/group/history/$league_details_id/" . ($offset - 1), 'big' => "Round " . $gr->round, 'small' => "", 'disable' => $disable]);
 
+    }
+
+    public static function removeGameFromGroup($games_id, $groups_id) {
+        $to_delete = Games::find($games_id);
+        $bsfsum = $to_delete->bsf;
+        $to_delete->delete();
+        $games = Games::where('match.groups_id', '=', $groups_id)
+            ->join('match', 'games.match_id', '=', 'match.id')
+            ->where('resultShort', '=', '-')
+            ->select(DB::raw('`games`.*, `match`.league_details_id'))
+            ->where('user_id', '=', Auth::user()->id)
+            ->where('confirmed', '=', 0)
+            ->get();
+        GamesController::basicRecalc($games, $bsfsum);
+
+        return Redirect::back()->with('message', 'Game removed');
+    }
+
+    public static function basicRecalc($games, $bsf_sum) {
+        $league_details_id = '';
+        foreach($games as $game) {
+            $bsf_sum = $bsf_sum + $game->bsf;
+            $league_details_id = $game->league_details_id;
+        }
+
+        $multiplier = Settings::where('user_id', '=', Auth::user()->id)
+            ->where('league_details_id', '=', $league_details_id)
+            ->where('game_type_id', '=', 1)
+            ->pluck('multiplier');
+        $bsfpm = round($bsf_sum/count($games), 2, PHP_ROUND_HALF_UP);
+        foreach($games as $game) {
+
+            $game->bsf = $bsfpm;
+            $game->bet = $bsfpm * $multiplier;
+            $game->income = $game->odds * $game->bet;
+            $game->save();
+        }
     }
 }

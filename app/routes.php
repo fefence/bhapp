@@ -23,7 +23,7 @@ Route::get('/boo', function(){
 //        }
 //
 //    }
-
+//    return GamesController::basicRecalc(828);
 });
 
 Route::get('/settings2', function(){
@@ -79,6 +79,9 @@ Route::get('/pps/group/history/{id}/{offset}', 'GamesController@getGamesForGroup
 Route::get('/pps/group/{id}/{fromdate?}/{todate?}', 'GamesController@getGamesForGroup');
 Route::get('/groupodds/{groups_id}', 'GamesController@getMatchOddsForGames');
 Route::get('/ppsodds/{fromdate?}/{todate?}', 'GamesController@getMatchOddsForAll');
+Route::get('/pps/remove/{game_id}/{groups_id}', 'GamesController@removeGameFromGroup');
+
+
 
 //games actions
 Route::post('/save', 'GamesController@saveTable');
