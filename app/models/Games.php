@@ -269,19 +269,85 @@ class Games extends Eloquent
         return $games;
     }
 
-    /**
-     * @param $groups_id
-     * @param $user_id
-     * @return mixed
-     */
+//    /**
+//     * @param $groups_id
+//     * @param $user_id
+//     * @return mixed
+//     */
+//    public static function getGamesForGroupUser($groups_id, $user_id)
+//    {
+//        $games = User::find($user_id)
+//            ->games()
+//            ->where('groups_id', '=', $groups_id)
+//            ->where('confirmed', '=', 0)
+//            ->get();
+//        return $games;
+//    }
+
+
+    public static function getPPSForConfirm($group_id, $fromdate, $todate)
+    {
+        $matches = Games::where('groups_id', '=', $group_id)
+            ->where('user_id', '=', Auth::user()->id)
+            ->where('confirmed', '=', 1)
+            ->lists('standings_id');
+        if (count($matches) == 0) {
+            $matches = [-1];
+        }
+        if ($fromdate == '' && $todate == '') {
+            $data = Games::where('groups_id', '=', $group_id)
+                ->where('user_id', '=', Auth::user()->id)
+                ->where('confirmed', '=', 0)
+                ->whereNotIn('standings_id', $matches)
+                ->get(['games.id', 'game_type_id']);
+            return $data;
+
+        } else {
+            list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
+            $data = Games::join('match', 'match.id', '=', 'games.match_id')
+                ->where('games.groups_id', '=', $group_id)
+                ->where('user_id', '=', Auth::user()->id)
+                ->where('matchDate', '>=', $fromdate)
+                ->where('matchDate', '<=', $todate)
+                ->whereNotIn('match_id', $matches)
+                ->where('confirmed', '=', 0)
+                ->get(['games.id', 'game_type_id']);
+            return $data;
+
+        }
+    }
+
     public static function getGamesForGroupUser($groups_id, $user_id)
     {
-        $games = User::find($user_id)
-            ->games()
-            ->where('groups_id', '=', $groups_id)
+        $games = Games::where('match.groups_id', '=', $groups_id)
+            ->join('match', 'games.match_id', '=', 'match.id')
+            ->where('resultShort', '=', '-')
+            ->select(DB::raw('`games`.*, `match`.league_details_id'))
+            ->where('user_id', '=', $user_id)
             ->where('confirmed', '=', 0)
             ->get();
         return $games;
+    }
+
+    public static function basicRecalc($games, $bsf_sum) {
+        $league_details_id = '';
+        foreach($games as $game) {
+            $bsf_sum = $bsf_sum + $game->bsf;
+            $league_details_id = $game->league_details_id;
+        }
+
+        $multiplier = Settings::where('user_id', '=', Auth::user()->id)
+            ->where('league_details_id', '=', $league_details_id)
+            ->where('game_type_id', '=', 1)
+            ->pluck('multiplier');
+        $bsfpm = round($bsf_sum/count($games), 2, PHP_ROUND_HALF_UP);
+        foreach($games as $game) {
+
+            $game->bsf = $bsfpm;
+            $game->bet = $bsfpm * $multiplier;
+            $game->income = $game->odds * $game->bet;
+            $game->save();
+        }
     }
 }
 

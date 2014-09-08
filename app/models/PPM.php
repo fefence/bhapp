@@ -104,4 +104,35 @@ class PPM extends Eloquent {
         return $games;
     }
 
+    public static function getPPMForConfirm($country, $fromdate, $todate, $user_id)
+    {
+        $conf = PPM::where('user_id', '=', $user_id)
+            ->join('match', 'match.id', '=', 'ppm.match_id')
+            ->where('confirmed', '=', 1)
+            ->where('ppm.country', '=', $country)
+            ->where('matchDate', '>=', $fromdate)
+            ->where('matchDate', '<=', $todate)
+            ->where('resultShort', '=', '-')
+//            ->where('bet', '<>', '0')
+            ->lists('game_type_id');
+        if (count($conf) == 0) {
+            $conf = [-1];
+        }
+        $games = PPM::where('user_id', '=', $user_id)
+            ->whereNotIn('game_type_id', $conf)
+            ->join('match', 'match.id', '=', 'ppm.match_id')
+            ->where('confirmed', '=', 0)
+            ->where('ppm.country', '=', $country)
+            ->where('matchDate', '>=', $fromdate)
+            ->where('matchDate', '<=', $todate)
+            ->where('resultShort', '=', '-')
+            ->where('bet', '<>', '0')
+            ->orderBy('matchDate')
+            ->orderBy('matchTime')
+            ->orderBy('game_type_id')
+            ->select(DB::raw("`ppm`.*"))
+            ->get();
+        return $games;
+    }
+
 }

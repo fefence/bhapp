@@ -2,6 +2,7 @@
 
 class GamesController extends \BaseController
 {
+
     public function getGamesForGroup($league_details_id, $fromdate = "", $todate = "")
     {
         $pool = Pools::getPoolForUserLeague(Auth::user()->id, $league_details_id);
@@ -25,11 +26,11 @@ class GamesController extends \BaseController
             $count = array();
 
             if ($fromdate == '' && $todate == '') {
-                $data = Groups::getGamesForGroup($gr->id);
+                $data = Groups::getGamesForGroup($gr->id, Auth::user()->id);
                 $grey = Groups::getMatchesNotInGames($gr->id, $standings);
                 list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
             } else {
-                $data = Groups::getGamesForGroupAndDates($league_details_id, $fromdate, $todate);
+                $data = Groups::getGamesForGroupAndDates($league_details_id, $fromdate, $todate, Auth::user()->id);
                 $grey = Groups::getMatchesNotInGamesForDates($league_details_id, $standings, $fromdate, $todate);
             }
             $disable = false;
@@ -62,34 +63,66 @@ class GamesController extends \BaseController
         return View::make('matches')->with(['plus' => $plusminus[0],'minus'=>$plusminus[1],'settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "pps/group/$league_details_id", 'big' => $big, 'small' => $small, 'disable' => $disable]);
     }
 
+    public static function getGamesForGroupOffset($league_details_id, $offset)
+    {
+        $current_active = false;
+        if ($offset == -1 || $offset == '-1') {
+            $gr = Groups::where('league_details_id', '=', $league_details_id)->where('state', '=', 3)->orderBy('id', 'desc')->first();
+        } else if ($offset == 0) {
+            return Redirect::to("/pps/group/$league_details_id");
+        } else {
+            $groups = Groups::where('league_details_id', '=', $league_details_id)->where('state', '=', 1)->orderBy('id', 'desc')->get();
+            $i = 0;
+            foreach ($groups as $gr) {
+                $i++;
+                if ($i == $offset) {
+                    break;
+                }
+            }
+        }
+
+        $pool = Pools::getPoolForUserLeague(Auth::user()->id, $league_details_id);
+
+        if ($gr != null) {
+            $id = $gr->id;
+            $games = User::find(Auth::user()->id)->games()->where('groups_id', '=', $gr->id)->lists('standings_id');
+            if (count($games) == 0) {
+                $games = [-1];
+            }
+            $standings = Standings::where('league_details_id', '=', $league_details_id)->whereNotIn('id', $games)->lists('team');
+            $count = array();
+
+            $data = Groups::getGamesForGroup($gr->id, Auth::user()->id);
+            $grey = Groups::getMatchesNotInGames($gr->id, $standings);
+
+            $disable = false;
+            foreach ($data as $g) {
+                $match = Match::find($g->match_id);
+                $count[$g->id] = count(Games::confirmedGamesForMatch($match, Auth::user()->id, $g->team));
+                if ($count[$g->id] > 0) {
+                    $disable = true;
+                }
+            }
+        } else {
+            $data = array();
+            $grey = array();
+            $count = 0;
+            $id = -1;
+            $disable = true;
+        }
+        $arr = array();
+        $arr[0] = $data;
+        $arr[1] = $grey;
+        $standings = Standings::where('league_details_id', '=', $league_details_id)->lists('place', 'team');
+        $league = LeagueDetails::find($league_details_id);
+        return View::make('matches')->with(['hide_all' => true, 'current_active' => $current_active, 'today_btn' => 'current', 'tail' => "", 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/", 'base_minus' => "pps/group/$league_details_id/" . ($offset + 1), 'base_plus' => "pps/group/$league_details_id/" . ($offset - 1), 'big' => "Round " . $gr->round, 'small' => "", 'disable' => $disable]);
+
+    }
+
     public static function confirmAllPPM($country, $fromdate, $todate)
     {
-        $conf = PPM::where('user_id', '=', Auth::user()->id)
-            ->join('match', 'match.id', '=', 'ppm.match_id')
-            ->where('confirmed', '=', 1)
-            ->where('ppm.country', '=', $country)
-            ->where('matchDate', '>=', $fromdate)
-            ->where('matchDate', '<=', $todate)
-            ->where('resultShort', '=', '-')
-//            ->where('bet', '<>', '0')
-            ->lists('game_type_id');
-        if (count($conf) == 0) {
-            $conf = [-1];
-        }
-        $games = PPM::where('user_id', '=', Auth::user()->id)
-            ->whereNotIn('game_type_id', $conf)
-            ->join('match', 'match.id', '=', 'ppm.match_id')
-            ->where('confirmed', '=', 0)
-            ->where('ppm.country', '=', $country)
-            ->where('matchDate', '>=', $fromdate)
-            ->where('matchDate', '<=', $todate)
-            ->where('resultShort', '=', '-')
-            ->where('bet', '<>', '0')
-            ->orderBy('matchDate')
-            ->orderBy('matchTime')
-            ->orderBy('game_type_id')
-            ->select(DB::raw("`ppm`.*"))
-            ->get();
+        $user_id = Auth::user()->id;
+        $games = PPM::getPPMForConfirm($country, $fromdate, $todate, $user_id);
         foreach ($games as $game) {
             Games::confirmGame($game->id, $game->game_type_id, false);
         }
@@ -99,7 +132,6 @@ class GamesController extends \BaseController
             return Redirect::to(URL::to("/ppm/country/" . $country . "/" . $fromdate . "/" . $todate));
 
         }
-//        return $games;
     }
 
     public function confirmGame($game_id, $game_type_id, $pl = false)
@@ -130,47 +162,17 @@ class GamesController extends \BaseController
 
     public function addGame($groups_id, $standings_id, $match_id)
     {
+        $user_id = Auth::user()->id;
         Games::addGame($groups_id, $standings_id, Auth::user()->id, $match_id);
         $bsfsum = 0;
-        $games = Games::where('match.groups_id', '=', $groups_id)
-            ->join('match', 'games.match_id', '=', 'match.id')
-            ->where('resultShort', '=', '-')
-            ->select(DB::raw('`games`.*, `match`.league_details_id'))
-            ->where('user_id', '=', Auth::user()->id)
-            ->where('confirmed', '=', 0)
-            ->get();
-        GamesController::basicRecalc($games, $bsfsum);
+        $games = Games::getGamesForGroupUser($groups_id, $user_id);
+        Games::basicRecalc($games, $bsfsum);
         return Redirect::back()->with('message', 'New game added');
     }
 
     public static function confirmAllGames($group_id, $fromdate = "", $todate = "")
     {
-        $matches = Games::where('groups_id', '=', $group_id)
-            ->where('user_id', '=', Auth::user()->id)
-            ->where('confirmed', '=', 1)
-            ->lists('standings_id');
-        if (count($matches) == 0) {
-            $matches = [-1];
-        }
-        if ($fromdate == '' && $todate == '') {
-            $data = Games::where('groups_id', '=', $group_id)
-                ->where('user_id', '=', Auth::user()->id)
-                ->where('confirmed', '=', 0)
-                ->whereNotIn('standings_id', $matches)
-                ->get(['games.id', 'game_type_id']);
-
-        } else {
-            list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
-            $data = Games::join('match', 'match.id', '=', 'games.match_id')
-                ->where('games.groups_id', '=', $group_id)
-                ->where('user_id', '=', Auth::user()->id)
-                ->where('matchDate', '>=', $fromdate)
-                ->where('matchDate', '<=', $todate)
-                ->whereNotIn('match_id', $matches)
-                ->where('confirmed', '=', 0)
-                ->get(['games.id', 'game_type_id']);
-
-        }
+        $data = Games::getPPSForConfirm($group_id, $fromdate, $todate);
         foreach ($data as $game) {
             Games::confirmGame($game->id, $game->game_type_id, false);
         }
@@ -179,64 +181,8 @@ class GamesController extends \BaseController
 
     public static function recalculateGroup($group_id)
     {
-        $data = Games::join('match', 'match.id', '=', 'games.match_id')
-            ->where('games.groups_id', '=', $group_id)
-            ->where('user_id', '=', Auth::user()->id)
-            ->where('resultShort', '=', '-')
-            ->where('confirmed', '=', 0)
-            ->select(DB::raw('games.*'))
-            ->get();
-        Parser::parseMatchOddsForGames($data);
-
-        $gr = Groups::find($group_id);
-        $setting = Settings::where('user_id', '=', Auth::user()->id)
-            ->where('league_details_id', '=', $gr->league_details_id)
-            ->first(['from', 'to', 'multiplier', 'auto']);
-        $from = $setting->from;
-        $teams = array();
-        if ($setting->auto == '2') {
-            $teams = Standings::where('league_details_id', '=', $gr->league_details_id)
-                ->where('streak', '>=', $from)->lists('team', 'id');
-        } else if ($setting->auto == '1') {
-            $to = $setting->to;
-            for ($i = 0; $i < 100; $i++) {
-                $count = Standings::where('league_details_id', '=', $gr->league_details_id)
-                    ->where('streak', '>=', $i);
-                if ($count->count() <= $to) {
-                    if ($count->count() < $from) {
-                        $teams = Standings::where('league_details_id', '=', $gr->league_details_id)
-                            ->where('streak', '>=', $i - 1)->lists('team', 'id');
-                        break 1;
-                    } else {
-                        $teams = Standings::where('league_details_id', '=', $gr->league_details_id)
-                            ->where('streak', '>=', $i)->lists('team', 'id');
-                    }
-                    break 1;
-                }
-            }
-        }
-
-//        return $setting;
-        $league_details_id = Groups::find($group_id)->league_details_id;
-        $pool = Pools::where('user_id', '=', Auth::user()->id)->where('league_details_id', '=', $league_details_id)->first();
-        if (count($teams) > 0) {
-            $bsfpm = $pool->amount / count($teams);
-        } else {
-            $bsfpm = $pool->amount;
-        }
-        $setting = Settings::where('user_id', '=', Auth::user()->id)->where('league_details_id', '=', $league_details_id)->first();
-        $betpm = $bsfpm * $setting->multiplier;
-        foreach ($data as $game) {
-            $game->bsf = $bsfpm;
-            $game->bet = $betpm;
-            $game->income = $betpm * $game->odds;
-
-            $game->save();
-        }
-
-        $pool = Pools::where('user_id', '=', Auth::user()->id)->where('league_details_id', '=', Groups::find($group_id)->league_details_id)->first();
-        $pool->current = Games::where('groups_id', '=', $group_id)->where('user_id', '=', Auth::user()->id)->sum('bsf');
-        $pool->save();
+        $user_id = Auth::user()->id;
+        Groups::recalculatePPSGroup($group_id, $user_id);
         return Redirect::back()->with('message', 'BSF recalculated');
     }
 
@@ -331,101 +277,14 @@ class GamesController extends \BaseController
         return Redirect::back()->with('message', 'Odds retrieved');
     }
 
-    public static function getGamesForGroupOffset($league_details_id, $offset)
-    {
-        $current_active = false;
-        if ($offset == -1 || $offset == '-1') {
-            $gr = Groups::where('league_details_id', '=', $league_details_id)->where('state', '=', 3)->orderBy('id', 'desc')->first();
-        } else if ($offset == 0) {
-//            $gr = Groups::where('league_details_id', '=', $league_details_id)->where('state', '=', 2)->orderBy('id', 'desc')->first();
-//            $current_active = true;
-            return Redirect::to("/pps/group/$league_details_id");
-        } else {
-            $groups = Groups::where('league_details_id', '=', $league_details_id)->where('state', '=', 1)->orderBy('id', 'desc')->get();
-            $i = 0;
-            foreach ($groups as $gr) {
-                $i++;
-                if ($i == $offset) {
-                    break;
-                }
-            }
-        }
 
-        $pool = Pools::getPoolForUserLeague(Auth::user()->id, $league_details_id);
-
-        if ($gr != null) {
-            $id = $gr->id;
-            $games = User::find(Auth::user()->id)->games()->where('groups_id', '=', $gr->id)->lists('standings_id');
-            if (count($games) == 0) {
-                $games = [-1];
-            }
-            $standings = Standings::where('league_details_id', '=', $league_details_id)->whereNotIn('id', $games)->lists('team');
-            $count = array();
-
-            $data = Groups::getGamesForGroup($gr->id);
-            $grey = Groups::getMatchesNotInGames($gr->id, $standings);
-//                list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
-
-            $disable = false;
-            foreach ($data as $g) {
-                $match = Match::find($g->match_id);
-                $count[$g->id] = count(Games::confirmedGamesForMatch($match, Auth::user()->id, $g->team));
-                if ($count[$g->id] > 0) {
-                    $disable = true;
-                }
-            }
-        } else {
-            $data = array();
-            $grey = array();
-            $count = 0;
-            $id = -1;
-            $disable = true;
-        }
-//        list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, $league_details_id);
-        $arr = array();
-        $arr[0] = $data;
-        $arr[1] = $grey;
-        $standings = Standings::where('league_details_id', '=', $league_details_id)->lists('place', 'team');
-        $league = LeagueDetails::find($league_details_id);
-//        return $league;
-        return View::make('matches')->with(['hide_all' => true, 'current_active' => $current_active, 'today_btn' => 'current', 'tail' => "", 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/", 'base_minus' => "pps/group/$league_details_id/" . ($offset + 1), 'base_plus' => "pps/group/$league_details_id/" . ($offset - 1), 'big' => "Round " . $gr->round, 'small' => "", 'disable' => $disable]);
-
-    }
 
     public static function removeGameFromGroup($games_id, $groups_id) {
         $to_delete = Games::find($games_id);
         $bsfsum = $to_delete->bsf;
         $to_delete->delete();
-        $games = Games::where('match.groups_id', '=', $groups_id)
-            ->join('match', 'games.match_id', '=', 'match.id')
-            ->where('resultShort', '=', '-')
-            ->select(DB::raw('`games`.*, `match`.league_details_id'))
-            ->where('user_id', '=', Auth::user()->id)
-            ->where('confirmed', '=', 0)
-            ->get();
-        GamesController::basicRecalc($games, $bsfsum);
-
+        $games = Games::getGamesForGroupUser($groups_id, Auth::user()->id);
+        Games::basicRecalc($games, $bsfsum);
         return Redirect::back()->with('message', 'Game removed');
-    }
-
-    public static function basicRecalc($games, $bsf_sum) {
-        $league_details_id = '';
-        foreach($games as $game) {
-            $bsf_sum = $bsf_sum + $game->bsf;
-            $league_details_id = $game->league_details_id;
-        }
-
-        $multiplier = Settings::where('user_id', '=', Auth::user()->id)
-            ->where('league_details_id', '=', $league_details_id)
-            ->where('game_type_id', '=', 1)
-            ->pluck('multiplier');
-        $bsfpm = round($bsf_sum/count($games), 2, PHP_ROUND_HALF_UP);
-        foreach($games as $game) {
-
-            $game->bsf = $bsfpm;
-            $game->bet = $bsfpm * $multiplier;
-            $game->income = $game->odds * $game->bet;
-            $game->save();
-        }
     }
 }
