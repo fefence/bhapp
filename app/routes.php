@@ -1,29 +1,6 @@
 <?php
 Route::get('/boo', function(){
-//    $ppms = PPM::where("match_id", '=', "0fmE98Vr")->where('confirmed', '=', 1)->get();
-//    foreach($ppms as $ppm) {
-//        PPMPlaceHolder::createPlaceholder($ppm);
-//    }
-//    return Updater::updatePPM();
 
-//    $curr = Groups::where('league_details_id', '=', 53)->where('state', '=', 2)->first();
-//    $next = Groups::where('league_details_id', '=', 53)->where('state', '=', 3)->first();
-//    Parser::parseMatchesForGroup($curr, $next);
-
-//    $grs = Groups::where('state', '=', 2)->get();
-//    foreach ($grs as $gr) {
-//        $str = Standings::where('league_details_id', '=', $gr->league_details_id)
-//            ->select(DB::raw('streak, count(*) as c'))
-//            ->groupBy('streak')
-//            ->get();
-//        foreach ($str as $s) {
-//            $g = GroupToStreaks::firstOrNew(['groups_id' => $gr->id, 'streak_length' => $s->streak]);
-//            $g->streak_count = $s->c;
-//            $g->save();
-//        }
-//
-//    }
-//    return GamesController::basicRecalc(828);
 });
 
 Route::get('/settings2', function(){

@@ -3,13 +3,13 @@
 class PPMController extends \BaseController
 {
 
+
     public function display($country = "", $fromdate = "", $todate = "")
     {
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, '');
-        $games = PPM::ppmForDatesCountry($fromdate, $todate, $country);
+        $games = PPM::ppmForDatesCountry($fromdate, $todate, $country, Auth::user()->id);
         $placeholders = PPMPlaceHolder::placeholdersForDatesCountry($fromdate, $todate, $country);
-//        return $placeholders;
         $count = array();
         $count_pl = array();
         $league_ids = array();
@@ -37,99 +37,29 @@ class PPMController extends \BaseController
     {
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, '');
-        $leagues = PPM::ppmLeaguesForDates($fromdate, $todate);
+        $leagues = PPM::ppmLeaguesForDates($fromdate, $todate, Auth::user()->id);
         $info = array();
         foreach ($leagues as $league) {
-            $info[$league->country]['all'] = count(PPM::ppmForDatesCountry($fromdate, $todate, $league->country));
-            $info[$league->country]['confirmed'] = PPM::ppmConfirmedForLeague($fromdate, $todate, $league);
+            $info[$league->country]['all'] = count(PPM::ppmForDatesCountry($fromdate, $todate, $league->country, Auth::user()->id));
+            $info[$league->country]['confirmed'] = PPM::ppmConfirmedForLeague($fromdate, $todate, $league, Auth::user()->id);
             $info[$league->country][5] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 5)->first(['current_length'])->current_length;
             $info[$league->country][6] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 6)->first(['current_length'])->current_length;
             $info[$league->country][7] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 7)->first(['current_length'])->current_length;
             $info[$league->country][8] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 8)->first(['current_length'])->current_length;
-            try{
+            try {
                 $p = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 5)->first(['amount']);
-                $info[$league->country][55] = ($p == null)?0:$p->amount;
-                $p =Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 6)->first(['amount']);
-                $info[$league->country][66] = ($p == null)?0:$p->amount;
+                $info[$league->country][55] = ($p == null) ? 0 : $p->amount;
+                $p = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 6)->first(['amount']);
+                $info[$league->country][66] = ($p == null) ? 0 : $p->amount;
                 $p = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 7)->first(['amount']);
-                $info[$league->country][77] = ($p == null)?0:$p->amount;
+                $info[$league->country][77] = ($p == null) ? 0 : $p->amount;
                 $p = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 8)->first(['amount']);
-                $info[$league->country][88] = ($p == null)?0:$p->amount;
+                $info[$league->country][88] = ($p == null) ? 0 : $p->amount;
             } catch (ErrorException $e) {
                 return $league;
             }
         }
         return View::make('ppmcountries')->with(['all_btn' => 'flat', 'data' => $leagues, 'info' => $info, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small, 'all_link' => "ppm/flat/$fromdate/$todate", 'ppm' => true]);
-    }
-
-    public static function getOddsForCountry($country, $fromdate = "", $todate = "")
-    {
-        list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
-        $games = PPM::where('user_id', '=', Auth::user()->id)
-            ->join('match', 'match.id', '=', 'ppm.match_id')
-            ->where('confirmed', '=', 0)
-            ->where('country', '=', $country)
-            ->where('matchDate', '>=', $fromdate)
-            ->where('matchDate', '<=', $todate)
-            ->where('resultShort', '=', '-')
-            ->select([DB::raw('ppm.id as id, ppm.*')])
-            ->get();
-        $placeholders = PPMPlaceHolder::placeholdersForDatesCountry($fromdate, $todate, $country);
-
-        $err = Parser::parseMatchOddsForGames($games);
-        $err2 = Parser::parseMatchOddsForGames($placeholders);
-        if ($err || $err2) {
-            return Redirect::back()->with('warning', 'Odds not refreshed correctly');
-        }
-        return Redirect::back()->with('message', 'Odds refreshed');
-
-    }
-
-    public function getOdds($fromdate = "", $todate = "")
-    {
-        $start = time();
-        list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
-        $games = PPM::where('user_id', '=', Auth::user()->id)
-            ->join('match', 'match.id', '=', 'ppm.match_id')
-            ->where('confirmed', '=', 0)
-            ->where('matchDate', '>=', $fromdate)
-            ->where('matchDate', '<=', $todate)
-            ->where('resultShort', '=', '-')
-            ->select([DB::raw('ppm.id as id, ppm.*')])
-            ->get();
-        Parser::parseMatchOddsForGames($games);
-        return Redirect::back()->with('message', 'Odds refreshed ' . (time() - $start) . " sec");
-    }
-
-    public static function displaySeries($id)
-    {
-//        return $id;
-        $country = Series::find($id)->team;
-        $games = PPM::where('series_id', '=', $id)
-            ->join('match', 'match.id', '=', 'ppm.match_id')
-            ->join('bookmaker', 'bookmaker.id', '=', 'bookmaker_id')
-            ->join('game_type', 'game_type.id', '=', 'game_type_id')
-            ->where('user_id', '=', Auth::user()->id)
-            ->orderBy('current_length', 'desc')
-            ->get();
-        $data = array();
-        foreach ($games as $game) {
-            if ($game->confirmed == 0) {
-                $count = PPM::where('match_id', '=', $game->match_id)
-                    ->where('game_type_id', '=', $game->game_type_id)
-                    ->where('user_id', '=', $game->user_id)
-                    ->where('bookmaker_id', '=', $game->bookmaker_id)
-                    ->where('confirmed', '=', 1)
-                    ->count();
-                if ($count == 0) {
-                    array_push($data, $game);
-                }
-            } else {
-                array_push($data, $game);
-            }
-        }
-
-        return View::make('ppmseriesdetails')->with(['games' => $data, 'league' => $country, 'series' => $id]);
     }
 
     public static function displayFlatView($fromdate = '', $todate = '')
@@ -160,7 +90,7 @@ class PPMController extends \BaseController
                 ->where('confirmed', '=', 1)
                 ->select(DB::raw('count(distinct(ppm.game_type_id)) as c'))
                 ->pluck('c');
-            $conf = ($conf == null)?0:$conf;
+            $conf = ($conf == null) ? 0 : $conf;
             $res[$m->id] = array();
             $res[$m->id]['match'] = $m;
             $res[$m->id]['all'] = $all;
@@ -197,5 +127,65 @@ class PPMController extends \BaseController
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, -1);
         return View::make('flat')->with(['hide_all' => true, 'matches' => $res, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small, 'base' => 'ppm/flat']);
     }
+
+
+    public static function getOddsForCountry($country, $fromdate = "", $todate = "")
+    {
+        list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
+        $user_id = Auth::user()->id;
+        $games = PPM::getPPMForCountryDates($country, $fromdate, $todate, $user_id);
+        $placeholders = PPMPlaceHolder::placeholdersForDatesCountry($fromdate, $todate, $country);
+
+        $err = Parser::parseMatchOddsForGames($games);
+        $err2 = Parser::parseMatchOddsForGames($placeholders);
+        if ($err || $err2) {
+            return Redirect::back()->with('warning', 'Odds not refreshed correctly');
+        }
+        return Redirect::back()->with('message', 'Odds refreshed');
+
+    }
+
+    public function getOdds($fromdate = "", $todate = "")
+    {
+        $start = time();
+        list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
+        $user_id = Auth::user()->id;
+        $games = PPM::getPPMForDates($fromdate, $todate, $user_id);
+        Parser::parseMatchOddsForGames($games);
+        return Redirect::back()->with('message', 'Odds refreshed ' . (time() - $start) . " sec");
+    }
+
+    public static function displaySeries($id)
+    {
+//        return $id;
+        $country = Series::find($id)->team;
+        $user_id = Auth::user()->id;
+        $games = PPM::where('series_id', '=', $id)
+            ->join('match', 'match.id', '=', 'ppm.match_id')
+            ->join('bookmaker', 'bookmaker.id', '=', 'bookmaker_id')
+            ->join('game_type', 'game_type.id', '=', 'game_type_id')
+            ->where('user_id', '=', $user_id)
+            ->orderBy('current_length', 'desc')
+            ->get();
+        $data = array();
+        foreach ($games as $game) {
+            if ($game->confirmed == 0) {
+                $count = PPM::where('match_id', '=', $game->match_id)
+                    ->where('game_type_id', '=', $game->game_type_id)
+                    ->where('user_id', '=', $game->user_id)
+                    ->where('bookmaker_id', '=', $game->bookmaker_id)
+                    ->where('confirmed', '=', 1)
+                    ->count();
+                if ($count == 0) {
+                    array_push($data, $game);
+                }
+            } else {
+                array_push($data, $game);
+            }
+        }
+
+        return View::make('ppmseriesdetails')->with(['games' => $data, 'league' => $country, 'series' => $id]);
+    }
+
 
 }

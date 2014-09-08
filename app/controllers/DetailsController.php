@@ -23,7 +23,7 @@ class DetailsController extends \BaseController
     public function detailsPPM($match_id, $type)
     {
         $match = Match::find($match_id);
-        $games = PPM::getPPMForMatchType($type, $match);
+        $games = PPM::getPPMForMatchType($type, $match, Auth::user()->id);
         return View::make('ppmdetails')->with(['isFree' => '', 'games' => $games]);
     }
 
