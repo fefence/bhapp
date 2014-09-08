@@ -67,12 +67,35 @@ class Checker
                 $body = "<p>" . ucwords(str_replace('-', ' ', $league->country)) . " " . $league->displayName . "<br>" .
                     $match->home . " - " . $match->away . "<br>";
                 if ($date != $match->matchDate){
-                    $body = $body."<strong>".date('d M Y', strtotime($match->matchDate)) ."</strong> ";
+                    $darr = explode('-', $date);
+                    $dd = $darr[2];
+                    $dm = $darr[1];
+                    $dy = $darr[0];
+                    $mdarr = explode('-', $match->matchDate);
+                    $md = $mdarr[2];
+                    $mm = $mdarr[1];
+                    $my = $mdarr[0];
+                    if ($md != $dd) {
+                        $body = $body."<span style='text-decoration-color: darkred'><strong>".date('d', strtotime($match->matchDate)) ."</strong></span> ";
+                    } else {
+                        $body = $body.date('d', strtotime($match->matchDate))." ";
+                    }
+                    if ($mm != $dm) {
+                        $body = $body."<span style='text-decoration-color: darkred'><strong>".date('M', strtotime($match->matchDate)) ."</strong></span> ";
+                    } else {
+                        $body = $body.date('M', strtotime($match->matchDate))." ";
+                    }
+                    if($my != $dy) {
+                        $body = $body."<span style='text-decoration-color: darkred'><strong>".date('Y', strtotime($match->matchDate)) ."</strong></span>";
+                    } else {
+                        $body = $body.date('Y', strtotime($match->matchDate));
+                    }
+                    $body = $body.", ";
                 } else {
-                    $body = $body.date('d M Y', strtotime($match->matchDate)) . " ";
+                    $body = $body.date('d M Y', strtotime($match->matchDate)) . ", ";
                 }
                 if ($time != $match->matchTime){
-                    $body = $body."<strong>".substr($match->matchTime, 0, strlen($match->matchTime) - 3)."</strong>";
+                    $body = $body."<span style='text-decoration-color: darkred'><strong>".substr($match->matchTime, 0, strlen($match->matchTime) - 3)."</strong><span>";
                 } else {
                     $body = $body.substr($match->matchTime, 0, strlen($match->matchTime) - 3);
                 }
