@@ -11,7 +11,7 @@
 @stop
 
 @section('pageHeader')
-	@include('layouts.partials.pageheader', array('calendar' => true, 'big' => "Statistics"))
+	@include('layouts.partials.pageheader', array('calendar' => false, 'big' => "Statistics"))
 @stop
 
 @section('content')

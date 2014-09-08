@@ -12,7 +12,7 @@
 @stop
 
 @section('pageHeader')
-	@include('layouts.partials.pageheader', array('calendar' => true, 'big' => "Archive", 'small' => $country))
+	@include('layouts.partials.pageheader', array('calendar' => false, 'big' => "Archive", 'small' => $country))
 @stop
 @section('content')
     @foreach($leagues as $league)

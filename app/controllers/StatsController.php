@@ -47,7 +47,7 @@ class StatsController extends BaseController
             'over' => $over,
             'under' => $under);
 
-        return View::make('stats')->with('data', $array);
+        return View::make('stats')->with($array);
 
     }
 
@@ -66,7 +66,7 @@ class StatsController extends BaseController
                         ->orWhere('away', '=', $regexp);
                 })
                 ->orderBy('matchDate', 'desc')
-                ->get(['home', 'away', 'resultShort', 'homeGoals', 'awayGoals', 'id', 'matchDate']);
+                ->get();
 
             $seq = array_add($seq, $team->home, $matches);
         }

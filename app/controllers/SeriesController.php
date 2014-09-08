@@ -277,7 +277,8 @@ class SeriesController extends BaseController {
 			->where('season', '=', $season)
 			->where('team', '=', $team->home)
 			->where('game_type_id', '=', $game_type_id)
-			->orderBy('matchDate', 'asc')->get();
+			->orderBy('matchDate', 'asc')
+            ->get();
 		}
 		return $res;
 	}

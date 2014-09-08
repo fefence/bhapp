@@ -73,13 +73,19 @@ class Match extends Eloquent {
 
     public static function matchesForSeason($leagueId, $season) {
 
-    	return Match::where('league_details_id', '=', $leagueId)->where('season', '=', $season)->orderBy('matchDate', 'ASC')->orderBy('matchTime', 'ASC');
+    	return Match::where('league_details_id', '=', $leagueId)
+            ->where('season', '=', $season)
+            ->orderBy('matchDate', 'ASC')
+            ->orderBy('matchTime', 'ASC');
 
     }
 
     public static function matchesForSeasons($leagueId, $season) {
 
-        return Match::where('league_details_id', '=', $leagueId)->where('season', '>=', $season)->orderBy('matchDate', 'ASC')->orderBy('matchTime', 'ASC');
+        return Match::where('league_details_id', '=', $leagueId)
+            ->where('season', '>=', $season)
+            ->orderBy('matchDate', 'ASC')
+            ->orderBy('matchTime', 'ASC');
 
     }
 
@@ -356,7 +362,9 @@ class Match extends Eloquent {
             })
 			->where('matchDate', '>=', $match->matchDate)
 			->where('id', '<>', $match->id)
-			->orderBy('matchDate', 'asc')->orderBy('matchTime', 'asc')->first();
+			->orderBy('matchDate', 'asc')
+            ->orderBy('matchTime', 'asc')
+            ->first();
 	}
 
 	public static function getNextMatchForTeamLeague($team, $league_details_id) {
@@ -370,7 +378,9 @@ class Match extends Eloquent {
             })
 			->where('matchDate', '>=', $date)
 			->where('league_details_id', '=', $league_details_id)
-			->orderBy('matchDate', 'asc')->orderBy('matchTime', 'asc')->first(['home', 'away', 'matchDate']);
+			->orderBy('matchDate', 'asc')
+            ->orderBy('matchTime', 'asc')
+            ->first(['home', 'away', 'matchDate']);
 	}
 
 
