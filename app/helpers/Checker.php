@@ -14,33 +14,21 @@ class Checker
             ->select(DB::raw('`match`.*'))
             ->get();
         $text = "";
-        foreach ($all_matches as $m) {
-            $time = $m->matchTime;
-            $date = $m->matchDate;
-            $match = Parser::parseTimeDate($m);
-            if ($time != $match->matchTime || $date != $match->matchDate) {
-                $send = true;
-                $league = LeagueDetails::find($match->league_details_id);
-                $body = "[".$match->id."] ".$league->country." ".$league->displayName." ".$match->home." - ".$match->away." old value: $date $time new value: " . $match->matchDate . " " . $match->matchTime . "<br>";
-                $text = $text . $body;
-            }
+        $count = 0;
+        $leagues_str = "";
+        list($send, $count, $leagues_str, $text) = self::checkMatches($all_matches, $count, $leagues_str, $text, $send);
+        list($send, $count, $leagues_str, $text) = self::checkMatches($all_free, $count, $leagues_str, $text, $send);
+        $text = $text . (time() - $start) . " sec for " . count($all_matches) . " matches.";
+        if ($count > 1) {
+            $subj = "Rescheduled ".$count." matches (".substr(trim($leagues_str), 2).")";
+        } else {
+            $subj = "Rescheduled match (".substr(trim($leagues_str), 2).")";
         }
-        foreach ($all_free as $m) {
-            $time = $m->matchTime;
-            $date = $m->matchDate;
-            $match = Parser::parseTimeDate($m);
-            if ($time != $match->matchTime || $date != $match->matchDate) {
-                $send = true;
-                $league = LeagueDetails::find($match->league_details_id);
-                $body = "[".$match->id."] ".$league->country." ".$league->displayName." ".$match->home." - ".$match->away." old value: $date $time new value: " . $match->matchDate . " " . $match->matchTime . "<br>";
-                $text = $text . $body;
-            }
-        }
-        $text = $text . " execution time: " . (time() - $start) . " sec for " . count($all_matches) . " matches.";
+
         if ($send) {
-            Mail::send('emails.email', ['data' => $text], function ($message) {
+            Mail::send('emails.email', ['data' => $text], function ($message) use ($subj){
                 $message->to(['wpopowa@gmail.com' => 'Vesela Popova', 'fefence@gmail.com' => 'Deniz Murat', 'stoykostoykov1913@gmail.com' => 'Stoyko Stoykov'])
-                    ->subject('Changed match date or time');
+                    ->subject($subj);
             });
         }
         return $text;
@@ -64,5 +52,35 @@ class Checker
         }
         return $text;
     }
-    
+
+    public static function checkMatches($all_matches, $count, $leagues_str, $text, $send)
+    {
+        foreach ($all_matches as $m) {
+            $time = $m->matchTime;
+            $date = $m->matchDate;
+            $match = Parser::parseTimeDate($m);
+            if ($time != $match->matchTime || $date != $match->matchDate) {
+                $send = true;
+                $count = $count + 1;
+                $league = LeagueDetails::find($match->league_details_id);
+                $leagues_str = $leagues_str . ", " . $league->country_alias;
+                $body = "<p>" . ucwords(str_replace('-', ' ', $league->country)) . " " . $league->displayName . "<br>" .
+                    $match->home . " - " . $match->away . "<br>";
+                if ($date != $match->matchDate){
+                    $body = $body."<strong>".date('d M Y', strtotime($match->matchDate)) ."</strong> ";
+                } else {
+                    $body = $body.date('d M Y', strtotime($match->matchDate)) . " ";
+                }
+                if ($time != $match->matchTime){
+                    $body = $body."<strong>".substr($match->matchTime, 0, strlen($match->matchTime) - 3)."</strong>";
+                } else {
+                    $body = $body.substr($match->matchTime, 0, strlen($match->matchTime) - 3);
+                }
+                $body = $body. " (was " . date('d M Y', strtotime($date)) . " " . substr($time, 0, strlen($time) - 3) . ") <br>[" . $match->id . "]</p>";
+                $text = $text . $body;
+            }
+        }
+        return array($send, $count, $leagues_str, $text);
+    }
+
 } 

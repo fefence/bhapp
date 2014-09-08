@@ -1,6 +1,6 @@
 <?php
 Route::get('/boo', function(){
-
+    Checker::getAllMatches();
 });
 
 Route::get('/settings2', function(){
