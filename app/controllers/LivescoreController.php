@@ -9,7 +9,8 @@ class LivescoreController extends \BaseController
 
 //        $ids = PPM::where('user_id', '=', Auth::user()->id)->lists('match_id');
 //        return $ids;
-        $leagues = Settings::where('user_id', '=', Auth::user()->id)
+        $user_id = Auth::user()->id;
+        $leagues = Settings::where('user_id', '=', $user_id)
             ->where('game_type_id', '>=', 5)
             ->where('game_type_id', '<=', 8)
             ->lists('league_details_id');
@@ -31,26 +32,11 @@ class LivescoreController extends \BaseController
         } else {
             $ms = array();
         }
-        $pps = Games::where('user_id', '=', Auth::user()->id)->lists('match_id');
-        $free = FreeGames::where('user_id', '=', Auth::user()->id)->lists('match_id');
+        $pps = Games::where('user_id', '=', $user_id)->lists('match_id');
+        $free = FreeGames::where('user_id', '=', $user_id)->lists('match_id');
 
         $all_ids = array_merge(array_merge($ms, $pps), $free);
-        $matches = Match::join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
-            ->where(function ($q) use ($fromdate, $todate, $todate2) {
-                $q->where(function ($q) use ($fromdate, $todate, $todate2) {
-                    $q->where('matchDate', '>=', $fromdate)
-                    ->where('matchDate', '<=', $todate);
-                });
-                $q->orWhere(function ($q) use ($fromdate, $todate, $todate2) {
-                    $q->where('matchDate', '=', $todate2)
-                        ->where('matchTime', '<', '08:00:00');
-                });
-            })
-            ->whereIn('match.id', $all_ids)
-            ->orderBy('matchDate', "asc")
-            ->orderBy('matchTime')
-            ->select(DB::raw("`match`.*, `leagueDetails`.country, `leagueDetails`.displayName, `leagueDetails`.alias, `leagueDetails`.ppm"))
-            ->get();
+        $matches = Match::getAllMatchesForDates($fromdate, $todate, $todate2, $all_ids);
         $res = array();
 //        return $matches;
         foreach ($matches as $match) {
@@ -59,7 +45,7 @@ class LivescoreController extends \BaseController
             if (in_array($match->id, $ms)) {
                 $game = PPM::where('match_id', '=', $match->id)
                     ->where('confirmed', '=', 1)
-                    ->where('user_id', '=', Auth::user()->id)
+                    ->where('user_id', '=', $user_id)
                     ->orderBy('id')
                     ->first();
                 if($game != null){
@@ -68,7 +54,7 @@ class LivescoreController extends \BaseController
             } if (in_array($match->id, $free)) {
                 $game = FreeGames::where('match_id', '=', $match->id)
                     ->where('confirmed', '=', 1)
-                    ->where('user_id', '=', Auth::user()->id)
+                    ->where('user_id', '=', $user_id)
                     ->orderBy('id')
                     ->first();
                 if($game != null){
@@ -77,7 +63,7 @@ class LivescoreController extends \BaseController
             } else {
                 $game = Games::where('match_id', '=', $match->id)
                     ->where('confirmed', '=', 1)
-                    ->where('user_id', '=', Auth::user()->id)
+                    ->where('user_id', '=', $user_id)
                     ->orderBy('id')
                     ->first();
                 if ($game != null) {
@@ -130,4 +116,6 @@ class LivescoreController extends \BaseController
         return View::make('matchfeed')->with(['html' => Parser::parseLivescoreForMatch($dom)]);
         return $html;
     }
+
+
 }

@@ -372,5 +372,27 @@ class Match extends Eloquent {
 			->where('league_details_id', '=', $league_details_id)
 			->orderBy('matchDate', 'asc')->orderBy('matchTime', 'asc')->first(['home', 'away', 'matchDate']);
 	}
+
+
+    public static function getAllMatchesForDates($fromdate, $todate, $todate2, $all_ids)
+    {
+        $matches = Match::join('leagueDetails', 'leagueDetails.id', '=', 'match.league_details_id')
+            ->where(function ($q) use ($fromdate, $todate, $todate2) {
+                $q->where(function ($q) use ($fromdate, $todate, $todate2) {
+                    $q->where('matchDate', '>=', $fromdate)
+                        ->where('matchDate', '<=', $todate);
+                });
+                $q->orWhere(function ($q) use ($fromdate, $todate, $todate2) {
+                    $q->where('matchDate', '=', $todate2)
+                        ->where('matchTime', '<', '08:00:00');
+                });
+            })
+            ->whereIn('match.id', $all_ids)
+            ->orderBy('matchDate', "asc")
+            ->orderBy('matchTime')
+            ->select(DB::raw("`match`.*, `leagueDetails`.country, `leagueDetails`.displayName, `leagueDetails`.alias, `leagueDetails`.ppm"))
+            ->get();
+        return $matches;
+    }
 }
 
