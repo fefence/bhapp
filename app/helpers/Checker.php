@@ -63,7 +63,9 @@ class Checker
                 $send = true;
                 $count = $count + 1;
                 $league = LeagueDetails::find($match->league_details_id);
-                $leagues_str = $leagues_str . ", " . $league->country_alias;
+                if (!str_contains($leagues_str, " ".$league->alias.", ")){
+                    $leagues_str = $leagues_str . ", " . $league->country_alias;
+                }
                 $body = "<p>" . ucwords(str_replace('-', ' ', $league->country)) . " " . $league->displayName . "<br>" .
                     $match->home . " - " . $match->away . "<br>";
                 if ($date != $match->matchDate){
