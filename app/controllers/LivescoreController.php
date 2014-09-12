@@ -38,7 +38,6 @@ class LivescoreController extends \BaseController
         $all_ids = array_merge(array_merge($ms, $pps), $free);
         $matches = Match::getAllMatchesForDates($fromdate, $todate, $todate2, $all_ids);
         $res = array();
-//        return $matches;
         foreach ($matches as $match) {
             $res[$match->id] = array();
             $res[$match->id]['streak'] = "";
@@ -60,7 +59,7 @@ class LivescoreController extends \BaseController
                 if($game != null){
                     $res[$match->id]['streak'] = $game->current_length;
                 }
-            } else {
+            } else if (in_array($match->id, $pps)) {
                 $game = Games::where('match_id', '=', $match->id)
                     ->where('confirmed', '=', 1)
                     ->where('user_id', '=', $user_id)

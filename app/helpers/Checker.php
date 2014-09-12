@@ -27,11 +27,12 @@ class Checker
 
         if ($send) {
             Mail::send('emails.email', ['data' => $text], function ($message) use ($subj){
-                $message->to(['wpopowa@gmail.com' => 'Vesela Popova', 'fefence@gmail.com' => 'Deniz Murat', 'stoykostoykov1913@gmail.com' => 'Stoyko Stoykov'])
-                    ->subject($subj);
+                $message->to(['wpopowa@gmail.com' => 'Vesela Popova'])
+                    ->subject("[test]".$subj);
             });
         }
         return $text;
+        //, 'fefence@gmail.com' => 'Deniz Murat', 'stoykostoykov1913@gmail.com' => 'Stoyko Stoykov'
     }
 
     public static function getWrongGroups() {
@@ -63,7 +64,7 @@ class Checker
                 $send = true;
                 $count = $count + 1;
                 $league = LeagueDetails::find($match->league_details_id);
-                if (!str_contains($leagues_str, " ".$league->alias.", ")){
+                if (!str_contains($leagues_str, $league->alias)){
                     $leagues_str = $leagues_str . ", " . $league->country_alias;
                 }
                 $body = "<p>" . ucwords(str_replace('-', ' ', $league->country)) . " " . $league->displayName . "<br>" .
@@ -78,17 +79,17 @@ class Checker
                     $mm = $mdarr[1];
                     $my = $mdarr[0];
                     if ($md != $dd) {
-                        $body = $body."<span style='text-decoration-color: darkred'><strong>".date('d', strtotime($match->matchDate)) ."</strong></span> ";
+                        $body = $body."<font color='red'><strong>".date('d', strtotime($match->matchDate)) ."</strong></font></span> ";
                     } else {
                         $body = $body.date('d', strtotime($match->matchDate))." ";
                     }
                     if ($mm != $dm) {
-                        $body = $body."<span style='text-decoration-color: darkred'><strong>".date('M', strtotime($match->matchDate)) ."</strong></span> ";
+                        $body = $body."<font color='red'><strong>".date('M', strtotime($match->matchDate)) ."</strong></font></span> ";
                     } else {
                         $body = $body.date('M', strtotime($match->matchDate))." ";
                     }
                     if($my != $dy) {
-                        $body = $body."<span style='text-decoration-color: darkred'><strong>".date('Y', strtotime($match->matchDate)) ."</strong></span>";
+                        $body = $body."<font color='red'><strong>".date('Y', strtotime($match->matchDate)) ."</strong></font></span>";
                     } else {
                         $body = $body.date('Y', strtotime($match->matchDate));
                     }
@@ -97,7 +98,7 @@ class Checker
                     $body = $body.date('d M Y', strtotime($match->matchDate)) . ", ";
                 }
                 if ($time != $match->matchTime){
-                    $body = $body."<span style='text-decoration-color: darkred'><strong>".substr($match->matchTime, 0, strlen($match->matchTime) - 3)."</strong><span>";
+                    $body = $body."<font color='red'><strong>".substr($match->matchTime, 0, strlen($match->matchTime) - 3)."</strong></font><span>";
                 } else {
                     $body = $body.substr($match->matchTime, 0, strlen($match->matchTime) - 3);
                 }
