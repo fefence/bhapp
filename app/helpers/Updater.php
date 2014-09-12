@@ -182,7 +182,7 @@ class Updater
                     } else {
                         $teams = Standings::where('league_details_id', '=', $gr->league_details_id)
                             ->where('streak', '>=', $i)->lists('team', 'id');
-                        $bigger_than = $i;
+                        $bigger_than = $i - 1;
                     }
                     break 1;
                 }
@@ -197,8 +197,7 @@ class Updater
             ->first();
         $gr_to_bsf = GroupToBSF::firstOrNew(['user_id' => $user_id, 'groups_id' => $groups_id]);
         $gr_to_bsf->bsf = $pool->amount;
-        $gr_to_bsf->streak_bigger_than = $bigger_than;
-        $gr_to_bsf->save();
+        $gr_to_bsf->streak_bigger_than = $i;
         if (count($teams) > 0) {
             $bsfpm = $pool->amount / count($teams);
             $bpm = $pool->amount * $setting->multiplier / count($teams);
@@ -382,7 +381,7 @@ class Updater
                     }
 
                 }
-                for ($i = 2; $i < 3; $i++) {
+                for ($i = 1; $i < 5; $i++) {
                     $user = User::find($i);
                     foreach ($next_matches as $next) {
                         $conf = PPM::where('match_id', '=', $next->id)
@@ -537,7 +536,6 @@ class Updater
                         $game->bookmaker_id = 1;
                         $game->income = 0;
                         $game->odds = 3;
-                        $game->current_length = $standings->streak;
                         $game->save();
                     }
                 }
