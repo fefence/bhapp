@@ -453,19 +453,23 @@ class Updater
                     $newgame->bet = 0;
                     $newgame->income = $newgame->bet * $newgame->odds;
                     $newgame->save();
-                    $warn = Parser::parseMatchOddsForGames([$newgame]);
-                    $league = LeagueDetails::find($newgame->league_details_id);
-                    $user = User::find($newgame->user_id);
-                    if ($warn) {
-                        $text = "Odds for match " . $n->home . " - " . $n->away . " are not retrieved correctly.<br>Please go to " . URL::to("/") . $league->country . "/" . $n->matchDate . "/" . $n->matchDate . " to confirm the game manually";
-                        Mail::send('emails.email', ['data' => $text], function ($message) use ($user) {
-                            $message->to([$user->email => $user->name])
-                                ->subject('PPM game available');
-                        });
-                    } else {
-                        $newgame->bet = round((12 + $newgame->bsf) / ($newgame->odds - 1), 2, PHP_ROUND_HALF_UP);
-                        $newgame->income = $newgame->bet * $newgame->odds;
-                        $newgame->save();
+                    try {
+                        $warn = Parser::parseMatchOddsForGames([$newgame]);
+                        $league = LeagueDetails::find($newgame->league_details_id);
+                        $user = User::find($newgame->user_id);
+                        if ($warn) {
+                            $text = "Odds for match " . $n->home . " - " . $n->away . " are not retrieved correctly.<br>Please go to " . URL::to("/") . $league->country . "/" . $n->matchDate . "/" . $n->matchDate . " to confirm the game manually";
+                            Mail::send('emails.email', ['data' => $text], function ($message) use ($user) {
+                                $message->to([$user->email => $user->name])
+                                    ->subject('PPM game available');
+                            });
+                        } else {
+                            $newgame->bet = round((12 + $newgame->bsf) / ($newgame->odds - 1), 2, PHP_ROUND_HALF_UP);
+                            $newgame->income = $newgame->bet * $newgame->odds;
+                            $newgame->save();
+                        }
+                    } catch (ErrorException $e) {
+                        
                     }
 //                    PPMPlaceHolder::createPlaceholder($newgame);
 

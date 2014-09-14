@@ -1,6 +1,7 @@
 <?php
 Route::get('/boo', function(){
-    Checker::getAllMatches();
+//    Checker::getAllMatches();
+    return Updater::updatePPM();
 });
 
 Route::get('/settings2', function(){
