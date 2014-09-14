@@ -469,7 +469,7 @@ class Updater
                             $newgame->save();
                         }
                     } catch (ErrorException $e) {
-                        
+
                     }
 //                    PPMPlaceHolder::createPlaceholder($newgame);
 

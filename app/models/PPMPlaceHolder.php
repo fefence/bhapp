@@ -1,8 +1,8 @@
 <?php
 
 
-
-class PPMPlaceHolder extends Eloquent{
+class PPMPlaceHolder extends Eloquent
+{
     protected $table = 'ppm_placeholder';
 
     public static $unguarded = true;
@@ -12,7 +12,8 @@ class PPMPlaceHolder extends Eloquent{
         return $this->belongsTo('Match');
     }
 
-    public static function getForGame($game) {
+    public static function getForGame($game)
+    {
 //        return $game;
         return PPMPlaceHolder::where('user_id', '=', $game->user_id)
             ->where('series_id', '=', $game->series_id)
@@ -44,28 +45,31 @@ class PPMPlaceHolder extends Eloquent{
         return $games;
     }
 
-    public static function createPlaceholder($game) {
+    public static function createPlaceholder($game)
+    {
         $match = Match::find($game->match_id);
         $nextMatches = Updater::getNextPPMMatches($match);
-        foreach($nextMatches as $next) {
-            $placeholder = PPMPlaceHolder::firstOrCreate(['user_id' => $game->user_id, 'match_id' => $next->id, 'game_type_id' => $game->game_type_id, 'country' => $game->country]);
-            if ($game->confirmed == 1) {
-                $placeholder->bsf = $placeholder->bsf + $game->bsf + $game->bet;
-            } else {
-                $placeholder->bsf = $placeholder->bsf + $game->bsf;
+        if (count($nextMatches) > 0) {
+            foreach ($nextMatches as $next) {
+                $placeholder = PPMPlaceHolder::firstOrCreate(['user_id' => $game->user_id, 'match_id' => $next->id, 'game_type_id' => $game->game_type_id, 'country' => $game->country]);
+                if ($game->confirmed == 1) {
+                    $placeholder->bsf = $placeholder->bsf + $game->bsf + $game->bet;
+                } else {
+                    $placeholder->bsf = $placeholder->bsf + $game->bsf;
+                }
+                $placeholder->current_length = $game->current_length + 1;
+                $placeholder->bookmaker_id = $game->bookmaker_id;
+                $placeholder->odds = 3;
+                $placeholder->series_id = $game->series_id;
+                $placeholder->active = 1;
+                $placeholder->save();
+                return $placeholder;
             }
-            $placeholder->current_length = $game->current_length + 1;
-            $placeholder->bookmaker_id = $game->bookmaker_id;
-            $placeholder->odds = 3;
-            $placeholder->series_id = $game->series_id;
-            $placeholder->active = 1;
-            $placeholder->save();
-            return $placeholder;
         }
-
     }
 
-    public static function getPlaceholder($game) {
+    public static function getPlaceholder($game)
+    {
         return PPMPlaceHolder::where('user_id', '=', $game->user_id)
             ->where('match_id', '=', $game->match_id)
             ->where('game_type_id', '=', $game->game_type_id)
