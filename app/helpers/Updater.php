@@ -383,6 +383,7 @@ class Updater
                 }
                 for ($i = 1; $i < 5; $i++) {
                     $user = User::find($i);
+                    if (count($next_matches) > 0) {
                     foreach ($next_matches as $next) {
                         $conf = PPM::where('match_id', '=', $next->id)
                             ->where('bet', '<>', 0)
@@ -417,6 +418,9 @@ class Updater
                                     ->subject("PPM games available for confirm [" . $league->country . "]");
                             });
                         }
+                    }
+                    } else {
+                        echo 'No next matches for '.$serie->league_details_id;
                     }
                 }
 
