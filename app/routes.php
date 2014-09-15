@@ -1,7 +1,8 @@
 <?php
 Route::get('/boo', function(){
+    return PPM::ppmConfirmedForLeague('2014-09-15', '2014-09-15', LeagueDetails::find(6), 2);
 //    Checker::getAllMatches();
-    return Updater::updatePPM();
+//    return Updater::updatePPM();
 });
 
 Route::get('/settings2', function(){

@@ -140,11 +140,18 @@ class PoolsController extends \BaseController
 //        return $free;
         $id = Input::get('id');
 //        return $id;
+        $aLog = new ActionLog;
+
         $amount = Input::get('amount');
         if ($free == "false") {
             $pool = Pools::find($id);
+            $aLog->league_details_id = $pool->league_details_id;
+            $aLog->game_type_id = $pool->game_type_id;
+
         } else {
             $pool = FreePool::find($id);
+            $aLog->league_details_id = -1;
+            $aLog->game_type_id = 1;
         }
         $main = CommonPools::where('user_id', '=', Auth::user()->id)->first();
         $old = $pool->amount;
@@ -157,16 +164,13 @@ class PoolsController extends \BaseController
         $log->amount = $amount;
         $log->action = "+";
         $log->save();
-        $aLog = new ActionLog;
         $aLog->type = "pools";
         $aLog->action = "add";
 //        $aLog->amount = $amount;
         $aLog->element_id = $pool->id;
         $aLog->user_id = $pool->user_id;
         $aLog->description = $amount." added. Old value ".$old.", new value ".$pool->amount;
-        $aLog->league_details_id = $pool->league_details_id;
-        $aLog->game_type_id = $pool->game_type_id;
-        $aLog->save();
+
         if ($free == "false" && $pool->game_type_id >= 5 && $pool->game_type_id <= 8) {
             $ppms = PPM::join('match', 'match.id', '=', 'ppm.match_id')
                 ->where('resultShort', '=', '-')
@@ -189,10 +193,10 @@ class PoolsController extends \BaseController
                 ->where('resultShort', '=', '-')
                 ->select(DB::raw('freeplay.*, match.resultShort'))
                 ->first();
-//            return $fgame;
             $fgame->bsf = $pool->amount;
             $fgame->save();
         }
+        $aLog->save();
         return Redirect::back()->with("message", $amount. "€ added to pool");
     }
 

@@ -37,7 +37,8 @@ class UpdatePPMCommand extends Command {
 	 */
 	public function fire()
 	{
-                $time = Updater::updatePPM();
+        $value = $this->argument('league_details_id');
+        $time = Updater::updatePPM($value);
         $this->info($time." sec elapsed");
 	}
 
@@ -49,7 +50,7 @@ class UpdatePPMCommand extends Command {
 	protected function getArguments()
 	{
 		return array(
-//			array('example', InputArgument::REQUIRED, 'An example argument.'),
+			array('league_details_id', InputArgument::REQUIRED, 'League Id'),
 		);
 	}
 

@@ -87,8 +87,13 @@ class PPM extends Eloquent {
             ->groupBy('ppm.match_id')
 //            ->distinct('ppm.game_type_id')
             ->select(DB::raw('count(distinct(ppm.game_type_id)) as c'))
-            ->pluck('c');
-        return ($c == null)?0:$c;
+            ->get(['c']);
+//        return $c;
+        $count = 0;
+        foreach($c as $co) {
+            $count = $count + $co->c;
+        }
+        return $count;
     }
 
     public static function getPPMForMatchType($type, $match, $user_id)
@@ -147,7 +152,7 @@ class PPM extends Eloquent {
         return $games;
     }
 
-    public static function getPPMForDates($fromdate, $todate, $user_id)
+    public function getPPMForDates($fromdate, $todate, $user_id)
     {
         $games = PPM::where('user_id', '=', $user_id)
             ->join('match', 'match.id', '=', 'ppm.match_id')

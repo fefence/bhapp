@@ -256,12 +256,13 @@ class Updater
         $game->save();
     }
 
-    public static function getPPMMatches()
+    public static function getPPMMatches($league_details_id)
     {
 
         $ids = Series::where('game_type_id', '>', 4)
             ->where('game_type_id', '<', 9)
             ->where('active', '=', 1)
+            ->where('league_details_id', '=', $league_details_id)
             ->lists('end_match_id');
         $matches = Match::whereIn('id', $ids)
             ->get();
@@ -279,10 +280,10 @@ class Updater
         return $res;
     }
 
-    public static function updatePPM()
+    public static function updatePPM($league_details_id)
     {
         $time = time();
-        $matches = self::getPPMMatches();
+        $matches = self::getPPMMatches($league_details_id);
         foreach ($matches as $match) {
             Parser::parseLeagueStandings($match->league_details_id);
             if ($match->resultShort != '-') {
@@ -468,7 +469,7 @@ class Updater
                                     ->subject('PPM game available');
                             });
                         } else {
-                            $newgame->bet = round((12 + $newgame->bsf) / ($newgame->odds - 1), 2, PHP_ROUND_HALF_UP);
+                            $newgame->bet = round((20 + $newgame->bsf) / ($newgame->odds - 1), 2, PHP_ROUND_HALF_UP);
                             $newgame->income = $newgame->bet * $newgame->odds;
                             $newgame->save();
                         }
