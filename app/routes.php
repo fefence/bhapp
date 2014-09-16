@@ -1,6 +1,8 @@
 <?php
 Route::get('/boo', function(){
-    return PPM::ppmConfirmedForLeague('2014-09-15', '2014-09-15', LeagueDetails::find(6), 2);
+//    return Updater::updateDetails(Match::find("I5CrwPc2"));
+    return Match::updateMatchDetailsLivescore(Match::find("I5CrwPc2"));
+//    return PPM::ppmConfirmedForLeague('2014-09-15', '2014-09-15', LeagueDetails::find(6), 2);
 //    Checker::getAllMatches();
 //    return Updater::updatePPM();
 });

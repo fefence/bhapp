@@ -109,15 +109,20 @@ class Match extends Eloquent {
         $dom->preserveWhiteSpace = false;
 
         $table = $dom->getElementById("flashscore");
+//        return $data;
         $rows = $table->getElementsByTagName("tr");
+
         $finished = trim($rows->item(2)->getElementsByTagName('td')->item(0)->nodeValue);
-//        return $finished;
+        if ($finished == null || trim($finished) == '') {
+            $finished = trim($rows->item(3)->getElementsByTagName('td')->item(0)->nodeValue);
+        }
         if($finished == "Finished") {
             $res = explode('-', $rows->item(0)->getElementsByTagName('td')->item(2)->nodeValue);
+            if (count($res) < 2) {
+                $res = explode('-', $rows->item(1)->getElementsByTagName('td')->item(1)->nodeValue);
+            }
             $match->homeGoals = $res[0];
             $match->awayGoals = $res[1];
-//            return $res;
-//            if ($res[0] == $res[1]) {
                 if ($res[0] > $res[1]) {
                     $resultShort = 'H';
                 } else if ($res[0] < $res[1]) {
@@ -125,12 +130,11 @@ class Match extends Eloquent {
                 } else {
                     $resultShort = 'D';
                 }
-//                return $resultShort;
                 $match->resultShort = $resultShort;
         }
+
         $match->save();
         return $match;
-//        return Parser::parseLivescoreForMatch($dom);
     }
 
 	public static function updateMatchDetails($match) {
