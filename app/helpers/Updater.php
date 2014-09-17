@@ -60,8 +60,11 @@ class Updater
 
             $current = Groups::where('league_details_id', '=', $gr->league_details_id)
                 ->where('state', '=', 3)
-                ->where('round', '=', ($gr->round + 1))
+                //->where('round', '=', ($gr->round + 1))
                 ->firstOrFail();
+        } catch (ErrorException $e) {
+            $current = Groups::firstOrCreate(['league_details_id' => $gr->league_details_id, 'state' => 2, 'round' => -1]);
+        }
             $gr->state = 1;
             $gr->save();
             $current->state = 2;
@@ -76,9 +79,7 @@ class Updater
                 Parser::parseMatchesForGroup($current, $next);
 
             }
-        } catch (ErrorException $e) {
 
-        }
 
         $str = Standings::where('league_details_id', '=', $gr->league_details_id)
             ->select(DB::raw('streak, count(*) as c'))
@@ -202,7 +203,7 @@ class Updater
             ->first();
         $gr_to_bsf = GroupToBSF::firstOrNew(['user_id' => $user_id, 'groups_id' => $groups_id]);
         $gr_to_bsf->bsf = $pool->amount;
-        $gr_to_bsf->streak_bigger_than = $i;
+        $gr_to_bsf->streak_bigger_than = $bigger_than;
         if (count($teams) > 0) {
             $bsfpm = $pool->amount / count($teams);
             $bpm = $pool->amount * $setting->multiplier / count($teams);
@@ -408,20 +409,25 @@ class Updater
                                 ->get();
                             if (count($ppms) > 0) {
                                 $league = LeagueDetails::find($match->league_details_id);
-                                $text = "<a href='" . URL::to("/") . "/confirmallppm/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate . "'>" . $next->home . " - " . $next->away . "</a><br>";
+                                $text = "<a href='http://bhapp.eu/confirmallppm/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate . "'>[Confirm]</a>" . $next->home . " - " . $next->away ." or <a href='http://bhapp.eu/ppm/country/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate . "'>[View Group]</a><br>";
+                                $subject = "";
                                 foreach ($ppms as $ppm) {
+                                    if($ppm->game_type_id == 5) {
+                                        $subject = "[" . ucwords($league->country) . "][".$ppm->current_length."][".$next->home." - ".$next->away."] ".round($ppm->bet, 0, PHP_ROUND_HALF_UP)."€ @ ".$ppm->odds." for ".($ppm->income - $ppm->bet - $ppm->bsf)."€";
+                                    }
+                                    //[Confirm] Sevilla - Getafe or [View Group]
                                     if (in_array($ppm->game_type_id, $conf)) {
                                         if ($ppm->confirmed == 1) {
-                                            $text = $text . "<p>" . $ppm->type . " Length: " . $ppm->current_length . " (confirmed)<br>BSF: " . $ppm->bsf . "€<br> Bet: " . $ppm->bet . "€<br>Odds: " . $ppm->odds . "<br>Profit: " . ($ppm->income - $ppm->bet - $ppm->bsf) . "€</p>";
+                                            $text = $text . "<p> (confirmed)[" . $ppm->type . "] [" . $ppm->current_length . "] [BSF: " . $ppm->bsf . "€] " . $ppm->bet . "€ @ " . $ppm->odds . " for " . ($ppm->income - $ppm->bet - $ppm->bsf) . "€</p>";
                                         }
                                     } else {
-                                        $text = $text . "<p>" . $ppm->type . " Length: " . $ppm->current_length . "<br>BSF: " . $ppm->bsf . "€<br> Bet: " . $ppm->bet . "€<br>Odds: " . $ppm->odds . "<br>Profit: " . ($ppm->income - $ppm->bet - $ppm->bsf) . "€</p>";
+                                        $text = $text . "<p>[" . $ppm->type . "] [" . $ppm->current_length . "] [BSF: " . $ppm->bsf . "€] " . $ppm->bet . "€ @ " . $ppm->odds . " for " . ($ppm->income - $ppm->bet - $ppm->bsf) . "€</p>";
                                     }
                                 }
-                                $text = $text . "<a href='" . URL::to("/") . "/ppm/country/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate . "'>Go to group</a>";
-                                Mail::send('emails.email', ['data' => $text], function ($message) use ($user, $league) {
+                                echo $text;
+                                Mail::send('emails.email', ['data' => $text], function ($message) use ($user, $subject) {
                                     $message->to([$user->email => $user->name])
-                                        ->subject("PPM games available for confirm [" . $league->country . "]");
+                                        ->subject($subject);
                                 });
                             }
                         }
@@ -475,7 +481,7 @@ class Updater
                                     ->subject('PPM game available');
                             });
                         } else {
-                            $newgame->bet = round((20 + $newgame->bsf) / ($newgame->odds - 1), 2, PHP_ROUND_HALF_UP);
+                            $newgame->bet = ceil((20 + $newgame->bsf) / ($newgame->odds - 1), 2, PHP_ROUND_HALF_UP);
                             $newgame->income = $newgame->bet * $newgame->odds;
                             $newgame->save();
                         }
