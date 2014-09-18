@@ -4,15 +4,16 @@ Route::get('/boo', function(){
 //    return Match::updateMatchDetailsLivescore(Match::find("I5CrwPc2"));
 //    return PPM::ppmConfirmedForLeague('2014-09-15', '2014-09-15', LeagueDetails::find(6), 2);
 //    Checker::getAllMatches();
-    Updater::update();
-return   Updater::updatePPM(100);
-    Updater::updatePPM(1);
-    Updater::updatePPM(6);
-    Updater::updatePPM(35);
-    Updater::updatePPM(69);
-    Updater::updatePPM(85);
-    Updater::updatePPM(39);
-    Updater::updatePPM(74);
+//    Updater::update();
+//    return Updater::getLastTenMatches(Match::find("prNHTTME"));
+//    return Updater::updatePPM(100);
+//    Updater::updatePPM(1);
+//    Updater::updatePPM(6);
+////    Updater::updatePPM(35);
+//    Updater::updatePPM(69);
+    return Updater::updatePPM(85);
+//    Updater::updatePPM(39);
+//    Updater::updatePPM(74);
 
 });
 

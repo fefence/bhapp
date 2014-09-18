@@ -16,6 +16,7 @@ App::before(function($request)
 	if ($request->path() != 'login' && $request->path() != "sessions") {
 		if (Auth::guest()) return Redirect::guest('login');
 	}
+    define("SEM_COREPHP", 1970);
 });
 
 

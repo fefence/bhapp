@@ -87,9 +87,9 @@ $i = 0;
         <td>@if($d->resultShort == '-')
             <a role="button" @if ($count[$d->id] != 0) class="btn btn-default btn-xs" @else class="btn btn-primary btn-xs" @endif style="width: 50px" href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}" style="font-size: 130%;">+&nbsp({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})<span style='display: none;'>{{$d->match_id}}</span></a>
             @elseif ($d->resultShort == 'D')
-            <a role="button" class="btn btn-success btn-xs" style="width: 50px" href="#" disabled>+&nbsp({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})</a><span style='display: none;'>{{$d->match_id}}</span>
+            <a role="button" class="btn btn-success btn-xs" style="width: 50px" href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}">+&nbsp({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})</a><span style='display: none;'>{{$d->match_id}}</span>
             @else
-            <a role="button" class="btn btn-default btn-xs" style="width: 50px" href="#" disabled>+&nbsp({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})</a><span style='display: none;'>{{$d->match_id}}</span>
+            <a role="button" class="btn btn-default btn-xs" style="width: 50px" href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}">+&nbsp({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})</a><span style='display: none;'>{{$d->match_id}}</span>
             @endif
         </td>
     </tr>
@@ -111,9 +111,8 @@ $i = 0;
         <td class='editable' id="{{$d->game_type_id}}">{{$d->odds}}</td>
         <td>{{$d->income}}</td>
         <td>{{round(($d->income - $d->bsf - $d->bet), 2, PHP_ROUND_HALF_UP)}}</td>
-        <td>@if($d->resultShort == '-')
+        <td>
             <a role="button" @if ($countpl[$d->id] != 0) class="btn btn-default btn-xs" @else class="btn btn-primary btn-xs" @endif style="width: 50px" href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}/true" style="font-size: 130%;">+&nbsp({{ (array_key_exists($d->match_id, $countpl))?$countpl[$d->match_id]:$countpl[$d->id] }})<span style='display: none;'>{{$d->match_id}}</span></a>
-            @endif
         </td>
     </tr>
     @endforeach
