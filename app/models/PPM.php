@@ -152,7 +152,7 @@ class PPM extends Eloquent {
         return $games;
     }
 
-    public function getPPMForDates($fromdate, $todate, $user_id)
+    public static function getPPMForDates($fromdate, $todate, $user_id)
     {
         $games = PPM::where('user_id', '=', $user_id)
             ->join('match', 'match.id', '=', 'ppm.match_id')
