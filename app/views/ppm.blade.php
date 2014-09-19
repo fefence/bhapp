@@ -4,7 +4,7 @@
 <!-- breadcrumbs -->
 <?php
 $list = array('ppm' => URL::to("/ppm"));
-$active = '<img src="/images/'.strtoupper($league->country).'.png"> '.$league->country." <a href='http://www.betexplorer.com/soccer/".$league->country."/".$league->fullName."'>[betexpl]</a> <a href='http://www.sportsats.com/soccer/".$league->country."/".$league->fullName."/streaks/#no-raws'>[sportstats]</a>";
+$active = '<img src="/images/'.strtoupper($league->country).'.png"> '.$league->country." <a href='http://www.betexplorer.com/soccer/".$league->country."/".$league->fullName."'>[betexpl]</a> <a href='http://www.sportstats.com/soccer/".$league->country."/".$league->fullName."/streaks/#no-raws'>[sportstats]</a>";
 $elements = array('active' => $active, 'list' => $list);
 $i = 0;
 ?>
@@ -87,9 +87,9 @@ $i = 0;
         <td>@if($d->resultShort == '-')
             <a role="button" @if ($count[$d->id] != 0) class="btn btn-default btn-xs" @else class="btn btn-primary btn-xs" @endif style="width: 50px" href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}" style="font-size: 130%;">+&nbsp({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})<span style='display: none;'>{{$d->match_id}}</span></a>
             @elseif ($d->resultShort == 'D')
-            <a role="button" class="btn btn-success btn-xs" style="width: 50px" href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}">+&nbsp({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})</a><span style='display: none;'>{{$d->match_id}}</span>
+            <a role="button" class="btn btn-success btn-xs" style="width: 50px" disabled href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}">+&nbsp({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})</a><span style='display: none;'>{{$d->match_id}}</span>
             @else
-            <a role="button" class="btn btn-default btn-xs" style="width: 50px" href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}">+&nbsp({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})</a><span style='display: none;'>{{$d->match_id}}</span>
+            <a role="button" class="btn btn-default btn-xs" style="width: 50px" disabled href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}">+&nbsp({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})</a><span style='display: none;'>{{$d->match_id}}</span>
             @endif
         </td>
     </tr>
