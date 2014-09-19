@@ -290,9 +290,9 @@ class Updater
     {
         $time = time();
 
-        $sem = sem_get(SEM_COREPHP, 1);
+//        $sem = sem_get("SEM_COREPHP", 1);
 
-        if (sem_acquire($sem)) {
+//        if (sem_acquire($sem)) {
             $matches = self::getPPMMatches($league_details_id);
             foreach ($matches as $match) {
                 Parser::parseLeagueStandings($match->league_details_id);
@@ -446,9 +446,9 @@ class Updater
 
                 }
             }
-            sem_release($sem);
+//            sem_release($sem);
 
-        }
+//        }
         return (time() - $time);
 
     }
