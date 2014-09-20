@@ -413,7 +413,7 @@ class Updater
                                     ->orderBy('game_type_id')
                                     ->get();
                                 if (count($ppms) > 0) {
-                                    $league = LeagueDetails::find($match->league_details_id);
+                                    $league = LeagueDetails::find($next->league_details_id);
                                     $text = "";
 //                                        "<span  style='font-size: 18px;'><a href='".URL::to("/")."/confirmallppm/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate . "'>[confirm]</a></span><br><br>" . $next->home . " - " . $next->away . "<br>
 //                                    <p>" . Updater::getLastTenMatches($match) . "</p>";
@@ -426,14 +426,14 @@ class Updater
                                         }
                                         if (in_array($ppm->game_type_id, $conf)) {
                                             if ($ppm->confirmed == 1) {
-                                                $text = $text . "<p> (confirmed)[" . $ppm->type . "] [" . $ppm->current_length . "] [BSF: " . $ppm->bsf . "€] " . round($ppm->bet, 0, PHP_ROUND_HALF_UP) . "€ @ " . $ppm->odds . " for " . ($ppm->income - $ppm->bet - $ppm->bsf) . "€</p>";
+                                                $text = $text . "<p> (confirmed)[" . $ppm->type . "] [" . $ppm->current_length . "] [BSF: " . $ppm->bsf . "€] " . round($ppm->bet, 0) . "€ @ " . $ppm->odds . " for " . ($ppm->income - $ppm->bet - $ppm->bsf) . "€</p>";
                                             }
                                         } else {
-                                            $text = $text . "<p>[" . $ppm->type . "] [" . $ppm->current_length . "] [BSF: " . $ppm->bsf . "€] " . $ppm->bet . "€ @ " . round($ppm->bet, 0, PHP_ROUND_HALF_UP) . " for " . ($ppm->income - $ppm->bet - $ppm->bsf) . "€</p>";
+                                            $text = $text . "<p>[" . $ppm->type . "] [" . $ppm->current_length . "] [BSF: " . $ppm->bsf . "€] " . round($ppm->bet, 0) . "€ @ " . $ppm->odds . " for " . ($ppm->income - $ppm->bet - $ppm->bsf) . "€</p>";
                                         }
                                     }
                                     $link_to_group = URL::to("/") . "/ppm/country/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate;
-                                    Mail::send('emails.confirm', ['body' => $text, 'link_to_group' => $link_to_group, 'confirm_link' => $confirm_link, 'res' => $res, 'home' => $match->home, 'away' => $match->away], function ($message) use ($user, $subject) {
+                                    Mail::send('emails.confirm', ['body' => $text, 'link_to_group' => $link_to_group, 'confirm_link' => $confirm_link, 'res' => $res, 'home' => $next->home, 'away' => $next->away], function ($message) use ($user, $subject) {
                                         $message->to([$user->email => $user->name])
                                             ->subject($subject);
                                     });
@@ -445,9 +445,6 @@ class Updater
                     }
 
                 }
-//            }
-//            sem_release($sem);
-//
             }
         } catch (ErrorException $e) {
             Mail::send('emails.email', ['data' => "Error in update of league $league_details_id"], function ($message){
