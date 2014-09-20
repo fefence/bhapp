@@ -397,6 +397,41 @@ class Parser
                 $m->save();
             }
         }
+
+//        $curr = ;
+//        return $curr->get();
+        $teams = Standings::where('league_details_id', '=', $current->league_details_id)->lists('team');
+        $tmp = array();
+        foreach ($teams as $team) {
+            $matches = $current->matches()->orderBy('matchDate')->where(function ($q) use ($team) {
+                $q->where('home', '=', $team)
+                    ->orWhere('away', '=', $team);
+            })
+                ->orderBy('matchDate', 'asc')
+                ->lists('id');
+            if (count($matches) > 1) {
+//                return $matches;
+                for($i = 1; $i < count($matches); $i ++) {
+                    array_push($tmp, $matches[$i]);
+                }
+            }
+        }
+        if(count($tmp) > 0) {
+            $next_matches = $next->matches()->get();
+            foreach($next_matches as $n) {
+                $n->groups_id = 0;
+                $n->save();
+            }
+            foreach($tmp as $id) {
+                $match = Match::find($id);
+                $match->groups_id = $next->id;
+                $match->save();
+                $next->round = $match->round;
+                $next->save();
+            }
+        }
+
+//        return $next;
     }
 
     public static function parseMatchesForUSA($current, $next)
@@ -612,9 +647,9 @@ class Parser
 
     private static function get_http_response_code($url)
     {
-        try{
-        $headers = get_headers($url);
-        } catch (ErrorException $e){
+        try {
+            $headers = get_headers($url);
+        } catch (ErrorException $e) {
             echo $url;
             return 404;
         }

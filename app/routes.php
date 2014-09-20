@@ -1,20 +1,9 @@
 <?php
 Route::get('/boo', function(){
-//    return Updater::updateDetails(Match::find("I5CrwPc2"));
-//    return Match::updateMatchDetailsLivescore(Match::find("I5CrwPc2"));
-//    return PPM::ppmConfirmedForLeague('2014-09-15', '2014-09-15', LeagueDetails::find(6), 2);
-//    Checker::getAllMatches();
-//    Updater::update();
-//    return Updater::getLastTenMatches(Match::find("prNHTTME"));
-//    return Updater::updatePPM(100);
-//    Updater::updatePPM(1);
-//    Updater::updatePPM(6);
-////    Updater::updatePPM(35);
-    return Updater::updatePPM(69);
-//    return Updater::updatePPM(85);
-//    Updater::updatePPM(39);
-//    Updater::updatePPM(1654);
-//    Updater::updateGroup(1654);
+
+    $current = Groups::find(1665);
+    $next = Groups::find(1705);
+    return Parser::parseMatchesForGroup($current, $next);
 });
 
 Route::get('/settings2', function(){

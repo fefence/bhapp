@@ -170,7 +170,6 @@ class Updater
         $from = $setting->from;
         $teams = array();
         $bigger_than = 0;
-        $i = 0;
         if ($setting->auto == '2') {
             $teams = Standings::where('league_details_id', '=', $gr->league_details_id)
                 ->where('streak', '>=', $from)->lists('team', 'id');
