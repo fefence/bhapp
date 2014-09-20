@@ -612,7 +612,12 @@ class Parser
 
     private static function get_http_response_code($url)
     {
+        try{
         $headers = get_headers($url);
+        } catch (ErrorException $e){
+            echo $url;
+            return 404;
+        }
         return substr($headers[0], 9, 3);
     }
 

@@ -293,6 +293,7 @@ class Updater
 //        $sem = sem_get("SEM_COREPHP", 1);
 
 //        if (sem_acquire($sem)) {
+        try {
             $matches = self::getPPMMatches($league_details_id);
             foreach ($matches as $match) {
                 Parser::parseLeagueStandings($match->league_details_id);
@@ -417,7 +418,7 @@ class Updater
                                     $text = "";
 //                                        "<span  style='font-size: 18px;'><a href='".URL::to("/")."/confirmallppm/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate . "'>[confirm]</a></span><br><br>" . $next->home . " - " . $next->away . "<br>
 //                                    <p>" . Updater::getLastTenMatches($match) . "</p>";
-                                    $confirm_link = URL::to("/")."/confirmallppm/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate;
+                                    $confirm_link = URL::to("/") . "/confirmallppm/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate;
                                     $res = Updater::getLastTenMatches($match);
                                     $subject = "";
                                     foreach ($ppms as $ppm) {
@@ -432,7 +433,7 @@ class Updater
                                             $text = $text . "<p>[" . $ppm->type . "] [" . $ppm->current_length . "] [BSF: " . $ppm->bsf . "€] " . $ppm->bet . "€ @ " . round($ppm->bet, 0, PHP_ROUND_HALF_UP) . " for " . ($ppm->income - $ppm->bet - $ppm->bsf) . "€</p>";
                                         }
                                     }
-                                    $link_to_group = URL::to("/")."/ppm/country/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate;
+                                    $link_to_group = URL::to("/") . "/ppm/country/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate;
                                     Mail::send('emails.confirm', ['body' => $text, 'link_to_group' => $link_to_group, 'confirm_link' => $confirm_link, 'res' => $res, 'home' => $match->home, 'away' => $match->away], function ($message) use ($user, $subject) {
                                         $message->to([$user->email => $user->name])
                                             ->subject($subject);
@@ -445,10 +446,17 @@ class Updater
                     }
 
                 }
-            }
+//            }
 //            sem_release($sem);
-
-//        }
+//
+            }
+        } catch (ErrorException $e) {
+            Mail::send('emails.email', ['data' => "Error in update of league $league_details_id"], function ($message){
+                $message->to(['wpopowa@gmail.com' => 'Vesela Popova'])
+                    ->subject("Exception in ppm update");
+            });
+            return $e;
+        }
         return (time() - $time);
 
     }
@@ -495,31 +503,18 @@ class Updater
                         $placeholder->active = 0;
                         $placeholder->save();
                         $newgame = $newg;
-//                                        $newgame = PPM::firstOrNew(['user_id' => $sett->user_id, 'series_id' => $serie->id, 'match_id' => $n->id, 'game_type_id' => $i, 'country' => $serie->team, 'confirmed' => 0]);
                     }
                 } else {
                     $newgame->bet = 0;
                     $newgame->income = $newgame->bet * $newgame->odds;
                     $newgame->save();
-                    try {
-                        $warn = Parser::parseMatchOddsForGames([$newgame]);
-                        $league = LeagueDetails::find($newgame->league_details_id);
-                        $user = User::find($newgame->user_id);
-                        if ($warn) {
-                            $text = "Odds for match " . $n->home . " - " . $n->away . " are not retrieved correctly.<br>Please go to " . URL::to("/") . $league->country . "/" . $n->matchDate . "/" . $n->matchDate . " to confirm the game manually";
-                            Mail::send('emails.email', ['data' => $text], function ($message) use ($user) {
-                                $message->to([$user->email => $user->name])
-                                    ->subject('PPM game available');
-                            });
-                        } else {
-                            $newgame->bet = ceil((20 + $newgame->bsf) / ($newgame->odds - 1));
-                            $newgame->income = $newgame->bet * $newgame->odds;
-                            $newgame->save();
-                        }
-                    } catch (ErrorException $e) {
-                        print_r($e);
+                    $warn = Parser::parseMatchOddsForGames([$newgame]);
+                    if ($warn) {
+                    } else {
+                        $newgame->bet = ceil((20 + $newgame->bsf) / ($newgame->odds - 1));
+                        $newgame->income = $newgame->bet * $newgame->odds;
+                        $newgame->save();
                     }
-//                    PPMPlaceHolder::createPlaceholder($newgame);
 
                 }
             }

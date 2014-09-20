@@ -28,7 +28,7 @@ class Checker
         if ($send) {
             Mail::send('emails.email', ['data' => $text], function ($message) use ($subj){
                 $message->to(['wpopowa@gmail.com' => 'Vesela Popova'])
-                    ->subject("[test]".$subj);
+                    ->subject($subj);
             });
         }
         return $text;

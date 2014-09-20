@@ -10,12 +10,11 @@ Route::get('/boo', function(){
 //    Updater::updatePPM(1);
 //    Updater::updatePPM(6);
 ////    Updater::updatePPM(35);
-//    Updater::updatePPM(69);
+    return Updater::updatePPM(69);
 //    return Updater::updatePPM(85);
 //    Updater::updatePPM(39);
 //    Updater::updatePPM(1654);
-    Updater::updateGroup(1654);
-
+//    Updater::updateGroup(1654);
 });
 
 Route::get('/settings2', function(){
