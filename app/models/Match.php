@@ -419,7 +419,7 @@ class Match extends Eloquent {
                     });
             })
             ->where('season', '=', $match->season)
-            ->where('resultShort', '=', '-')
+            ->where('resultShort', '<>', '-')
             ->orderBy('matchDate', "desc")
             ->orderBy('matchTime', "desc")
             ->take(50)
