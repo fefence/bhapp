@@ -1,6 +1,13 @@
 @extends('layout')
 
 @section('content')
+<div class="row">
+    <div class="col-xs-12">
+        @foreach($matches as $match)
+            @include('layouts.partials.square', ['data' => ['match'=>$match], 'game_type' => $type])
+        @endforeach
+    </div>
+</div>
 <table class="noMargin noPadding">
     @foreach($games as $game)
     <tr>

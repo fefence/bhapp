@@ -408,5 +408,23 @@ class Match extends Eloquent {
             ->get();
         return $matches;
     }
+
+    public static function last40matches($match) {
+        $matches = Match::where('league_details_id', '=', $match->league_details_id)
+            ->where(function ($q) use ($match) {
+                $q->where('matchDate', '<', $match->matchDate)
+                    ->orWhere(function ($query) use ($match) {
+                        $query->where('matchDate', '=', $match->matchDate)
+                            ->where('matchTime', '<=', $match->matchTime);
+                    });
+            })
+            ->where('season', '=', $match->season)
+            ->orderBy('matchDate', "desc")
+            ->orderBy('matchTime', "desc")
+            ->take(50)
+            ->get();
+        $arr = \Illuminate\Support\Collection::make($matches->all());
+        return $arr->reverse();
+    }
 }
 

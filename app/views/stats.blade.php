@@ -205,7 +205,7 @@
                   <?php
                     $d = array('team' => $team, 'match' => $s);
                   ?>
-                  @include('square
+<!--                  @include('square-->
               @endforeach
               </td>
           </tr>

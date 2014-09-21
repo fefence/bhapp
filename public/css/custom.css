@@ -83,6 +83,12 @@ table th input:focus {
   font-size: 90%;
   border: none;  
 }
+.w26 {
+    height: 18px !important;
+    width: 20px !important;
+    margin: 0px !important;
+    padding: 0px !important;
+}
 /* tables inside the match details (+) view */
 table.matchDetails {
   width: 100%;
