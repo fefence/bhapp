@@ -86,7 +86,7 @@ $i = 0;
         <td>{{round(($d->income - $d->bsf - $d->bet), 2, PHP_ROUND_HALF_UP)}}</td>
         <td>@if($d->resultShort == '-')
             <a role="button" @if ($count[$d->id] != 0) class="btn btn-default btn-xs" @else class="btn btn-primary btn-xs" @endif style="width: 50px" href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}" style="font-size: 130%;">+&nbsp({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})<span style='display: none;'>{{$d->match_id}}</span></a>
-            @elseif ($d->resultShort == 'D')
+            @elseif ($d->resultShort == 'D' && ($d->type == '1X2' || ($d->type == '0-0' && $d->homeGoals == 0) || ($d->type == '1-1' && $d->homeGoals == 1) || ($d->type == '2-2' && $d->homeGoals == 2)))
             <a role="button" class="btn btn-success btn-xs" style="width: 50px" disabled href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}">+&nbsp({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})</a><span style='display: none;'>{{$d->match_id}}</span>
             @else
             <a role="button" class="btn btn-default btn-xs" style="width: 50px" disabled href="/confirm/{{$d->games_id}}/{{$d->game_type_id}}">+&nbsp({{ (array_key_exists($d->match_id, $count))?$count[$d->match_id]:$count[$d->id] }})</a><span style='display: none;'>{{$d->match_id}}</span>

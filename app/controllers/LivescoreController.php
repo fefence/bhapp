@@ -33,7 +33,8 @@ class LivescoreController extends \BaseController
             $ms = array();
         }
         $pps = Games::where('user_id', '=', $user_id)->lists('match_id');
-        $free = FreeGames::where('user_id', '=', $user_id)->lists('match_id');
+        $free = FreeGames::where('user_id', '=', $user_id)
+            ->lists('match_id');
 
         $all_ids = array_merge(array_merge($ms, $pps), $free);
         $matches = Match::getAllMatchesForDates($fromdate, $todate, $todate2, $all_ids);
