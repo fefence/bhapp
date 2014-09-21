@@ -54,7 +54,7 @@ return array(
 	|
 	*/
 
-	'from' => array('address' => "wpopowa@gmail.com", 'name' => "bhapp admin"),
+	'from' => array('address' => "bhappeu@gmail.com", 'name' => "bhapp.eu"),
 
 	/*
 	|--------------------------------------------------------------------------

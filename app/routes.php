@@ -1,9 +1,10 @@
 <?php
 Route::get('/boo', function(){
 
-    $current = Groups::find(1665);
-    $next = Groups::find(1705);
-    return Parser::parseMatchesForGroup($current, $next);
+    return Updater::updatePPM(35);
+//    $current = Groups::find(1665);
+//    $next = Groups::find(1705);
+//    return Parser::parseMatchesForGroup($current, $next);
 });
 
 Route::get('/settings2', function(){

@@ -420,20 +420,27 @@ class Updater
                                     $confirm_link = URL::to("/") . "/confirmallppm/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate;
                                     $res = Updater::getLastTenMatches($match);
                                     $subject = "";
+                                    $bodyarr = array();
                                     foreach ($ppms as $ppm) {
                                         if ($ppm->game_type_id == 5) {
                                             $subject = "[" . ucwords($league->country) . "][" . $ppm->current_length . "][" . $next->home . " - " . $next->away . "] " . round($ppm->bet, 0, PHP_ROUND_HALF_UP) . "€ @ " . $ppm->odds . " for " . ($ppm->income - $ppm->bet - $ppm->bsf) . "€";
                                         }
+                                        $bodyarr[$ppm->type] = array();
+                                        $bodyarr[$ppm->type]['length'] = $ppm->current_length;
+                                        $bodyarr[$ppm->type]['bsf'] = $ppm->bsf;
+                                        $bodyarr[$ppm->type]['bet'] = round($ppm->bet, 0);
+                                        $bodyarr[$ppm->type]['odds'] = $ppm->odds;
+                                        $bodyarr[$ppm->type]['profit'] = ($ppm->income - $ppm->bet - $ppm->bsf);
+                                        $bodyarr[$ppm->type]['confirmed'] = "";
                                         if (in_array($ppm->game_type_id, $conf)) {
                                             if ($ppm->confirmed == 1) {
-                                                $text = $text . "<p> (confirmed)[" . $ppm->type . "] [" . $ppm->current_length . "] [BSF: " . $ppm->bsf . "€] " . round($ppm->bet, 0) . "€ @ " . $ppm->odds . " for " . ($ppm->income - $ppm->bet - $ppm->bsf) . "€</p>";
+                                                $bodyarr[$ppm->type]['confirmed'] = "(confirmed)";
                                             }
-                                        } else {
-                                            $text = $text . "<p>[" . $ppm->type . "] [" . $ppm->current_length . "] [BSF: " . $ppm->bsf . "€] " . round($ppm->bet, 0) . "€ @ " . $ppm->odds . " for " . ($ppm->income - $ppm->bet - $ppm->bsf) . "€</p>";
                                         }
                                     }
+//                                    return $bodyarr;
                                     $link_to_group = URL::to("/") . "/ppm/country/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate;
-                                    Mail::send('emails.confirm', ['body' => $text, 'link_to_group' => $link_to_group, 'confirm_link' => $confirm_link, 'res' => $res, 'home' => $next->home, 'away' => $next->away], function ($message) use ($user, $subject) {
+                                    Mail::send('emails.confirm', ['body' => $bodyarr, 'link_to_group' => $link_to_group, 'confirm_link' => $confirm_link, 'res' => $res, 'home' => $next->home, 'away' => $next->away], function ($message) use ($user, $subject) {
                                         $message->to([$user->email => $user->name])
                                             ->subject($subject);
                                     });
@@ -470,7 +477,7 @@ class Updater
             ->where('season', '=', $match->season)
             ->orderBy('matchDate', "desc")
             ->orderBy('matchTime', "desc")
-            ->take(20)
+            ->take(40)
             ->get(['resultShort']);
 
         $arr = \Illuminate\Support\Collection::make($matches->all());
