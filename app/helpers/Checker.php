@@ -61,6 +61,8 @@ class Checker
             $date = $m->matchDate;
             $match = Parser::parseTimeDate($m);
             if ($time != $match->matchTime || $date != $match->matchDate) {
+                $next_gr = Groups::where('league_detials_id', '=', $match->league_details_id)->where('state', '=', 3);
+                Parser::parseMatchesForGroup(Groups::find($match->groups_id), $next_gr);
                 $send = true;
                 $count = $count + 1;
                 $league = LeagueDetails::find($match->league_details_id);

@@ -33,7 +33,11 @@ class LivescoreController extends \BaseController
             $ms = array();
         }
         $pps = Games::where('user_id', '=', $user_id)->lists('match_id');
-        $free = FreeGames::where('user_id', '=', $user_id)
+        $free = FreeGames::where('freeplay_teams.user_id', '=', $user_id)
+            ->where('freeplay.user_id', '=', $user_id)
+            ->join('freeplay_teams', "freeplay_teams.team_id", '=', 'freeplay.team_id')
+            ->where('hidden', '=', 0)
+            ->select(DB::raw('freeplay.match_id as match_id'))
             ->lists('match_id');
 
         $all_ids = array_merge(array_merge($ms, $pps), $free);

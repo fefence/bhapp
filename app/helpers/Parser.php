@@ -314,6 +314,7 @@ class Parser
 
     public static function parseMatchesForGroup($current, $next)
     {
+        $start = time();
         $baseUrl = "http://www.betexplorer.com/soccer/";
         $tail = "fixtures/";
 
@@ -389,6 +390,7 @@ class Parser
         }
         $curr = $current->matches()->orderBy('matchDate')->get();
 //        return $current;
+//        return $next;
         $firstOfNext = $next->matches()->orderBy('matchDate')->first();
 //        return $firstOfNext;
         foreach ($curr as $m) {
@@ -426,12 +428,22 @@ class Parser
                 $match = Match::find($id);
                 $match->groups_id = $next->id;
                 $match->save();
-                $next->round = $match->round;
+                $games = Games::where('match_id', '=', $id)->get();
+                foreach($games as $game) {
+                    if ($game->confirmed == 1) {
+                        $pool = Pools::where('user_id', '=', $game->user_id)->where('league_details_id', '=', $match->league_details_id)->where('game_type_id', '=', 1)->first();
+                        $pool->account = $pool->account + $game->bet;
+                        $pool->save();
+//                        $pool->account = $pool->account + $game->bet;
+                    }
+                    $game->delete();
+                }
+//                $next->round = $match->round;
                 $next->save();
             }
         }
 
-//        return $next;
+        return (time() - $start)."sec.";
     }
 
     public static function parseMatchesForUSA($current, $next)
