@@ -61,13 +61,22 @@
         @else
         <td></td>
         @endif
-        <td @if($d['match']->resultShort == '-' && $d['match']->matchTime <= date('H:i:s', time()) && $d['match']->matchDate <= date('Y-m-d', time())) class="livescoreResult"@endif style="text-align: center;">
+        <?php
+            if($d['match']->resultShort == '-' && $d['match']->matchTime <= date('H:i:s', time()) && $d['match']->matchDate <= date('Y-m-d', time())) {
+                $active_livescore = true;
+            } else {
+                $active_livescore = false;
+            }
+        ?>
+        <td @if($active_livescore) class="livescoreResultTdActive" @else class="livescoreResultTdInactive" @endif>
             <div class="noPadding noMargin">
-            @if ($d['match']->resultShort != '-')
-            {{$d['match']->homeGoals}}:{{$d['match']->awayGoals}}
-            @else
-            -
-            @endif
+                <span @if($active_livescore) class="livescoreResultText" @endif>
+                    @if ($d['match']->resultShort != '-')
+                    {{$d['match']->homeGoals}}:{{$d['match']->awayGoals}}
+                    @else
+                    -
+                    @endif
+                </span>
             </div>
         </td>
         <td>{{$d['match']->resultShort}}</td>
@@ -89,7 +98,7 @@
             "sPaginationType": "full_numbers",
             "aaSorting": []
         });
-        $("#matches tr .livescoreResult div").each(function() {
+        $("#matches tr .livescoreResultTdActive div .livescoreResultText").each(function() {
             var id =$(this).closest('tr').prop('id');
             var td = $(this);
             $.post( "/getres/" + id, function( data ) {
@@ -97,7 +106,7 @@
             });
         });
         setInterval(function() {
-            $("#matches tr .livescoreResult div").each(function() {
+            $("#matches tr .livescoreResultTdActive div .livescoreResultText").each(function() {
                 var id =$(this).closest('tr').prop('id');
                 var td = $(this);
                 $.post( "/getres/" + id, function( data ) {
@@ -107,7 +116,7 @@
 
         }, 30000);
         setInterval(function() {
-            $("#matches tr .livescoreResult div span").each(function() {
+            $("#matches tr .livescoreResultTdActive div span span").each(function() {
                 $(this).toggleClass('livescoreIndicator');
             })
         }, 1000);

@@ -110,8 +110,14 @@ table.matchDetails td {
 .livescoreIndicator {
     visibility: hidden;
 }
-.livescoreResult {
+.livescoreResultTdInactive {
+    text-align: center;
+}
+.livescoreResultTdActive {
     background-color: #FA6900;
+    text-align: center;
+}
+.livescoreResultText {
     color: #E0E4CC;
     font-weight: bold;
     font-size: 120%;
