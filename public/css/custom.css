@@ -120,9 +120,7 @@ table.matchDetails td {
 .livescoreResultText {
     color: #E0E4CC;
     font-weight: bold;
-    font-size: 120%;
-    margin: 0px;
-    padding: 0px;
+    font-size: 1.1em;
 }
 .statsBrowser {
   
