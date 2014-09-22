@@ -106,9 +106,9 @@
         }, 30000);
         setInterval(function() {
             $("#matches tr .res span").each(function() {
-                $(this).toggleClass('oddsColumn');
+                $(this).toggleClass('livescoreIndicator');
             })
-        }, 2000);
+        }, 1000);
     });
 </script>
 

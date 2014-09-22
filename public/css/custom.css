@@ -107,6 +107,9 @@ table.matchDetails td {
     background-color: #eeeeee;
     text-align: center;
 }
+.livescoreIndicator {
+    visibility: hidden;
+}
 .statsBrowser {
   
 }
