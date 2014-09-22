@@ -96,7 +96,7 @@
                 });
             })
 
-        }, 5000);
+        }, 30000);
         setInterval(function() {
             $("#matches tr .res span").each(function() {
                 $(this).toggleClass('oddsColumn');
