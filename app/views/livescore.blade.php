@@ -68,7 +68,7 @@
                 $active_livescore = false;
             }
         ?>
-        <td style="padding: 0px;" @if($active_livescore) class="livescoreResultTdActive" @else class="livescoreResultTdInactive" @endif>
+        <td @if($active_livescore) class="livescoreResultTdActive" @else class="livescoreResultTdInactive" @endif>
             <div>
                 <span @if($active_livescore) class="livescoreResultText" @endif>
                     @if ($d['match']->resultShort != '-')
