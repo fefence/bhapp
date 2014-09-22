@@ -117,8 +117,39 @@ class LivescoreController extends \BaseController
         @$dom->loadHTML($html);
 
 //        return $html;
-        return View::make('matchfeed')->with(['html' => Parser::parseLivescoreForMatch($dom)]);
+//        return View::make('matchfeed')->with(['html' => Parser::parseLivescoreForMatch($dom)]);
         return $html;
+    }
+
+    public static function getMatchCurrentRes($id) {
+        $html = LivescoreController::matchScore($id);
+        $dom = new DOMDocument;
+        $dom->preserveWhiteSpace = FALSE;
+        @$dom->loadHTML($html);
+        $finder = new DomXPath($dom);
+        $classname="p1_home";
+        $h1 = $finder->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' $classname ')]");
+        $home = '';
+        $away = '';
+        if ($h1->length > 0) {
+            $home = $h1->item(0)->nodeValue;
+        }
+        $classname="p2_home";
+        $h2 = $finder->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' $classname ')]");
+        if ($h2->length > 0) {
+            $home = $home + $h2->item(0)->nodeValue;
+        }
+        $classname="p1_away";
+        $a1 = $finder->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' $classname ')]");
+        if ($a1->length > 0) {
+            $away = $a1->item(0)->nodeValue;
+        }
+        $classname="p2_away";
+        $a2 = $finder->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' $classname ')]");
+        if ($a2->length > 0) {
+            $away = $away + $a2->item(0)->nodeValue;
+        }
+        return $home." <span>:</span> ".$away;
     }
 
 

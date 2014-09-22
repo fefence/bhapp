@@ -10,12 +10,18 @@ class StatsController extends BaseController
         $drawCount = Match::matchesForSeason($league->id, $season)->where('resultShort', '=', 'D')->count();
         $homeCount = Match::matchesForSeason($league->id, $season)->where('resultShort', '=', 'H')->count();
         $awayCount = Match::matchesForSeason($league->id, $season)->where('resultShort', '=', 'A')->count();
-        $seq = $this->getSequences($country, $leagueName, $season);
+        $seq = array();//$this->getSequences($country, $leagueName, $season);
         $sSeq = Match::matchesForSeason($league->id, $season)->get();
+        $longest = SeriesController::getLongestPPMSeries($league->id, $season);
         $pps1x2 = SeriesController::getSeriesForMatches($league->id, $season, 1);
         $pps00 = SeriesController::getSeriesForMatches($league->id, $season, 2);
         $pps11 = SeriesController::getSeriesForMatches($league->id, $season, 3);
         $pps22 = SeriesController::getSeriesForMatches($league->id, $season, 4);
+        $ppm1x2 = SeriesController::getSeriesForSeason($league->id, 5, $season);
+        $ppm00 = SeriesController::getSeriesForSeason($league->id, 6, $season);
+        $ppm11 = SeriesController::getSeriesForSeason($league->id, 7, $season);
+        $ppm22 = SeriesController::getSeriesForSeason($league->id, 8, $season);
+//return $ppm1x2;
         $homeGoals = Match::matchesForSeason($league->id, $season)->sum('homeGoals');
         $awayGoals = Match::matchesForSeason($league->id, $season)->sum('awayGoals');
         $goals = $homeGoals + $awayGoals;
@@ -38,9 +44,14 @@ class StatsController extends BaseController
             'seq' => $seq,
             'sSeq' => $sSeq,
             'pps1x2' => $pps1x2,
+            'ppm1x2' => $ppm1x2,
+            'ppm00' => $ppm00,
+            'ppm11' => $ppm11,
+            'ppm22' => $ppm22,
             'pps00' => $pps00,
             'pps11' => $pps11,
             'pps22' => $pps22,
+            'longest' => $longest,
             'goals' => $goals,
             'homeGoals' => $homeGoals,
             'awayGoals' => $awayGoals,

@@ -44,7 +44,7 @@
     </thead>
     <tbody>
     @foreach($matches as $d)
-    <tr class="{{$d['match']->match_id}}">
+    <tr id="{{$d['match']->id}}">
         @if(isset($d['game']))
         <td><span style="font-weight: bold">{{date('d M', strtotime($d['match']->matchDate))}}</span></td>
         <td><span style="font-weight: bold">{{substr($d['match']->matchTime, 0, strlen($d['match']->matchTime)-3)}}</span></td>
@@ -61,7 +61,7 @@
         @else
         <td></td>
         @endif
-        <td>
+        <td @if($d['match']->resultShort == '-' && $d['match']->matchTime <= date('H:i:s', time()) && $d['match']->matchDate <= date('Y-m-d', time())) class="res" @endif>
             @if ($d['match']->resultShort != '-')
             {{$d['match']->homeGoals}}:{{$d['match']->awayGoals}}
             @else
@@ -87,6 +87,21 @@
             "sPaginationType": "full_numbers",
             "aaSorting": []
         });
+        setInterval(function() {
+            $("#matches tr .res").each(function() {
+                var id =$(this).closest('tr').prop('id');
+                var td = $(this);
+                $.post( "/getres/" + id, function( data ) {
+                    td.html(data);
+                });
+            })
+
+        }, 5000);
+        setInterval(function() {
+            $("#matches tr .res span").each(function() {
+                $(this).toggleClass('oddsColumn');
+            })
+        }, 2000);
     });
 </script>
 

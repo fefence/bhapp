@@ -149,7 +149,7 @@ $i = 0;
 <!--        <td>-</td>-->
         <td>-</td>
         <td>-</td>
-        <td><a href="/addgame/{{$dd->groups_id}}/{{$dd->standings_id}}/{{$dd->id}}" style="font-size: 130%;">+</a> <span style='display: none;'>{{$dd->id}}</span>
+        <td><a role="button" class="btn btn-xs btn-info" style="width: 50px" href="/addgame/{{$dd->groups_id}}/{{$dd->standings_id}}/{{$dd->id}}">+</a> <span style='display: none;'>{{$dd->id}}</span>
         </td>
     </tr>
     @endforeach

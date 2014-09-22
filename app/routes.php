@@ -1,7 +1,7 @@
 <?php
 Route::get('/boo/{season}/{id}', function($season, $id){
-//    return SeriesController::calculatePPMSeries($season, $id);
-    Updater::updateGroup(1652);
+    return SeriesController::calculatePPMSeries($season, $id);
+//    Updater::updateGroup(1652);
 });
 
 Route::get('/settings2', function(){

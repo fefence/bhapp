@@ -205,7 +205,7 @@
                   <?php
                     $d = array('team' => $team, 'match' => $s);
                   ?>
-<!--                  @include('square-->
+                  @include('layouts.partials.square', array('data' => $d))
               @endforeach
               </td>
           </tr>
@@ -236,7 +236,9 @@
                 @if($s->current_length > 1)
                   {{ $s->current_length - 1}}
                 @endif
-              @endforeach
+                  @include('layouts.partials.square', array('data' => $d))
+
+                  @endforeach
               </td>
           </tr>
       @endforeach
@@ -254,7 +256,9 @@
                 @if($s->current_length > 1)
                   {{ $s->current_length - 1}}
                 @endif
-              @endforeach
+                  @include('layouts.partials.square', array('data' => $d))
+
+                  @endforeach
               </td>
           </tr>
       @endforeach
@@ -272,7 +276,9 @@
                 @if($s->current_length > 1)
                   {{ $s->current_length - 1}}
                 @endif
-              @endforeach
+                  @include('layouts.partials.square', array('data' => $d))
+
+                  @endforeach
               </td>
           </tr>
       @endforeach
@@ -286,11 +292,12 @@
               <td><strong>{{$team}}</strong></td>
               <td>
               @foreach($series as $s)
-
                 @if($s->current_length > 1)
                   {{ $s->current_length - 1}}
                 @endif
-              @endforeach
+                  @include('layouts.partials.square', array('data' => $d))
+
+                  @endforeach
               </td>
           </tr>
       @endforeach
@@ -309,13 +316,118 @@
               <?php
                 $d = array('team' => '', 'match' => $sSeq);
               ?>
-              @include('layouts.partials.square', array([team]))
+              @include('layouts.partials.square', array('data' => $d))
             @endforeach
           </td>
         </tr>
       </table>
     </div>
-  </div>
+    <div class="tab-pane" id="ppm1x2">
+        <table class="table table-bordered">
+            <tr>
+                <td><span class="text-default"><strong>Note:</strong> First match is top left.</span>&nbsp;
+                    <span class="text-danger">Top 5 longest series:
+                        @foreach($longest[5] as $l)
+                            {{$l-1}},&nbsp;
+                        @endforeach
+                    </span></td>
+            </tr>
+            <tr>
+                <td>
+                    @foreach($ppm1x2 as $s)
+                    @if($s->current_length > 1)
+                    {{ $s->current_length - 1}}
+                    @endif
+                    <?php
+                    $d = ['team' => '', 'match' => $s]
+                    ?>
+                    @include('layouts.partials.square', array('data' => $d))
+
+                    @endforeach
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="tab-pane" id="ppm00">
+        <table class="table table-bordered">
+            <tr>
+                <td><span class="text-default"><strong>Note:</strong> First match is top left.</span>&nbsp;
+                <span class="text-danger">Top 5 longest series:
+                        @foreach($longest[6] as $l)
+                            {{$l-1}},&nbsp;
+                        @endforeach
+                    </span></td>
+            </tr>
+            <tr>
+                <td>
+                    @foreach($ppm00 as $s)
+                    @if($s->current_length > 1)
+                    {{ $s->current_length - 1}}
+                    @endif
+                    <?php
+                    $d = ['team' => '', 'match' => $s]
+                    ?>
+                    @include('layouts.partials.square', array('data' => $d))
+
+                    @endforeach
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="tab-pane" id="ppm11">
+        <table class="table table-bordered">
+            <tr>
+                <td><span class="text-default"><strong>Note:</strong> First match is top left.</span>&nbsp;
+                <span class="text-danger">Top 5 longest series:
+                        @foreach($longest[7] as $l)
+                            {{$l-1}},&nbsp;
+                        @endforeach
+                    </span></td>
+            </tr>
+            <tr>
+                <td>
+                    @foreach($ppm11 as $s)
+                    @if($s->current_length > 1)
+                    {{ $s->current_length - 1}}
+                    @endif
+                    <?php
+                        $d = ['team' => '', 'match' => $s]
+                    ?>
+                    @include('layouts.partials.square', array('data' => $d))
+                    @endforeach
+                </td>
+            </tr>
+        </table>
+    </div>
+<div class="tab-pane" id="ppm22">
+    <table class="table table-bordered">
+        <tr>
+            <td><span class="text-default"><strong>Note:</strong> First match is top left.</span>&nbsp;<span class="text-danger">
+            <span class="text-danger">Top 5 longest series:
+                        @foreach($longest[8] as $l)
+                            {{$l-1}},&nbsp;
+                        @endforeach
+                    </span></td>
+        </tr>
+        <tr>
+            <td>
+                @foreach($ppm22 as $s)
+                @if($s->current_length > 1)
+                {{ $s->current_length - 1}}
+                @endif
+                <?php
+                $d = ['team' => '', 'match' => $s]
+                ?>
+                @include('layouts.partials.square', array('data' => $d))
+
+                @endforeach
+            </td>
+        </tr>
+    </table>
+</div>
+
+</div>
 <!-- js for tabs -->
 <script type="text/javascript">
   $('#myTab a').click(function (e) {
