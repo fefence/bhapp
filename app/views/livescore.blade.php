@@ -38,7 +38,7 @@
         <th style="width: 50px;">s</th>
         <th>bet 1x2</th>
 <!--        <th>l</th>-->
-        <th style="width: 28px;">r</th>
+        <th style="width: 30px;">r</th>
         <th style="width: 40px;">res</th>
     </tr>
     </thead>
