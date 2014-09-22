@@ -87,6 +87,13 @@
             "sPaginationType": "full_numbers",
             "aaSorting": []
         });
+        $("#matches tr .res").each(function() {
+            var id =$(this).closest('tr').prop('id');
+            var td = $(this);
+            $.post( "/getres/" + id, function( data ) {
+                td.html(data);
+            });
+        });
         setInterval(function() {
             $("#matches tr .res").each(function() {
                 var id =$(this).closest('tr').prop('id');
