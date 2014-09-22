@@ -149,7 +149,7 @@ class LivescoreController extends \BaseController
         if ($a2->length > 0) {
             $away = $away + $a2->item(0)->nodeValue;
         }
-        return $home."<span>:</span>".$away;
+        return $home." <span>:</span> ".$away;
     }
 
 

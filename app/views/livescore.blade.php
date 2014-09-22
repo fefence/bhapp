@@ -38,7 +38,7 @@
         <th style="width: 50px;">s</th>
         <th>bet 1x2</th>
 <!--        <th>l</th>-->
-        <th style="width: 24px;">r</th>
+        <th style="width: 28px;">r</th>
         <th style="width: 40px;">res</th>
     </tr>
     </thead>
@@ -72,7 +72,7 @@
             <div>
                 <span @if($active_livescore) class="livescoreResultText" @endif>
                     @if ($d['match']->resultShort != '-')
-                    {{$d['match']->homeGoals}}:{{$d['match']->awayGoals}}
+                    {{$d['match']->homeGoals}} : {{$d['match']->awayGoals}}
                     @else
                     -
                     @endif
