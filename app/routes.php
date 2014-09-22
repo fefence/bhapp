@@ -1,10 +1,7 @@
 <?php
-Route::get('/boo', function(){
-
-//    return Updater::updatePPM(35);
-    $current = Groups::find(1665);
-    $next = Groups::find(1705);
-    return Parser::parseMatchesForGroup($current, $next);
+Route::get('/boo/{season}/{id}', function($season, $id){
+//    return SeriesController::calculatePPMSeries($season, $id);
+    Updater::updateGroup(1652);
 });
 
 Route::get('/settings2', function(){
@@ -13,7 +10,7 @@ Route::get('/settings2', function(){
 
 
 Route::get('/log/{from?}/{to?}', "ActionLogController@display");
-
+Route::post('/getres/{id}', "LivescoreController@getMatchCurrentRes");
 //free views
 Route::get('/free/manage', "FreeController@manage");
 Route::get('/free/show/{team_id}', 'FreeController@showTeam');
