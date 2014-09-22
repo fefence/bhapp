@@ -69,8 +69,8 @@
             }
         ?>
         <td @if($active_livescore) class="livescoreResultTdActive" @else class="livescoreResultTdInactive" @endif>
-            <div class="noPadding noMargin">
-                <span @if($active_livescore) class="livescoreResultText" @endif>
+            <div>
+                <span class="margin: 0px; padding: 0px;" @if($active_livescore) class="livescoreResultText" @endif>
                     @if ($d['match']->resultShort != '-')
                     {{$d['match']->homeGoals}}:{{$d['match']->awayGoals}}
                     @else
