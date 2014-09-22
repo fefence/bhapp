@@ -121,6 +121,8 @@ table.matchDetails td {
     color: #E0E4CC;
     font-weight: bold;
     font-size: 120%;
+    margin: 0px;
+    padding: 0px;
 }
 .statsBrowser {
   
