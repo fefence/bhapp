@@ -38,7 +38,7 @@
         <th style="width: 50px;">s</th>
         <th>bet 1x2</th>
 <!--        <th>l</th>-->
-        <th style="width: 40px;">res</th>
+        <th style="width: 24px;">r</th>
         <th style="width: 40px;">res</th>
     </tr>
     </thead>
@@ -61,12 +61,14 @@
         @else
         <td></td>
         @endif
-        <td @if($d['match']->resultShort == '-' && $d['match']->matchTime <= date('H:i:s', time()) && $d['match']->matchDate <= date('Y-m-d', time())) class="res" @endif>
+        <td @if($d['match']->resultShort == '-' && $d['match']->matchTime <= date('H:i:s', time()) && $d['match']->matchDate <= date('Y-m-d', time())) class="livescoreResult"@endif style="text-align: center;">
+            <div class="noPadding noMargin">
             @if ($d['match']->resultShort != '-')
             {{$d['match']->homeGoals}}:{{$d['match']->awayGoals}}
             @else
             -
             @endif
+            </div>
         </td>
         <td>{{$d['match']->resultShort}}</td>
 
@@ -87,7 +89,7 @@
             "sPaginationType": "full_numbers",
             "aaSorting": []
         });
-        $("#matches tr .res").each(function() {
+        $("#matches tr .livescoreResult div").each(function() {
             var id =$(this).closest('tr').prop('id');
             var td = $(this);
             $.post( "/getres/" + id, function( data ) {
@@ -95,7 +97,7 @@
             });
         });
         setInterval(function() {
-            $("#matches tr .res").each(function() {
+            $("#matches tr .livescoreResult div").each(function() {
                 var id =$(this).closest('tr').prop('id');
                 var td = $(this);
                 $.post( "/getres/" + id, function( data ) {
@@ -105,7 +107,7 @@
 
         }, 30000);
         setInterval(function() {
-            $("#matches tr .res span").each(function() {
+            $("#matches tr .livescoreResult div span").each(function() {
                 $(this).toggleClass('livescoreIndicator');
             })
         }, 1000);

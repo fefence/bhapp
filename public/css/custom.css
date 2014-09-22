@@ -110,6 +110,11 @@ table.matchDetails td {
 .livescoreIndicator {
     visibility: hidden;
 }
+.livescoreResult {
+    background-color: #FA6900;
+    color: #E0E4CC;
+    font-weight: bold;
+}
 .statsBrowser {
   
 }
