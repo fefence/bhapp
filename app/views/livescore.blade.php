@@ -53,8 +53,8 @@
         <td><span>{{substr($d['match']->matchTime, 0, strlen($d['match']->matchTime)-3)}}</span></td>
         @endif
         <td><img src="/images/{{strtoupper($d['match']->country)}}.png">&nbsp;<a href= @if(isset($d['match']) && ($d['match']->ppm == 1)) "/ppm/country/{{$d['match']->country}}/{{$d['match']->matchDate}}/{{$d['match']->matchDate}}" @else "/pps/group/{{$d['match']->league_details_id}}" @endif>{{$d['match']->alias}}</a></td>
-        <td><a href="/livescore/match/{{$d['match']->id}}">{{$d['match']->home}}</a></td>
-        <td><a href="/livescore/match/{{$d['match']->id}}">{{$d['match']->away}}</a></td>
+        <td>{{$d['match']->home}}<img style="padding-bottom: 4px;" src="/images/card-red-small.jpg"><img style="padding-bottom: 4px;" src="/images/card-red-small.jpg"><img style="padding-bottom: 4px;" src="/images/card-red-small.jpg"></td>
+        <td>{{$d['match']->away}}<img style="padding-bottom: 4px;" src="/images/card-red-small.jpg"><img style="padding-bottom: 4px;" src="/images/card-red-small.jpg"><img style="padding-bottom: 4px;" src="/images/card-red-small.jpg"></td>
         <td>{{$d['streak']}}</td>
         @if(isset($d['game']))
         <td>{{$d['game']->bet}}<span>@</span>{{$d['game']->odds}}</td>
