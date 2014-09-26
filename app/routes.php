@@ -9,7 +9,8 @@ Route::get('/boo', function(){
 Route::get('/settings2', function(){
    return View::make('settings2');
 });
-
+//getPPMSeries
+Route::get('/ppm/stats/series/{id}', "SeriesController@getPPMSeries");
 
 Route::get('/log/{from?}/{to?}', "ActionLogController@display");
 Route::post('/getres/{id}', "LivescoreController@getMatchCurrentRes");
