@@ -1,9 +1,9 @@
 <?php
-Route::get('/boo', function(){
+Route::get('/boo/{id}', function($id){
 
-//    return SeriesController::calculatePPMSeries($id);
+    return SeriesController::calculatePPMSeries($id);
 //    Updater::updateGroup(1652);
-    return Updater::updateGroup(1665);
+//    return Updater::updateGroup(1665);
 });
 
 Route::get('/settings2', function(){
