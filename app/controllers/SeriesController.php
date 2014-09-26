@@ -457,7 +457,7 @@ class SeriesController extends BaseController
                 ->where('game_type_id', '=', $i)
                 ->join('match', 'match.id', '=', 'series_stats.end_match_id')
                 ->orderBy('current_length', "desc")
-                ->take(5)
+                ->take(15)
                 ->lists('current_length');
         }
 //        return $res;
