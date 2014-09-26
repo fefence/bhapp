@@ -429,22 +429,23 @@ class SeriesController extends BaseController
 
     }
 
-    public static function getPPMSeries($league_details_id)
+    public static function getPPMSeries($country)
     {
-        $seasons = Match::where('match.league_details_id', '=', $league_details_id)
+        $league = LeagueDetails::where('country', '=', $country)->where('ppm', '=', 1)->first();
+        $seasons = Match::where('match.league_details_id', '=', $league->id)
             ->join('series_stats', 'series_stats.end_match_id', '=', 'match.id')
             ->distinct('season')
             ->get(['season']);
         $res = array();
         for ($i = 5; $i < 9; $i++) {
             foreach ($seasons as $s) {
-                $res[$i][$s->season]['stats'] = SeriesStats::where('match.league_details_id', '=', $league_details_id)
+                $res[$i][$s->season]['stats'] = SeriesStats::where('match.league_details_id', '=', $league->id)
                     ->join('match', 'series_stats.end_match_id', '=', 'match.id')
                     ->join('game_type', 'series_stats.game_type_id', '=', 'game_type.id')
                     ->where('season', '=', $s->season)
                     ->where('game_type_id', '=', $i)
                     ->get();
-                $res[$i][$s->season]['longest'] = SeriesStats::where('match.league_details_id', '=', $league_details_id)
+                $res[$i][$s->season]['longest'] = SeriesStats::where('match.league_details_id', '=', $league->id)
                     ->where('game_type_id', '=', $i)
                     ->join('match', 'match.id', '=', 'series_stats.end_match_id')
                     ->where('season', '=', $s->season)
@@ -452,7 +453,7 @@ class SeriesController extends BaseController
                     ->take(5)
                     ->lists('current_length');
             }
-            $res[$i]['all'] = SeriesStats::where('match.league_details_id', '=', $league_details_id)
+            $res[$i]['all'] = SeriesStats::where('match.league_details_id', '=', $league->id)
                 ->where('game_type_id', '=', $i)
                 ->join('match', 'match.id', '=', 'series_stats.end_match_id')
                 ->orderBy('current_length', "desc")
@@ -460,7 +461,7 @@ class SeriesController extends BaseController
                 ->lists('current_length');
         }
 //        return $res;
-        $country = LeagueDetails::find($league_details_id)->country;
+//        $country = LeagueDetails::find($league_details_id)->country;
         return View::make('ppmseries')->with(['data' => $res, 'country' => $country]);
 
     }
