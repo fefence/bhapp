@@ -22,7 +22,7 @@ class LivescoreController extends \BaseController
                 });
                 $q->orWhere(function ($q) use ($fromdate, $todate, $todate2) {
                     $q->where('matchDate', '=', $todate2)
-                        ->where('matchTime', '<', '11:00:00');
+                        ->where('matchTime', '<=', '11:00:00');
                 });
             })
                 ->whereIn('league_details_id', $leagues)
