@@ -61,8 +61,9 @@ class Checker
             $date = $m->matchDate;
             $match = Parser::parseTimeDate($m);
             if ($time != $match->matchTime || $date != $match->matchDate) {
-                $next_gr = Groups::where('league_detials_id', '=', $match->league_details_id)->where('state', '=', 3);
+                $next_gr = Groups::where('league_details_id', '=', $match->league_details_id)->where('state', '=', 3)->first();
                 Parser::parseMatchesForGroup(Groups::find($match->groups_id), $next_gr);
+                Checker::checkPPM($match);
                 $send = true;
                 $count = $count + 1;
                 $league = LeagueDetails::find($match->league_details_id);
@@ -111,4 +112,57 @@ class Checker
         return array($send, $count, $leagues_str, $text);
     }
 
+    public static function checkPPM($match) {
+        $ppms = PPM::where('match_id', '=', $match->id)->get();
+        if (count($ppms) > 0) {
+            $first = Match::where('league_details_id', '=', $match->league_details_id)
+                ->where('resultShort', '=', '-')
+                ->orderBy('matchDate')
+                ->orderBy('matchTime')
+                ->first();
+            $all = Match::where('league_details_id', '=', $match->league_details_id)
+                ->where('resultShort', '=', '-')
+                ->where('matchDate', '=', $first->matchDate)
+                ->where('matchTime', '=', $first->matchTime)
+                ->lists('id');
+            if (!in_array($match->id, $all)) {
+                foreach($ppms as $ppm) {
+                    if($ppm->confirmed == 0){
+                        $ppm->delete();
+                    } else {
+                        $pool = Pools::where('league_details_id', '=', $match->league_details_id)
+                            ->where('user_id', '=', $ppm->user_id)
+                            ->where('game_type_id', '=', $ppm->game_type_id)
+                            ->first();
+                        $pool->account = $pool->account + $ppm->bet;
+                        $pool->save();
+                        $ppm->delete();
+                    }
+                }
+                $settings = Settings::where('league_details_id', '=', $match->league_details_id)
+                    ->where('game_type_id', '>', 4)
+                    ->where('game_type_id', '<', 9)
+                    ->get();
+                foreach($settings as $sett) {
+                    $pool = Pools::where('league_details_id', '=', $sett->league_details_id)
+                        ->where('user_id', '=', $sett->user_id)
+                        ->where('game_type_id', '=', $sett->game_type_id)
+                        ->first();
+                    $series = Series::where('active', '=', 1)
+                        ->where('league_details_id', '=', $sett->league_details_id)
+                        ->where('game_type_id', '=', $sett->game_type_id)
+                        ->first();
+                    foreach($all as $id) {
+                        $p = PPM::firstOrCreate(['user_id' => $sett->user_id, 'game_type_id' => $sett->game_type_id, 'match_id' => $id]);
+                        $p->bsf = $pool->amount/count($all);
+                        $p->series_id = $series->id;
+                        $p->current_length = $series->current_length;
+                        $p->save();
+                        $series->end_match_id = $id;
+                        $series->save();
+                    }
+                }
+            }
+        }
+    }
 } 
