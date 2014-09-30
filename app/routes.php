@@ -1,7 +1,7 @@
 <?php
 Route::get('/boo', function(){
-
-    Checker::getAllMatches();
+    return Updater::updatePPM(39);
+//    Checker::getAllMatches();
 //    return SeriesController::calculatePPMSeries($id);
 //    Updater::updateGroup(1652);
 //    return Updater::updateGroup(1665);

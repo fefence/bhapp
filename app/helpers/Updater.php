@@ -312,6 +312,7 @@ class Updater
                                 ->first();
                         }
                         $next_matches = self::getNextPPMMatches($match);
+//                        return $next_matches;
                         if ($next_matches == null) {
                             continue;
                         }
@@ -324,6 +325,7 @@ class Updater
                             }
                         }
                         $next_match = self::getNextPPMMatch($match);
+//                        return $next_match;
                         $games = $match->ppm()->where('game_type_id', '=', $i)->get();
                         if (SeriesController::endSeries($match, $i)) {
                             $news = $serie->replicate();
@@ -488,7 +490,7 @@ class Updater
     {
         $settings = Settings::where('game_type_id', '=', $i)->where('league_details_id', '=', $series->league_details_id)->get();
         foreach ($settings as $sett) {
-            $pool = Pools::where('user_id', '=', $sett->user_id)->where('league_details_id', '=', $sett->league_details_id)->where('game_type_id', '=', $sett->game_type_id)->first();
+            $pool = Pools::firstOrNew(['user_id' => $sett->user_id, 'league_details_id' => $sett->league_details_id, 'game_type_id' => $sett->game_type_id]);
             foreach ($next_matches as $n) {
                 $newgame = PPM::firstOrNew(['user_id' => $sett->user_id, 'series_id' => $series->id, 'match_id' => $n->id, 'game_type_id' => $i, 'country' => $series->team, 'confirmed' => 0]);
                 $newgame->bsf = ($pool->amount) / count($next_matches);

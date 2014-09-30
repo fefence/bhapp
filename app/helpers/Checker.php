@@ -154,7 +154,7 @@ class Checker
                         ->first();
                     foreach($all as $id) {
                         $p = PPM::firstOrCreate(['user_id' => $sett->user_id, 'game_type_id' => $sett->game_type_id, 'match_id' => $id]);
-                        $p->bsf = $pool->amount/count($all);
+                        $p->bsf = $pool->bsf/count($all);
                         $p->series_id = $series->id;
                         $p->current_length = $series->current_length;
                         $p->save();
