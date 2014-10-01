@@ -165,4 +165,15 @@ class Checker
             }
         }
     }
+
+    public static function updateMissedGroups() {
+        $gr = Groups::where('state', '=', 2)->get();
+        foreach($gr as $group) {
+            $m = $group->matches()->where('resultShort', '=', '-')->count();
+            if ($m == 0) {
+                echo $group->league_details_id." ";
+                Updater::updateGroup($group->id);
+            }
+        }
+    }
 } 
