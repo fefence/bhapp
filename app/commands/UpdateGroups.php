@@ -1,12 +1,8 @@
 <?php
+use Illuminate\Console\Command;
 
-class UpdateGroups  extends Command {
+class UpdateGroups extends Command {
 
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
     protected $name = 'bhapp:updategroups';
 
     /**
