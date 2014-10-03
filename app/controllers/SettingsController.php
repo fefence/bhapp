@@ -48,16 +48,20 @@ class SettingsController extends BaseController
                             if ($pool->amount == 0 && $pool->income == 0 && $pool->profit == 0 && $pool->account == 0) {
                                 $pool->delete();
                             }
-                            $aLog = new ActionLog;
-                            $aLog->type = "settings";
-                            $aLog->action = "disable";
-                            $aLog->league_details_id = $setting->league_details_id;
-                            $aLog->game_type_id = $setting->game_type_id;
-                            $aLog->user_id = $setting->user_id;
-                            $aLog->description = "Disable pps";
-                            $aLog->element_id = $setting->id;
-                            $aLog->save();
                         }
+                        $aLog = new ActionLog;
+                        $aLog->type = "settings";
+                        $aLog->action = "disable";
+                        $aLog->league_details_id = $setting->league_details_id;
+                        $aLog->game_type_id = $setting->game_type_id;
+                        $aLog->user_id = $setting->user_id;
+                        $aLog->description = "Disable pps";
+                        if ($setting->id != null) {
+                            $aLog->element_id = $setting->id;
+                        } else {
+                            $aLog->element_id = 0;
+                        }
+                        $aLog->save();
                         $group = Groups::where('league_details_id', '=', $league->id)->where('state', '=', 2)->first(['id']);
                         Games::where('user_id', '=', Auth::user()->id)->where('groups_id', '=', $group->id)->where('confirmed', '=', 0)->where('game_type_id', '=', $i)->delete();
                         $setting->delete();
