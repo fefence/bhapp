@@ -6,7 +6,7 @@ html {
 
 /* Account for fixed navbar */
 body {
-  min-width: 970px;
+  min-width: 1080px;
   margin-bottom: 40px;
   padding-top: 65px;
   padding-bottom: 10px;
