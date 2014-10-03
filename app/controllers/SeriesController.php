@@ -460,9 +460,14 @@ class SeriesController extends BaseController
                 ->take(15)
                 ->lists('current_length');
         }
+        $leagues = LeagueDetails::where('ppm', '=', 1)->get();
+        $str = "";
+        foreach($leagues as $league){
+            $str = $str."<a href='/ppm/stats/series/".$league->country."'><img src='/images/".strtoupper($league->country).".png'></a>&nbsp;";
+        }
 //        return $res;
 //        $country = LeagueDetails::find($league_details_id)->country;
-        return View::make('ppmseries')->with(['data' => $res, 'country' => $country]);
+        return View::make('ppmseries')->with(['data' => $res, 'country' => $country, 'small' => $str]);
 
     }
 

@@ -4,18 +4,19 @@
 	<!-- breadcrumbs -->
 
 	<?php
-		$list = array('home' => URL::to("home"));
-		$active = 'series';
+		$list = array();
+		$active = "<img src='/images/".strtoupper($country).".png'> ". $country;
 		$elements = array('active' => $active, 'list' => $list);
 	?>
 	@include('layouts.partials.breadcrumbs', array('elements' => $elements))
 @stop
 
 @section('pageHeader')
-	@include('layouts.partials.pageheader', array('calendar' => false, 'big' => $country, 'small' => 'PPM series'))
+	@include('layouts.partials.pageheader', array('calendar' => false, 'big' => "PPM series", 'small' => $small))
 @stop
 
 @section('content')
+
 <ul class="nav nav-tabs" id="myTab" style="border: none">
     <li class="active"><a href="#5">PPM 1X2</a></li>
     <li><a href="#6">PPM 0-0</a></li>

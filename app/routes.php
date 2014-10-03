@@ -1,6 +1,7 @@
 <?php
 Route::get('/boo', function(){
-    Checker::updateMissedGroups();
+//    Checker::updateMissedGroups();
+    Parser::parseMatchesForUSA(Groups::find(1755), Groups::find(1769));
 //    return Updater::updatePPM(39);
 //    Checker::getAllMatches();
 //    return SeriesController::calculatePPMSeries($id);

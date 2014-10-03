@@ -13,6 +13,7 @@
                         <li class="{{Request::path() == 'pool' ? 'active' : '';}}"><a href="{{URL::to('/pool')}}">pool</a></li>
                         <li class="{{Request::path() == 'log' ? 'active' : '';}}"><a href="{{URL::to('/log')}}">log</a></li>
                         <li class="{{Request::path() == 'countries' ? 'active' : '';}}"><a href="{{ URL::to('countries') }}">stats</a></li>
+                        <li><a href="{{ URL::to('/ppm/stats/series/poland') }}">series</a></li>
                         <li class="divider"></li>
                         <li class="dropdown-header">Simulators</li>
                         <li><a href="{{URL::to('/simulator')}}">sim</a></li>
