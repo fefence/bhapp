@@ -62,7 +62,7 @@ class Checker
             $match = Parser::parseTimeDate($m);
             if ($time != $match->matchTime || $date != $match->matchDate) {
                 $next_gr = Groups::where('league_details_id', '=', $match->league_details_id)->where('state', '=', 3)->first();
-                if ($m->league_details_id == 112) {
+                if ($match->league_details_id == 112) {
                     Parser::parseMatchesForUSA(Groups::find($match->groups_id), $next_gr);
                 } else {
                     Parser::parseMatchesForGroup(Groups::find($match->groups_id), $next_gr);
