@@ -1,4 +1,4 @@
-<div class="col-xs-3" style="padding-top:1px;text-align:right;">
+<div class="col-xs-4" style="padding-top:1px;text-align:right;">
 	@if(isset($fromdate) && isset($todate))
 	<span>
         <a href="/{{$base}}/{{date('Y-m-d', strtotime($fromdate) - 86400)}}/{{date('Y-m-d', strtotime($fromdate) - 86400)}}" class="btn btn-default"><</a>

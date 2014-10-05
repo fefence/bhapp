@@ -1,5 +1,5 @@
 <div class="row">
-	<div class="col-xs-6 noPadding">
+	<div class="col-xs-5 noPadding">
 	<!-- main content -->
 		<div class="page-header">
 			<h3 style="margin: 0px 0px 10px 0px;">{{ $big }}
