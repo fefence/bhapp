@@ -492,7 +492,8 @@ class Updater
         foreach ($settings as $sett) {
             $pool = Pools::firstOrNew(['user_id' => $sett->user_id, 'league_details_id' => $sett->league_details_id, 'game_type_id' => $sett->game_type_id]);
             foreach ($next_matches as $n) {
-                $newgame = PPM::firstOrNew(['user_id' => $sett->user_id, 'series_id' => $series->id, 'match_id' => $n->id, 'game_type_id' => $i, 'country' => $series->team, 'confirmed' => 0]);
+                $newgame = PPM::firstOrNew(['user_id' => $sett->user_id, 'match_id' => $n->id, 'game_type_id' => $i, 'country' => $series->team, 'confirmed' => 0]);
+                $newgame->series_id = $series->id;
                 $newgame->bsf = ($pool->amount) / count($next_matches);
                 $newgame->bookmaker_id = 1;
                 $newgame->current_length = $series->current_length;
