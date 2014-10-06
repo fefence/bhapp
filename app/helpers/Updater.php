@@ -353,10 +353,7 @@ class Updater
                                 }
                             }
                             foreach ($games as $game) {
-                                $pool = Pools::where('user_id', '=', $game->user_id)
-                                    ->where('league_details_id', '=', $match->league_details_id)
-                                    ->where('game_type_id', '=', $i)
-                                    ->first();
+                                $pool = Pools::firstOrNew(['user_id' => $game->user_id, 'league_details_id' => $match->league_details_id, 'game_type_id' => $i]);
                                 if ($game->confirmed == 1) {
                                     $main = CommonPools::where('user_id', '=', $game->user_id)->first();
                                     $main->profit = $main->profit + $game->income - $game->bsf - $game->bet;
