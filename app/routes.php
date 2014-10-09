@@ -1,12 +1,13 @@
 <?php
-Route::get('/boo', function(){
+Route::get('/boo/{id1}/{id2}', function($id1, $id2){
 //    Checker::updateMissedGroups();
-    Parser::parseMatchesForUSA(Groups::find(1755), Groups::find(1769));
+//    Parser::parseMatchesForUSA(Groups::find(1755), Groups::find(1769));
 //    return Updater::updatePPM(39);
 //    Checker::getAllMatches();
 //    return SeriesController::calculatePPMSeries($id);
 //    Updater::updateGroup(1652);
 //    return Updater::updateGroup(1665);
+    return Parser::parseMatchesForGroup(Groups::find($id1), Groups::find($id2));
 });
 
 Route::get('/settings2', function(){

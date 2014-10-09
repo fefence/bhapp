@@ -22,22 +22,8 @@
 <body>
 <p>
     <span style="font-size:18px"><a href="{{$confirm_link}}" target="_blank">[confirm]</a></span><br><br>
-    {{$home}} - {{$away}}<br>
+    {{$home}} - {{$away}} ({{date('d M', strtotime($date))}}, {{substr($time, 0, strlen($time)-3)}})<br>
     </p>
-    <table style="border-collapse: collapse; border-spacing: 0px; margin: 0;">
-        <tbody>
-        <tr>
-            @foreach($res as $r)
-            @if($r->resultShort == 'D')
-                <td style="padding: 8px;vertical-align: top; background-color: #FDEC6F; color: #594433; border: 1px solid #BCB7AB;">D</td>
-            @else
-                <td style="padding: 8px;vertical-align: top; background-color: #F4F4F4; color: #594433; border: 1px solid #BCB7AB;">{{$r->resultShort}}</td>
-            @endif
-            @endforeach
-        </tr>
-        </tbody>
-</table>
-<br>
 <table>
     @foreach($body as $type => $b)
         <tr>
@@ -52,6 +38,20 @@
             <td style="text-align: right;">{{$b['profit']}}€</td>
         </tr>
     @endforeach
+</table>
+<br>
+<table style="border-collapse: collapse; border-spacing: 0px; margin: 0;">
+    <tbody>
+    <tr>
+        @foreach($res as $r)
+        @if($r->resultShort == 'D')
+        <td style="padding: 8px;vertical-align: top; background-color: #FDEC6F; color: #594433; border: 1px solid #BCB7AB;">D</td>
+        @else
+        <td style="padding: 8px;vertical-align: top; background-color: #F4F4F4; color: #594433; border: 1px solid #BCB7AB;">{{$r->resultShort}}</td>
+        @endif
+        @endforeach
+    </tr>
+    </tbody>
 </table>
 <br>
 <a href="{{$link_to_group}}" target="_blank">[view on bhapp.eu]</a>

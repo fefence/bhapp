@@ -439,7 +439,7 @@ class Updater
                                     }
 //                                    return $bodyarr;
                                     $link_to_group = URL::to("/") . "/ppm/country/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate;
-                                    Mail::send('emails.confirm', ['body' => $bodyarr, 'link_to_group' => $link_to_group, 'confirm_link' => $confirm_link, 'res' => $res, 'home' => $next->home, 'away' => $next->away], function ($message) use ($user, $subject) {
+                                    Mail::send('emails.confirm', ['body' => $bodyarr, 'link_to_group' => $link_to_group, 'confirm_link' => $confirm_link, 'res' => $res, 'home' => $next->home, 'away' => $next->away, 'date' => $next->matchDate, 'time' => $next->matchTime], function ($message) use ($user, $subject) {
                                         $message->to([$user->email => $user->name])
                                             ->subject($subject);
                                     });
