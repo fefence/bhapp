@@ -342,16 +342,19 @@ class Parser
         $away = "";
         $id = "";
         $group = $current;
+        $first = true;
         foreach ($rows as $row) {
-
             $headings = $row->getElementsByTagName('th');
             if ($headings->length > 0) {
-                if ($headings->item(0)->nodeValue == ($current->round + 1) . '. Round') {
-                    $group = $next;
-                }
-                if ($headings->item(0)->nodeValue == ($next->round + 1) . '. Round') {
+                if (str_contains($headings->item(0)->nodeValue, '. Round') && $group->id == $next->id && !$first) {
                     break 1;
                 }
+                if (str_contains($headings->item(0)->nodeValue, '. Round') && $group->id != $next->id && !$first) {
+                    $group = $next;
+                } else {
+                    $first = false;
+                }
+
             }
             $cols = $row->getElementsByTagName('td');
             if ($cols->length > 0) {
@@ -371,7 +374,6 @@ class Parser
                     $home = explode(' - ', $cols->item(1)->nodeValue)[0];
                     $away = explode(' - ', $cols->item(1)->nodeValue)[1];
                 }
-                //$attrs = $col->getAttribute("data-odd");
                 $match = Match::firstOrNew(array('id' => $id));
                 $match->home = $home;
                 $match->away = $away;
@@ -384,15 +386,10 @@ class Parser
                 $match->season = '2014-2015';
                 $match->league_details_id = $current->league_details_id;
                 $match->save();
-
-                // return $match;
             }
         }
         $curr = $current->matches()->orderBy('matchDate')->get();
-//        return $current;
-//        return $next;
         $firstOfNext = $next->matches()->orderBy('matchDate')->first();
-//        return $firstOfNext;
         foreach ($curr as $m) {
             if ($m->matchDate > $firstOfNext->matchDate) {
                 $m->groups_id = 0;
@@ -400,8 +397,6 @@ class Parser
             }
         }
 
-//        $curr = ;
-//        return $curr->get();
         $teams = Standings::where('league_details_id', '=', $current->league_details_id)->lists('team');
         $tmp = array();
         foreach ($teams as $team) {
@@ -434,14 +429,13 @@ class Parser
                         $pool = Pools::where('user_id', '=', $game->user_id)->where('league_details_id', '=', $match->league_details_id)->where('game_type_id', '=', 1)->first();
                         $pool->account = $pool->account + $game->bet;
                         $pool->save();
-//                        $pool->account = $pool->account + $game->bet;
                     }
                     $game->delete();
                 }
-//                $next->round = $match->round;
                 $next->save();
             }
         }
+
 
         return (time() - $start)."sec.";
     }

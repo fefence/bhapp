@@ -1,5 +1,6 @@
 <?php
-Route::get('/boo/{id1}/{id2}', function($id1, $id2){
+Route::get('/boo', function(){
+//    SeriesController::calculatePPMSeries(17);
 //    Checker::updateMissedGroups();
 //    Parser::parseMatchesForUSA(Groups::find(1755), Groups::find(1769));
 //    return Updater::updatePPM(39);
@@ -7,7 +8,8 @@ Route::get('/boo/{id1}/{id2}', function($id1, $id2){
 //    return SeriesController::calculatePPMSeries($id);
 //    Updater::updateGroup(1652);
 //    return Updater::updateGroup(1665);
-    return Parser::parseMatchesForUSA(Groups::find($id1), Groups::find($id2));
+//    return Parser::parseMatchesForUSA(Groups::find($id1), Groups::find($id2));
+    return Parser::parseMatchesForGroup(Groups::find(1747), Groups::find(1777));
 });
 
 Route::get('/settings2', function(){

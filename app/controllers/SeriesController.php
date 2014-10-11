@@ -18,9 +18,9 @@ class SeriesController extends BaseController
 
             foreach ($matches as $match) {
                 for ($i = 5; $i < 9; $i++) {
-                    $series = SeriesStats::where('team', '=', $league->country)->where('active', '=', 1)->where('game_type_id', '=', $i)->first();
+                    $series = Series::where('team', '=', $league->country)->where('active', '=', 1)->where('game_type_id', '=', $i)->first();
                     if ($series == NULL) {
-                        $series = new SeriesStats;
+                        $series = new Series;
                         $series->team = $league->country;
                         $series->league_details_id = $league->id;
                         $series->game_type_id = $i;
@@ -34,7 +34,7 @@ class SeriesController extends BaseController
                     $series->league_details_id = $league->id;
                     if (SeriesController::endSeries($match, $i)) {
                         $series->active = 0;
-                        $duplicate = SeriesStats::where('start_match_id', '=', $series->start_match_id)
+                        $duplicate = Series::where('start_match_id', '=', $series->start_match_id)
                             ->where('end_match_id', '=', $series->end_match_id)
                             ->where('team', '=', $league->country)
                             ->where('current_length', '=', $series->current_length)
