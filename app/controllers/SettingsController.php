@@ -123,7 +123,7 @@ class SettingsController extends BaseController
 //                    $aLog->amount = $arr[0];
                     $aLog->league_details_id = $arr[0];
                     $aLog->game_type_id = $arr[1];
-                    $aLog->user_id = $s->user_id;
+                    $aLog->user_id = $setting->user_id;
                     $aLog->description = "Enable ppm";
                     $aLog->element_id = $setting->id;
                     $aLog->save();
