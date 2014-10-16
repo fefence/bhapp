@@ -1,7 +1,7 @@
 <?php
 
 
-class SeriesSeriesStats extends Eloquent{
+class SeriesStats extends Eloquent{
     protected $table = 'series_stats';
 
     public $timestamps = false;
