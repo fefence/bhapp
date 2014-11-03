@@ -178,6 +178,7 @@ class Parser
 
     public static function parseLeagueStandings($league_details_id)
     {
+        return;
         $league = LeagueDetails::find($league_details_id);
 //        if ($league->pps == 0) {
 //            return Parser::parseLeagueStandings($league_details_id);
@@ -322,6 +323,7 @@ class Parser
         $league = LeagueDetails::findOrFail($current->league_details_id);
         $url = $baseUrl . $league->country . "/" . $league->fullName . "/" . $tail;
 
+//        return $url;
         if (Parser::get_http_response_code($url) != "200") {
             return "Wrong fixtures url! --> $url";
         }
@@ -357,7 +359,7 @@ class Parser
 
             }
             $cols = $row->getElementsByTagName('td');
-            if ($cols->length > 0) {
+            if ($cols->length > 1) {
                 $a = $cols->item(1)->getElementsByTagName('a');
                 foreach ($a as $link) {
                     $href = $link->getAttribute("href");
