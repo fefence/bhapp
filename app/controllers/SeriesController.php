@@ -470,7 +470,7 @@ class SeriesController extends BaseController
             ->distinct('season')
             ->get(['season']);
         $res = array();
-        for ($i = 5; $i < 15; $i++) {
+        for ($i = 5; $i < 16; $i++) {
             foreach ($seasons as $s) {
                 $res[$i][$s->season]['stats'] = SeriesStats::where('match.league_details_id', '=', $league->id)
                     ->join('match', 'series_stats.end_match_id', '=', 'match.id')
