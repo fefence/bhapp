@@ -1,8 +1,6 @@
 <?php
-
 class SeriesController extends BaseController
 {
-
     public static function calculatePPMSeries($id)
     {
 //        $ids = [1, 6, 17, 35, 39];
@@ -10,7 +8,6 @@ class SeriesController extends BaseController
         $end_match_id = SeriesStats::where('active', '=', 1)->where('league_details_id', '=', $id)->first()->end_match_id;
         $end_match = Match::find($end_match_id);
         $leagues = LeagueDetails::where('id', '=', $id)->get();
-
         foreach ($leagues as $league) {
             $matches = Match::where('league_details_id', '=', $league->id)
                 ->where(function ($q) use ($end_match) {
@@ -23,7 +20,6 @@ class SeriesController extends BaseController
                 ->orderBy('matchDate')
                 ->orderBy('matchTime')
                 ->get(array('id', 'resultShort', 'home', 'away', 'matchDate', 'matchTime', 'homeGoals', 'awayGoals'));
-
             foreach ($matches as $match) {
                 for ($i = 9; $i < 15; $i++) {
                     $series = SeriesStats::where('team', '=', $league->country)->where('active', '=', 1)->where('game_type_id', '=', $i)->first();
@@ -58,22 +54,16 @@ class SeriesController extends BaseController
             }
         }
         return "finished";
-
     }
-
     public function calculatePPSSeries($country)
     {
         $start = time();
         $ids = LeagueDetails::where('country', '=', $country)->lists('id');
         // $ids = array(20, 21);
         $teams = Match::whereIn('league_details_id', $ids)->distinct('home')->get(array('home'));
-
         foreach ($teams as $team) {
-
             $regexp = $team->home;
-
             // $ids = \DB::table('series')->lists('end_match_id');
-
             $matches = Match::whereIn('league_details_id', $ids)
                 ->where(function ($query) use ($regexp) {
                     $query->where('home', '=', $regexp)
@@ -95,11 +85,9 @@ class SeriesController extends BaseController
                         $series->active = 1;
                         $series->save();
                     }
-
                     $series->current_length = $series->current_length + 1;
                     $series->end_match_id = $match->id;
                     $series->league_details_id = $match->league_details_id;
-
                     if ($this->endSeries($match, $i)) {
                         $series->active = 0;
                         $duplicate = Series::where('start_match_id', '=', $series->start_match_id)
@@ -111,12 +99,10 @@ class SeriesController extends BaseController
                             $duplicate->delete();
                         }
                     }
-
                     if ($match->league_details_id != $prev_league) {
                         $note = "continued from $prev_league in " . $match->league_details_id . " league";
                     }
                     $series->note = $note;
-
                     $series->save();
                 }
                 $prev_league = $match->league_details_id;
@@ -128,16 +114,12 @@ class SeriesController extends BaseController
         $time = time() - $start;
         return "ended in $time sec";
     }
-
     public function calculatePPSSeriesForTeam($country, $team)
     {
         $start = time();
         $ids = LeagueDetails::where('country', '=', $country)->lists('id');
-
         $regexp = $team;
-
         // $ids = \DB::table('series')->lists('end_match_id');
-
         $matches = Match::whereIn('league_details_id', $ids)
             ->where(function ($query) use ($regexp) {
                 $query->where('home', '=', $regexp)
@@ -159,11 +141,9 @@ class SeriesController extends BaseController
                     $series->active = 1;
                     $series->save();
                 }
-
                 $series->current_length = $series->current_length + 1;
                 $series->end_match_id = $match->id;
                 $series->league_details_id = $match->league_details_id;
-
                 if ($this->endSeries($match, $i)) {
                     $series->active = 0;
                     $duplicate = Series::where('start_match_id', '=', $series->start_match_id)
@@ -175,12 +155,10 @@ class SeriesController extends BaseController
                         $duplicate->delete();
                     }
                 }
-
                 if ($match->league_details_id != $prev_league) {
                     $note = "continued from $prev_league in " . $match->league_details_id . " league";
                 }
                 $series->note = $note;
-
                 $series->save();
             }
             $prev_league = $match->league_details_id;
@@ -191,7 +169,6 @@ class SeriesController extends BaseController
         $time = time() - $start;
         return "ended in $time sec";
     }
-
     public static function endSeries($match, $type)
     {
         switch ($type) {
@@ -248,29 +225,23 @@ class SeriesController extends BaseController
                     return true;
                 else return false;
             case '14':
-            if ($match->resultShort == 'H' && $match->homeGoals == 2 && $match->awayGoals == 1)
-                return true;
-            else return false;
-
+                if ($match->resultShort == 'H' && $match->homeGoals == 2 && $match->awayGoals == 1)
+                    return true;
+                else return false;
         }
     }
-
     public function getSeries()
     {
-
         $res = DB::table('series')->join('match', 'match.id', '=', 'series.start_match_id')
             ->where('team', '=', 'Manchester United')->where('season', '=', '2013-2014')->get();
         return $res;
     }
-
     public function updateAllPPSSeries()
     {
         $starttime = time();
         $today = date('Y-m-d', time());
-
         $date = strtotime($today . "-1 month");
         $start = date('Y-m-d', $date);
-
         $series = Series::join('match', 'match.id', '=', 'series.end_match_id')
             ->where('matchDate', '<', $today)
             ->where('matchDate', '>=', $start)
@@ -300,7 +271,6 @@ class SeriesController extends BaseController
                     $s->end_match_id = $next_id;
                     $s->active = 1;
                     $s->save();
-
                 } else {
                     $serie->end_match_id = $next_id;
                     $serie->save();
@@ -310,7 +280,6 @@ class SeriesController extends BaseController
         $endtime = time() - $starttime;
         return $endtime . " sec. for matches";
     }
-
     public static function getSeriesForMatches($league_details_id, $season, $game_type_id)
     {
         $teams = Match::matchesForSeason($league_details_id, $season)->distinct('home')->get(array('home'));
@@ -327,7 +296,6 @@ class SeriesController extends BaseController
         }
         return $res;
     }
-
     public static function getSeriesForSeason($league_details_id, $game_type_id, $season)
     {
         $series = SeriesStats::where('match.league_details_id', '=', $league_details_id)
@@ -338,7 +306,6 @@ class SeriesController extends BaseController
             ->get();
         return $series;
     }
-
     public static function getLongestPPMSeries($league_details_id, $season)
     {
         $res = array();
@@ -372,7 +339,6 @@ class SeriesController extends BaseController
             ->lists('current_length');
         return $res;
     }
-
     public function percentStat($country, $league)
     {
         $leagueDetails = LeagueDetails::where('country', '=', $country)->where('fullName', '=', $league)->first();
@@ -396,18 +362,13 @@ class SeriesController extends BaseController
                 ->where('game_type_id', '=', 1)
                 ->where('season', '=', $season->season)->count();
         }
-
         return View::make('drawstats')->with(array('country' => $country, 'league' => $league, 'data' => $res));
-
     }
-
-
     public function percentDraws()
     {
         $leagueDetails = LeagueDetails::all();
         $res = array();
         foreach ($leagueDetails as $league) {
-
             $seasons = ImportedSeasons::distinct()->where('league_details_id', '=', $league->id)->get();
             foreach ($seasons as $season) {
                 $count = DB::table('match')
@@ -419,18 +380,13 @@ class SeriesController extends BaseController
                     ->where('league_details_id', '=', $league->id)
                     ->where('season', '=', $season->season)
                     ->count();
-
                 $res[$league->country][$league->fullName][$season->season][0] = $count;
                 $res[$league->country][$league->fullName][$season->season][1] = $countAll;
             }
-
-
         }
         // return $res;
         return View::make('drawspercent')->with(array('data' => $res));
-
     }
-
     public function percentDrawsPerRound($country, $league)
     {
         $leagueDetails = LeagueDetails::where('country', '=', $country)->where('fullName', '=', $league)->first();
@@ -459,9 +415,7 @@ class SeriesController extends BaseController
             }
         }
         return View::make('roundpercent')->with(array('country' => $country, 'league' => $league, 'data' => $res));
-
     }
-
     public static function getPPMSeries($country)
     {
         $league = LeagueDetails::where('country', '=', $country)->where('ppm', '=', 1)->first();
@@ -470,7 +424,7 @@ class SeriesController extends BaseController
             ->distinct('season')
             ->get(['season']);
         $res = array();
-        for ($i = 5; $i < 16; $i++) {
+        for ($i = 5; $i < 15; $i++) {
             foreach ($seasons as $s) {
                 $res[$i][$s->season]['stats'] = SeriesStats::where('match.league_details_id', '=', $league->id)
                     ->join('match', 'series_stats.end_match_id', '=', 'match.id')
@@ -501,7 +455,5 @@ class SeriesController extends BaseController
 //        return $res;
 //        $country = LeagueDetails::find($league_details_id)->country;
         return View::make('ppmseries')->with(['data' => $res, 'country' => $country, 'small' => $str]);
-
     }
-
 }
