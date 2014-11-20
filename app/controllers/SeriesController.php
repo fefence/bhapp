@@ -7,20 +7,28 @@ class SeriesController extends BaseController
     {
 //        $ids = [1, 6, 17, 35, 39];
 //        , 69, 74, 85, 100
+//        $end_match_id = SeriesStats::where('active', '=', 1)->where('league_details_id', '=', $id)->first()->end_match_id;
+//        $end_match = Match::find($end_match_id);
         $leagues = LeagueDetails::where('id', '=', $id)->get();
 
         foreach ($leagues as $league) {
             $matches = Match::where('league_details_id', '=', $league->id)
-                ->where('season', '>=', '2010-2011')
+//                ->where(function ($q) use ($end_match) {
+//                    $q->where('matchDate', '>', $end_match->matchDate)
+//                        ->orWhere(function ($query) use ($end_match) {
+//                            $query->where('matchDate', '=', $end_match->matchDate)
+//                                ->where('matchTime', '>', $end_match->matchTime);
+//                        });
+//                })
                 ->orderBy('matchDate')
                 ->orderBy('matchTime')
                 ->get(array('id', 'resultShort', 'home', 'away', 'matchDate', 'matchTime', 'homeGoals', 'awayGoals'));
 
             foreach ($matches as $match) {
-                for ($i = 5; $i < 9; $i++) {
-                    $series = Series::where('team', '=', $league->country)->where('active', '=', 1)->where('game_type_id', '=', $i)->first();
+                for ($i = 9; $i < 15; $i++) {
+                    $series = SeriesStats::where('team', '=', $league->country)->where('active', '=', 1)->where('game_type_id', '=', $i)->first();
                     if ($series == NULL) {
-                        $series = new Series;
+                        $series = new SeriesStats;
                         $series->team = $league->country;
                         $series->league_details_id = $league->id;
                         $series->game_type_id = $i;
@@ -34,7 +42,7 @@ class SeriesController extends BaseController
                     $series->league_details_id = $league->id;
                     if (SeriesController::endSeries($match, $i)) {
                         $series->active = 0;
-                        $duplicate = Series::where('start_match_id', '=', $series->start_match_id)
+                        $duplicate = SeriesStats::where('start_match_id', '=', $series->start_match_id)
                             ->where('end_match_id', '=', $series->end_match_id)
                             ->where('team', '=', $league->country)
                             ->where('current_length', '=', $series->current_length)
@@ -219,6 +227,31 @@ class SeriesController extends BaseController
                 if ($match->resultShort == 'D' && $match->homeGoals == 2 && $match->awayGoals == 2)
                     return true;
                 else return false;
+            case '9':
+                if ($match->resultShort == 'A' && $match->homeGoals == 0 && $match->awayGoals == 1)
+                    return true;
+                else return false;
+            case '10':
+                if ($match->resultShort == 'A' && $match->homeGoals == 0 && $match->awayGoals == 2)
+                    return true;
+                else return false;
+            case '11':
+                if ($match->resultShort == 'H' && $match->homeGoals == 1 && $match->awayGoals == 0)
+                    return true;
+                else return false;
+            case '12':
+                if ($match->resultShort == 'H' && $match->homeGoals == 2 && $match->awayGoals == 0)
+                    return true;
+                else return false;
+            case '13':
+                if ($match->resultShort == 'A' && $match->homeGoals == 1 && $match->awayGoals == 2)
+                    return true;
+                else return false;
+            case '14':
+            if ($match->resultShort == 'H' && $match->homeGoals == 2 && $match->awayGoals == 1)
+                return true;
+            else return false;
+
         }
     }
 
@@ -275,7 +308,7 @@ class SeriesController extends BaseController
             }
         }
         $endtime = time() - $starttime;
-        return $endtime . " sec. for " . count($matches) . " matches";
+        return $endtime . " sec. for matches";
     }
 
     public static function getSeriesForMatches($league_details_id, $season, $game_type_id)

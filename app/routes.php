@@ -1,6 +1,10 @@
 <?php
-Route::get('/boo', function(){
-    return Parser::parseLeagueStandings(2);
+Route::get('/boo/{id}', function($id){
+    return SeriesController::calculatePPMSeries($id);
+//    return Parser::test();
+//    return Parser::parseMatchesForGroup(Groups::find(1888), Groups::find(1892));
+//    Updater::updateGroup(1842);
+//    return SeriesController::calculatePPMSeries($id);
 });
 
 Route::get('/settings2', function(){
