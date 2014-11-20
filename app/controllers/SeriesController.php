@@ -17,6 +17,7 @@ class SeriesController extends BaseController
 //                                ->where('matchTime', '>', $end_match->matchTime);
 //                        });
 //                })
+            ->where('season', '<=', '2009-2010')
                 ->orderBy('matchDate')
                 ->orderBy('matchTime')
                 ->get(array('id', 'resultShort', 'home', 'away', 'matchDate', 'matchTime', 'homeGoals', 'awayGoals'));
