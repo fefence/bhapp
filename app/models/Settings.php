@@ -38,6 +38,12 @@ class Settings extends Eloquent
                 $ppm[$l->country][6] = Settings::where('league_details_id', '=', $l->id)->where('game_type_id', '=', 6)->where('user_id', '=', Auth::user()->id)->first();
                 $ppm[$l->country][7] = Settings::where('league_details_id', '=', $l->id)->where('game_type_id', '=', 7)->where('user_id', '=', Auth::user()->id)->first();
                 $ppm[$l->country][8] = Settings::where('league_details_id', '=', $l->id)->where('game_type_id', '=', 8)->where('user_id', '=', Auth::user()->id)->first();
+                $ppm[$l->country][9] = Settings::where('league_details_id', '=', $l->id)->where('game_type_id', '=', 9)->where('user_id', '=', Auth::user()->id)->first();
+                $ppm[$l->country][10] = Settings::where('league_details_id', '=', $l->id)->where('game_type_id', '=', 10)->where('user_id', '=', Auth::user()->id)->first();
+                $ppm[$l->country][11] = Settings::where('league_details_id', '=', $l->id)->where('game_type_id', '=', 11)->where('user_id', '=', Auth::user()->id)->first();
+                $ppm[$l->country][12] = Settings::where('league_details_id', '=', $l->id)->where('game_type_id', '=', 12)->where('user_id', '=', Auth::user()->id)->first();
+                $ppm[$l->country][13] = Settings::where('league_details_id', '=', $l->id)->where('game_type_id', '=', 13)->where('user_id', '=', Auth::user()->id)->first();
+                $ppm[$l->country][14] = Settings::where('league_details_id', '=', $l->id)->where('game_type_id', '=', 14)->where('user_id', '=', Auth::user()->id)->first();
 
             }
             if ($l->pps == 1){

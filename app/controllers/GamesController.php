@@ -203,7 +203,7 @@ class GamesController extends \BaseController
         $game_type_id = Input::get('id');
         $col = Input::get('column');
         $pl = false;
-        if ($game_type_id > 4 && $game_type_id < 9) {
+        if ($game_type_id > 4 && $game_type_id < 15) {
             if (str_contains($game_id, '!')) {
                 $game_id = str_replace('!', '', $game_id);
                 $game = PPMPlaceHolder::find($game_id);

@@ -298,7 +298,7 @@ class Updater
                 Parser::parseLeagueStandings($match->league_details_id);
                 if ($match->resultShort != '-') {
 
-                    for ($i = 5; $i < 9; $i++) {
+                    for ($i = 5; $i < 15; $i++) {
 
                         $serie = Series::where('end_match_id', '=', $match->id)
                             ->where('league_details_id', '=', $match->league_details_id)

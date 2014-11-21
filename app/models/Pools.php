@@ -38,7 +38,7 @@ class Pools extends Eloquent {
     {
         $ppspoolsq = Pools::where('user_id', '=', $user_id)
             ->where('pools.game_type_id', '>=', 5)
-            ->where('pools.game_type_id', '<=', 8)
+            ->where('pools.game_type_id', '<=', 14)
             ->join('game_type', 'game_type.id', '=', 'pools.game_type_id')
             ->join('leagueDetails', 'leagueDetails.id', '=', 'pools.league_details_id')
             ->orderBy('country')

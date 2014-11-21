@@ -28,6 +28,18 @@ $elements = array('active' => $active, 'list' => $list);
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
         <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
+        <th><input type="hidden"></th>
     </tr>
     <tr>
         <th>league</th>
@@ -35,10 +47,22 @@ $elements = array('active' => $active, 'list' => $list);
         <th>0:0</th>
         <th>1:1</th>
         <th>2:2</th>
+        <th>0:1</th>
+        <th>0:2</th>
+        <th>1:0</th>
+        <th>2:0</th>
+        <th>1:2</th>
+        <th>2:1</th>
         <th>bsf (1x2)</th>
         <th>bsf (0:0)</th>
         <th>bsf (1:1)</th>
         <th>bsf (2:2)</th>
+        <th>bsf (0:1)</th>
+        <th>bsf (0:2)</th>
+        <th>bsf (1:0)</th>
+        <th>bsf (2:0)</th>
+        <th>bsf (1:2)</th>
+        <th>bsf (2:1)</th>
         <th>conf</th>
     </tr>
     </thead>
@@ -50,10 +74,22 @@ $elements = array('active' => $active, 'list' => $list);
         <td>{{$info[$d->country][6]}}</td>
         <td>{{$info[$d->country][7]}}</td>
         <td>{{$info[$d->country][8]}}</td>
+        <td>{{$info[$d->country][9]}}</td>
+        <td>{{$info[$d->country][10]}}</td>
+        <td>{{$info[$d->country][11]}}</td>
+        <td>{{$info[$d->country][12]}}</td>
+        <td>{{$info[$d->country][13]}}</td>
+        <td>{{$info[$d->country][14]}}</td>
         <td>{{$info[$d->country][55]}}</td>
         <td>{{$info[$d->country][66]}}</td>
         <td>{{$info[$d->country][77]}}</td>
         <td>{{$info[$d->country][88]}}</td>
+        <td>{{$info[$d->country][99]}}</td>
+        <td>{{$info[$d->country][1010]}}</td>
+        <td>{{$info[$d->country][1111]}}</td>
+        <td>{{$info[$d->country][1212]}}</td>
+        <td>{{$info[$d->country][1313]}}</td>
+        <td>{{$info[$d->country][1414]}}</td>
         <td>@include('layouts.partials.xofy', ['x' => $info[$d->country]['confirmed'], 'y' => $info[$d->country]['all']])</td>
     </tr>
     @endforeach

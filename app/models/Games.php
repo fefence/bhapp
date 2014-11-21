@@ -142,7 +142,7 @@ class Games extends Eloquent
             $game = Games::find($game_id);
             $aLog->type = "pps";
             $series = Standings::find($game->standings_id)->team;
-        } else if ($game_type_id >= 5 && $game_type_id < 9) {
+        } else if ($game_type_id >= 5 && $game_type_id < 15) {
             if ($pl) {
                 $game = PPMPlaceHolder::find($game_id);
                 $aLog->type = "ppm_pl";
@@ -195,7 +195,7 @@ class Games extends Eloquent
             $aLog->type = "pps";
             $series = Standings::find($game->standings_id)->team;
 
-        } else if ($game_type_id >= 5 && $game_type_id < 9) {
+        } else if ($game_type_id >= 5 && $game_type_id < 15) {
             $game = PPM::find($game_id);
             $aLog->type = "ppm";
             $plh = PPMPlaceHolder::getForGame($game);

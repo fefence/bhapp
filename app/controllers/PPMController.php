@@ -46,6 +46,12 @@ class PPMController extends \BaseController
             $info[$league->country][6] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 6)->first(['current_length'])->current_length;
             $info[$league->country][7] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 7)->first(['current_length'])->current_length;
             $info[$league->country][8] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 8)->first(['current_length'])->current_length;
+            $info[$league->country][9] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 9)->first(['current_length'])->current_length;
+            $info[$league->country][10] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 10)->first(['current_length'])->current_length;
+            $info[$league->country][11] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 11)->first(['current_length'])->current_length;
+            $info[$league->country][12] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 12)->first(['current_length'])->current_length;
+            $info[$league->country][13] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 13)->first(['current_length'])->current_length;
+            $info[$league->country][14] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 14)->first(['current_length'])->current_length;
             try {
                 $p = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 5)->first(['amount']);
                 $info[$league->country][55] = ($p == null) ? 0 : $p->amount;
@@ -55,6 +61,18 @@ class PPMController extends \BaseController
                 $info[$league->country][77] = ($p == null) ? 0 : $p->amount;
                 $p = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 8)->first(['amount']);
                 $info[$league->country][88] = ($p == null) ? 0 : $p->amount;
+                $p = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 9)->first(['amount']);
+                $info[$league->country][99] = ($p == null) ? 0 : $p->amount;
+                $p = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 10)->first(['amount']);
+                $info[$league->country][1010] = ($p == null) ? 0 : $p->amount;
+                $p = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 11)->first(['amount']);
+                $info[$league->country][1111] = ($p == null) ? 0 : $p->amount;
+                $p = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 12)->first(['amount']);
+                $info[$league->country][1212] = ($p == null) ? 0 : $p->amount;
+                $p = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 13)->first(['amount']);
+                $info[$league->country][1313] = ($p == null) ? 0 : $p->amount;
+                $p = Pools::where('league_details_id', '=', $league->id)->where('user_id', '=', Auth::user()->id)->where('game_type_id', '=', 14)->first(['amount']);
+                $info[$league->country][1414] = ($p == null) ? 0 : $p->amount;
             } catch (ErrorException $e) {
                 return $league;
             }

@@ -86,11 +86,17 @@ $elements = array('active' => $active, 'list' => $list);
                         <th style="width: %;text-align: center;">0:0</th>
                         <th style="width: %;text-align: center;">1:1</th>
                         <th style="width: %;text-align: center;">2:2</th>
+                        <th style="width: %;text-align: center;">0:1</th>
+                        <th style="width: %;text-align: center;">0:2</th>
+                        <th style="width: %;text-align: center;">1:0</th>
+                        <th style="width: %;text-align: center;">2:0</th>
+                        <th style="width: %;text-align: center;">1:2</th>
+                        <th style="width: %;text-align: center;">2:1</th>
                     </tr>
                     @foreach($ppm as $country=>$s)
                     <tr>
                         <td><p class="text-center"><img src="/images/{{strtoupper($country)}}.png">&nbsp;{{ $country }}</p></td>
-                        @for($j = 5; $j < 9; $j ++)
+                        @for($j = 5; $j < 15; $j ++)
                         <td><p class="text-center">
                                 <input name="ppm[]" class="activate_league_for_play" type="checkbox"
                                        value='{{$s[0]}}#{{$j}}' {{(count($s[$j]) > 0)?"checked":""}}>
