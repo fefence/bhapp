@@ -1,6 +1,10 @@
 <?php
-Route::get('/boo/{id}', function($id){
-    return SeriesController::calculatePPMSeries($id);
+Route::get('/boo', function(){
+    $matches = Match::where('league_details_id', 107)->where('matchTime', '=', '00:00:00')->get();
+    foreach($matches as $m) {
+        Parser::parseTimeDate($m);
+    }
+//    return SeriesController::calculatePPMSeries($id);
 //    return Parser::test();
 //    return Parser::parseMatchesForGroup(Groups::find(1888), Groups::find(1892));
 //    Updater::updateGroup(1842);
