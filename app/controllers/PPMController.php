@@ -37,7 +37,8 @@ class PPMController extends \BaseController
     {
         list($fromdate, $todate) = StringsUtil::calculateDates($fromdate, $todate);
         list($big, $small) = StringsUtil::calculateHeading($fromdate, $todate, '');
-        $leagues = PPM::ppmLeaguesForDates($fromdate, $todate, Auth::user()->id);
+//        $leagues = PPM::ppmLeaguesForDates($fromdate, $todate, Auth::user()->id);
+        $leagues = LeagueDetails::where('ppm', 1)->get();
         $info = array();
         foreach ($leagues as $league) {
             $info[$league->country]['all'] = count(PPM::ppmForDatesCountry($fromdate, $todate, $league->country, Auth::user()->id));

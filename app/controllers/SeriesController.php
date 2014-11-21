@@ -445,7 +445,7 @@ class SeriesController extends BaseController
                 ->where('game_type_id', '=', $i)
                 ->join('match', 'match.id', '=', 'series_stats.end_match_id')
                 ->orderBy('current_length', "desc")
-                ->take(15)
+                ->take(25)
                 ->lists('current_length');
         }
         $leagues = LeagueDetails::where('ppm', '=', 1)->get();

@@ -165,6 +165,9 @@ class SettingsController extends BaseController
                     ->select('ppm.*')
                     ->get();
                 foreach ($todelete as $d) {
+                    $pl = PPMPlaceHolder::where('active', 1)->where('series_id', $d->series_id)->where('user_id', $d->user_id)->first();
+                    $pl->active = 0;
+                    $pl->save();
                     $d->delete();
                 }
                 $aLog = new ActionLog;
@@ -177,6 +180,7 @@ class SettingsController extends BaseController
 //                $aLog->amount = $s->game_type_id;
                 $aLog->element_id = $s->league_details_id;
                 $aLog->save();
+
                 $s->delete();
             }
         }

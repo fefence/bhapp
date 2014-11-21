@@ -259,6 +259,7 @@ class Updater
         $game->current_length = $series->current_length;
         $game->odds = 3;
         $game->save();
+        PPMPlaceHolder::createPlaceholder($game);
     }
 
     public static function getPPMMatches($league_details_id)

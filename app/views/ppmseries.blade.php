@@ -36,8 +36,8 @@
     <table class="table table-bordered">
         <tr>
             <td></td>
-            <td><span class="text-default"><strong>Note:</strong> First match is top left.</span>&nbsp;<span class="text-danger">
-            <span class="text-danger">Top 5 longest series:
+            <td>
+            <span>Top 25 series:
                         @foreach($stats['all'] as $l)
                             {{$l-1}},&nbsp;
                         @endforeach
