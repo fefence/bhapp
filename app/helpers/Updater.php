@@ -422,9 +422,9 @@ class Updater
                                     $subject = "";
                                     $bodyarr = array();
                                     foreach ($ppms as $ppm) {
-                                        if ($ppm->game_type_id == 5) {
+//                                        if ($ppm->game_type_id == 5) {
                                             $subject = "[" . ucwords($league->country) . "][" . $ppm->current_length . "][" . $next->home . " - " . $next->away . "] " . round($ppm->bet, 0, PHP_ROUND_HALF_UP) . "€ @ " . $ppm->odds . " for " . ($ppm->income - $ppm->bet - $ppm->bsf) . "€";
-                                        }
+//                                        }
                                         $bodyarr[$ppm->type] = array();
                                         $bodyarr[$ppm->type]['length'] = $ppm->current_length;
                                         $bodyarr[$ppm->type]['bsf'] = $ppm->bsf;
