@@ -66,7 +66,11 @@ $elements = array('active' => $active, 'list' => $list);
         <td>{{$info[$d->country][12]}}</td>
         <td>{{$info[$d->country][13]}}</td>
         <td>{{$info[$d->country][14]}}</td>
+        @if($info[$d->country]['all'] == 0)
+        <td>-</td>
+        @else
         <td>@include('layouts.partials.xofy', ['x' => $info[$d->country]['confirmed'], 'y' => $info[$d->country]['all']])</td>
+        @endif
     </tr>
     @endforeach
     </tbody>
