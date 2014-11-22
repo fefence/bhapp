@@ -12,7 +12,7 @@ class LivescoreController extends \BaseController
         $user_id = Auth::user()->id;
         $leagues = Settings::where('user_id', '=', $user_id)
             ->where('game_type_id', '>=', 5)
-            ->where('game_type_id', '<=', 8)
+            ->where('game_type_id', '<=', 14)
             ->lists('league_details_id');
         if (count($leagues) > 0) {
             $ms = Match::where(function ($q) use ($fromdate, $todate, $todate2) {
