@@ -22,7 +22,7 @@ class SeriesController extends BaseController
                 ->orderBy('matchTime')
                 ->get(array('id', 'resultShort', 'home', 'away', 'matchDate', 'matchTime', 'homeGoals', 'awayGoals'));
             foreach ($matches as $match) {
-                for ($i = 9; $i < 15; $i++) {
+                for ($i = 5; $i < 15; $i++) {
                     $series = SeriesStats::where('team', '=', $league->country)->where('active', '=', 1)->where('game_type_id', '=', $i)->first();
                     if ($series == NULL) {
                         $series = new SeriesStats;
