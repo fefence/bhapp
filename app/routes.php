@@ -1,12 +1,12 @@
 <?php
-Route::get('/boo', function(){
-    return Parser::parseMatchesForGroup(Groups::find(1881), Groups::find(1898));
+Route::get('/boo/{id}', function($id){
+//    return Parser::parseMatchesForGroup(Groups::find(1881), Groups::find(1898));
 //    $matches = Match::where('league_details_id', 107)->where('matchTime', '=', '00:00:00')->get();
 //    foreach($matches as $m) {
 //        Parser::parseTimeDate($m);
 //    }
 //    return Parser::parseOdds(Match::find("KQ67VCTe"));
-//    return SeriesController::calculatePPMSeries($id);
+    return SeriesController::calculatePPMSeries($id);
 //    return Parser::test();
 //    return Parser::parseMatchesForGroup(Groups::find(1888), Groups::find(1892));
 //    Updater::updateGroup(1842);
