@@ -1,10 +1,10 @@
 <?php
 Route::get('/boo', function(){
-//    $matches = Match::where('league_details_id', 107)->where('matchTime', '=', '00:00:00')->get();
-//    foreach($matches as $m) {
-//        Parser::parseTimeDate($m);
-//    }
-    return Parser::parseOdds(Match::find("KQ67VCTe"));
+    $matches = Match::where('league_details_id', 107)->where('matchTime', '=', '00:00:00')->get();
+    foreach($matches as $m) {
+        Parser::parseTimeDate($m);
+    }
+//    return Parser::parseOdds(Match::find("KQ67VCTe"));
 //    return SeriesController::calculatePPMSeries($id);
 //    return Parser::test();
 //    return Parser::parseMatchesForGroup(Groups::find(1888), Groups::find(1892));
