@@ -16,8 +16,8 @@ $elements = array('active' => $active, 'list' => $list);
 @section('content')
 <!-- tabbed nav -->
 <ul class="nav nav-pills" id="myTab" style="border: none;">
-    <li class='active'><a href="#myppsleagues">My PPS Leagues</a></li>
-    <li><a href="#myppmleagues">My PPM Leagues</a></li>
+    <li><a href="#myppsleagues">My PPS Leagues</a></li>
+    <li class='active'><a href="#myppmleagues">My PPM Leagues</a></li>
     <li><a href="#mybookmakers">My Bookmakers</a></li>
     <li><a href="#personal">Personal</a></li>
 </ul>
@@ -25,7 +25,7 @@ $elements = array('active' => $active, 'list' => $list);
 <form id="settingsform" method="post" action="settings/save">
     <div id='content' class="tab-content">
         <!-- tab::myleagues -->
-        <div class="tab-pane active" id="myppsleagues">
+        <div class="tab-pane" id="myppsleagues">
 
             <div class="row">
                 <table class="table-bordered" style="margin-bottom: 20px; width: 100%;">
@@ -75,7 +75,7 @@ $elements = array('active' => $active, 'list' => $list);
         </div>
 
         <!-- tab::myppmleagues -->
-        <div class="tab-pane" id="myppmleagues">
+        <div class="tab-pane active" id="myppmleagues">
             <h6>PPM</h6>
 
             <div class="row">
