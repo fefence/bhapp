@@ -48,7 +48,7 @@ class PoolsController extends \BaseController
         $aLog->league_details_id = $pool->league_details_id;
         $aLog->game_type_id = $pool->game_type_id;
         $aLog->save();
-        if ($free == "false" && $pool->game_type_id >= 5 && $pool->game_type_id <= 8) {
+        if ($free == "false" && $pool->game_type_id >= 5 && $pool->game_type_id <= 14) {
             $ppms = PPM::join('match', 'match.id', '=', 'ppm.match_id')
                 ->where('resultShort', '=', '-')
                 ->where('confirmed', '=', 0)
@@ -106,7 +106,7 @@ class PoolsController extends \BaseController
         $aLog->league_details_id = $pool->league_details_id;
         $aLog->game_type_id = $pool->game_type_id;
         $aLog->save();
-        if ($free == "false" && $pool->game_type_id >= 5 && $pool->game_type_id <= 8) {
+        if ($free == "false" && $pool->game_type_id >= 5 && $pool->game_type_id <= 14) {
             $ppms = PPM::join('match', 'match.id', '=', 'ppm.match_id')
                 ->where('resultShort', '=', '-')
                 ->where('confirmed', '=', 0)
@@ -171,7 +171,7 @@ class PoolsController extends \BaseController
         $aLog->user_id = $pool->user_id;
         $aLog->description = $amount." added. Old value ".$old.", new value ".$pool->amount;
 
-        if ($free == "false" && $pool->game_type_id >= 5 && $pool->game_type_id <= 8) {
+        if ($free == "false" && $pool->game_type_id >= 5 && $pool->game_type_id <= 14) {
             $ppms = PPM::join('match', 'match.id', '=', 'ppm.match_id')
                 ->where('resultShort', '=', '-')
                 ->where('confirmed', '=', 0)
