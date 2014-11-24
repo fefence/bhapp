@@ -286,6 +286,181 @@ class Updater
         return $res;
     }
 
+    public static function updateppmFromSummary($league_details_id) {
+        $time = time();
+        try {
+            $matches = self::getPPMMatches($league_details_id);
+            foreach ($matches as $m) {
+                $match = Updater::updateDetails($m);
+                Parser::parseLeagueStandings($match->league_details_id);
+                if ($match->resultShort != '-') {
+
+                    for ($i = 5; $i < 15; $i++) {
+
+                        $serie = Series::where('end_match_id', '=', $match->id)
+                            ->where('league_details_id', '=', $match->league_details_id)
+                            ->where('active', '=', 1)
+                            ->where('game_type_id', '=', $i)
+                            ->first();
+                        if ($serie == null) {
+                            $serie = Series::where('active', '=', 1)
+                                ->where('league_details_id', '=', $match->league_details_id)
+                                ->where('game_type_id', '=', $i)
+                                ->first();
+                        }
+                        $next_matches = self::getNextPPMMatches($match);
+//                        return $next_matches;
+                        if ($next_matches == null) {
+                            continue;
+                        }
+                        foreach ($next_matches as $nm) {
+                            $placeholder = PPMPlaceHolder::where('match_id', '=', $nm->id)
+                                ->get();
+                            foreach ($placeholder as $p) {
+                                $p->active = 0;
+                                $p->save();
+                            }
+                        }
+                        $next_match = self::getNextPPMMatch($match);
+//                        return $next_match;
+                        $games = $match->ppm()->where('game_type_id', '=', $i)->get();
+                        if (SeriesController::endSeries($match, $i)) {
+                            $news = $serie->replicate();
+                            $news->current_length = 1;
+                            $news->start_match_id = $next_match->id;
+                            $news->active = 1;
+                            $serie->active = 0;
+                            $serie->save();
+                            $news->end_match_id = $next_match->id;
+                            $news->save();
+                            $settings = Settings::where('league_details_id', '=', $match->league_details_id)->where('game_type_id', '=', $i)->get();
+                            foreach ($settings as $stngs) {
+                                $confirmedppms = PPM::where('user_id', '=', $stngs->user_id)->where('match_id', '=', $match->id)->where('game_type_id', '=', $i)->where('confirmed', '=', 1)->get();
+                                if ($confirmedppms == null) {
+                                    $pool = Pools::where('user_id', '=', $stngs->user_id)
+                                        ->where('league_details_id', '=', $match->league_details_id)
+                                        ->where('game_type_id', '=', $i)
+                                        ->first();
+                                    $pool->amount = 0;
+                                    $pool->profit = $pool->profit - $pool->bsf;
+                                    $main = CommonPools::where('user_id', '=', $pool->user_id)->first();
+                                    $main->profit = $main->profit - $pool->bsf;
+                                    $main->amount = $main->amount - $pool->bsf;
+                                    $main->save();
+                                }
+                            }
+                            foreach ($games as $game) {
+                                $pool = Pools::firstOrNew(['user_id' => $game->user_id, 'league_details_id' => $match->league_details_id, 'game_type_id' => $i]);
+                                if ($game->confirmed == 1) {
+                                    $main = CommonPools::where('user_id', '=', $game->user_id)->first();
+                                    $main->profit = $main->profit + $game->income - $game->bsf - $game->bet;
+                                    $main->account = $main->account + $game->income;
+                                    $main->amount = $main->amount - $game->bsf;
+                                    $main->save();
+                                    $pool->amount = $pool->amount - $game->bsf;
+                                    $pool->profit = $pool->profit + $game->income - $game->bsf - $game->bet;
+                                    $pool->account = $pool->account + $game->income;
+
+                                }
+                                $pool->save();
+
+                            }
+                            Updater::createPPMGames($next_matches, $i, $news);
+
+                        } else {
+                            $serie->current_length = $serie->current_length + 1;
+                            $serie->end_match_id = $next_match->id;
+                            $serie->save();
+                            foreach ($games as $game) {
+                                $pool = Pools::where('user_id', '=', $game->user_id)
+                                    ->where('game_type_id', '=', $i)
+                                    ->where('league_details_id', '=', $match->league_details_id)
+                                    ->first();
+                                if ($game->confirmed == 1) {
+                                    $pool->amount = $pool->amount + $game->bet;
+                                    $pool->save();
+                                    $main = CommonPools::where('user_id', '=', $game->user_id)->first();
+                                    $main->amount = $main->amount + $game->bet;
+                                    $main->save();
+                                }
+
+                            }
+                            Updater::createPPMGames($next_matches, $i, $serie);
+                        }
+
+                    }
+                    for ($i = 1; $i < 5; $i++) {
+                        $user = User::find($i);
+                        if (count($next_matches) > 0) {
+                            foreach ($next_matches as $next) {
+                                $conf = PPM::where('match_id', '=', $next->id)
+                                    ->where('bet', '<>', 0)
+                                    ->where('confirmed', '=', 1)
+                                    ->where('user_id', '=', $i)
+                                    ->lists('game_type_id');
+                                if (count($conf) == 0) {
+                                    $conf = [-1];
+                                }
+                                $ppms = PPM::where('match_id', '=', $next->id)
+                                    ->where('bet', '<>', 0)
+                                    ->where('user_id', '=', $i)
+                                    ->join('game_type', 'game_type.id', '=', 'ppm.game_type_id')
+                                    ->select(DB::raw("ppm.*, game_type.type as type"))
+                                    ->orderBy('game_type_id')
+                                    ->get();
+                                if (count($ppms) > 0) {
+                                    $league = LeagueDetails::find($next->league_details_id);
+                                    $text = "";
+//                                        "<span  style='font-size: 18px;'><a href='".URL::to("/")."/confirmallppm/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate . "'>[confirm]</a></span><br><br>" . $next->home . " - " . $next->away . "<br>
+//                                    <p>" . Updater::getLastTenMatches($match) . "</p>";
+                                    $confirm_link = URL::to("/") . "/confirmallppm/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate;
+                                    $res = Updater::getLastTenMatches($match);
+                                    $subject = "";
+                                    $bodyarr = array();
+                                    foreach ($ppms as $ppm) {
+//                                        if ($ppm->game_type_id == 5) {
+                                        $subject = "[" . ucwords($league->country) . "][" . $ppm->current_length . "][" . $next->home . " - " . $next->away . "] " . round($ppm->bet, 0, PHP_ROUND_HALF_UP) . "€ @ " . $ppm->odds . " for " . ($ppm->income - $ppm->bet - $ppm->bsf) . "€";
+//                                        }
+                                        $bodyarr[$ppm->type] = array();
+                                        $bodyarr[$ppm->type]['length'] = $ppm->current_length;
+                                        $bodyarr[$ppm->type]['bsf'] = $ppm->bsf;
+                                        $bodyarr[$ppm->type]['bet'] = round($ppm->bet, 0);
+                                        $bodyarr[$ppm->type]['odds'] = $ppm->odds;
+                                        $bodyarr[$ppm->type]['profit'] = ($ppm->income - $ppm->bet - $ppm->bsf);
+                                        $bodyarr[$ppm->type]['confirmed'] = "";
+                                        if (in_array($ppm->game_type_id, $conf)) {
+                                            if ($ppm->confirmed == 1) {
+                                                $bodyarr[$ppm->type]['confirmed'] = "(confirmed)";
+                                            }
+                                        }
+                                    }
+//                                    return $bodyarr;
+                                    $link_to_group = URL::to("/") . "/ppm/country/" . $league->country . "/" . $next->matchDate . "/" . $next->matchDate;
+                                    Mail::send('emails.confirm', ['body' => $bodyarr, 'link_to_group' => $link_to_group, 'confirm_link' => $confirm_link, 'res' => $res, 'home' => $next->home, 'away' => $next->away, 'date' => $next->matchDate, 'time' => $next->matchTime], function ($message) use ($user, $subject) {
+                                        $message->to([$user->email => $user->name])
+                                            ->subject($subject);
+                                    });
+                                }
+                            }
+                        } else {
+                            echo 'No next matches for ' . $serie->league_details_id;
+                        }
+                    }
+
+                }
+            }
+        } catch (ErrorException $e) {
+            Mail::send('emails.email', ['data' => "Error in update of league $league_details_id"], function ($message){
+                $message->to(['wpopowa@gmail.com' => 'Vesela Popova'])
+                    ->subject("Exception in ppm update");
+            });
+            return $e;
+        }
+        Parser::parseMatchesFromSummary($league_details_id);
+        return (time() - $time);
+
+    }
+
     public static function updatePPM($league_details_id)
     {
         $time = time();
