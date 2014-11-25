@@ -57,14 +57,14 @@ Route::post('/saveleaguestoplay', "SettingsController@saveLeagues");
 Route::get('/ppm/series/{id}', "PPMController@displaySeries");
 Route::get('/ppm/flat/{from?}/{to?}', "PPMController@displayFlatView");
 Route::get('/ppm/country/{country}/{from?}/{to?}', "PPMController@display");
-Route::get('/ppm/{from?}/{to?}', "PPMController@displayCountries");
+Route::get('/ppm/{from?}/{to?}', array('as' => 'home', "uses" => "PPMController@displayCountries"));
 Route::get('/ppmall/{from?}/{to?}/odds', "PPMController@getOdds");
 Route::get('/ppm/{country}/{from}/{to}/odds', "PPMController@getOddsForCountry");
 Route::get('/confirmallppm/{country}/{from}/{to}', "GamesController@confirmAllPPM");
 
 //livescore
 Route::get('/live/match/{match_id}', "LivescoreController@matchScore");
-Route::get('/live/{from?}/{to?}', array('as' => 'home', "uses" => "LivescoreController@livescore"));
+Route::get('/live/{from?}/{to?}', "LivescoreController@livescore");
 
 //Groups views
 Route::get('/pps/group/{id}/{offset}', 'GamesController@getGamesForGroupOffset');
