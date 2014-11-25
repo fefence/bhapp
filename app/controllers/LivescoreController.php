@@ -10,10 +10,8 @@ class LivescoreController extends \BaseController
 //        $ids = PPM::where('user_id', '=', Auth::user()->id)->lists('match_id');
 //        return $ids;
         $user_id = Auth::user()->id;
-        $leagues = Settings::where('user_id', '=', $user_id)
-            ->where('game_type_id', '>=', 5)
-            ->where('game_type_id', '<=', 14)
-            ->lists('league_details_id');
+        $leagues = LeagueDetails::where('ppm', 1)
+            ->lists('id');
         if (count($leagues) > 0) {
             $ms = Match::where(function ($q) use ($fromdate, $todate, $todate2) {
                 $q->where(function ($q) use ($fromdate, $todate, $todate2) {
