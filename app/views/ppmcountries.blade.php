@@ -56,16 +56,9 @@ $elements = array('active' => $active, 'list' => $list);
             <a href="/ppm/country/{{$d->country}}/{{isset($fromdate)?$fromdate.'/':''}}{{isset($todate)?$todate:''}}"><img src="/images/{{strtoupper($d->country)}}.png"> {{$d->country}}</a>
             @endif
             </td>
-        <td @if($info[$d->country][5] > $info[$d->country][55]) class="text-danger" style='font-weight: bold' @endif>{{$info[$d->country][5]}}</td>
-        <td @if($info[$d->country][6] > $info[$d->country][66]) class="text-danger" style='font-weight: bold' @endif>{{$info[$d->country][6]}}</td>
-        <td @if($info[$d->country][7] > $info[$d->country][77]) class="text-danger" style='font-weight: bold' @endif>{{$info[$d->country][7]}}</td>
-        <td @if($info[$d->country][8] > $info[$d->country][88]) class="text-danger" style='font-weight: bold' @endif>{{$info[$d->country][8]}}</td>
-        <td @if($info[$d->country][9] > $info[$d->country][99]) class="text-danger" style='font-weight: bold' @endif>{{$info[$d->country][9]}}</td>
-        <td @if($info[$d->country][10] > $info[$d->country][1010]) class="text-danger" style='font-weight: bold' @endif>{{$info[$d->country][10]}}</td>
-        <td @if($info[$d->country][11] > $info[$d->country][1111]) class="text-danger" style='font-weight: bold' @endif>{{$info[$d->country][11]}}</td>
-        <td @if($info[$d->country][12] > $info[$d->country][1212]) class="text-danger" style='font-weight: bold' @endif>{{$info[$d->country][12]}}</td>
-        <td @if($info[$d->country][13] > $info[$d->country][1313]) class="text-danger" style='font-weight: bold' @endif>{{$info[$d->country][13]}}</td>
-        <td @if($info[$d->country][14] > $info[$d->country][1414]) class="text-danger" style='font-weight: bold' @endif>{{$info[$d->country][14]}}</td>
+        @for($i = 5; $i < 15; $i ++)
+            <td data-toggle="tooltip" title="{{$info[$d->country][$i.$i][1]}}" @if($info[$d->country][$i] > $info[$d->country][$i.$i][0]) class="text-danger hasTooltip" style='font-weight: bold' @else class="hasTooltip" @endif>{{$info[$d->country][$i]}}</td>
+        @endfor
         @if($info[$d->country]['all'] == 0)
         <td>-</td>
         @else

@@ -43,38 +43,17 @@ class PPMController extends \BaseController
         foreach ($leagues as $league) {
             $info[$league->country]['all'] = count(PPM::ppmForDatesCountry($fromdate, $todate, $league->country, Auth::user()->id));
             $info[$league->country]['confirmed'] = PPM::ppmConfirmedForLeague($fromdate, $todate, $league, Auth::user()->id);
-            $info[$league->country][5] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 5)->first(['current_length'])->current_length;
-            $info[$league->country][6] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 6)->first(['current_length'])->current_length;
-            $info[$league->country][7] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 7)->first(['current_length'])->current_length;
-            $info[$league->country][8] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 8)->first(['current_length'])->current_length;
-            $info[$league->country][9] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 9)->first(['current_length'])->current_length;
-            $info[$league->country][10] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 10)->first(['current_length'])->current_length;
-            $info[$league->country][11] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 11)->first(['current_length'])->current_length;
-            $info[$league->country][12] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 12)->first(['current_length'])->current_length;
-            $info[$league->country][13] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 13)->first(['current_length'])->current_length;
-            $info[$league->country][14] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', 14)->first(['current_length'])->current_length;
-            $t5 = SeriesStats::where('league_details_id', '=', $league->id)->where('game_type_id', '=', 5)->orderBy('current_length', 'desc')->take(25)->lists('current_length');
-            $info[$league->country][55] = $t5[count($t5) - 1];
-            $t6 = SeriesStats::where('league_details_id', '=', $league->id)->where('game_type_id', '=', 6)->orderBy('current_length', 'desc')->take(25)->lists('current_length');
-            $info[$league->country][66] = $t6[count($t6) - 1];
-            $t7 = SeriesStats::where('league_details_id', '=', $league->id)->where('game_type_id', '=', 7)->orderBy('current_length', 'desc')->take(25)->lists('current_length');
-            $info[$league->country][77] = $t7[count($t7) - 1];
-            $t8 = SeriesStats::where('league_details_id', '=', $league->id)->where('game_type_id', '=', 8)->orderBy('current_length', 'desc')->take(25)->lists('current_length');
-            $info[$league->country][88] = $t8[count($t8) - 1];
-            $t9 = SeriesStats::where('league_details_id', '=', $league->id)->where('game_type_id', '=', 9)->orderBy('current_length', 'desc')->take(25)->lists('current_length');
-            $info[$league->country][99] = $t9[count($t9) - 1];
-            $t10 = SeriesStats::where('league_details_id', '=', $league->id)->where('game_type_id', '=', 10)->orderBy('current_length', 'desc')->take(25)->lists('current_length');
-            $info[$league->country][1010] = $t10[count($t10) - 1];
-            $t11 = SeriesStats::where('league_details_id', '=', $league->id)->where('game_type_id', '=', 11)->orderBy('current_length', 'desc')->take(25)->lists('current_length');
-            $info[$league->country][1111] = $t11[count($t11) - 1];
-            $t12 = SeriesStats::where('league_details_id', '=', $league->id)->where('game_type_id', '=', 12)->orderBy('current_length', 'desc')->take(25)->lists('current_length');
-            $info[$league->country][1212] = $t12[count($t12) - 1];
-            $t13 = SeriesStats::where('league_details_id', '=', $league->id)->where('game_type_id', '=', 13)->orderBy('current_length', 'desc')->take(25)->lists('current_length');
-            $info[$league->country][1313] = $t13[count($t13) - 1];
-            $t14 = SeriesStats::where('league_details_id', '=', $league->id)->where('game_type_id', '=', 14)->orderBy('current_length', 'desc')->take(25)->lists('current_length');
-            $info[$league->country][1414] = $t14[count($t14) - 1];
+            for($i = 5; $i < 15; $i ++) {
+                $info[$league->country][$i] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', $i)->first(['current_length'])->current_length;
+                $t = SeriesStats::where('league_details_id', '=', $league->id)->where('game_type_id', '=', $i)->orderBy('current_length', 'desc')->take(25)->lists('current_length');
+                $info[$league->country][$i.$i][0] = $t[count($t) - 1];
+                $str = '';
+                foreach($t as $l) {
+                    $str = $str.$l." ";
+                }
+                $info[$league->country][$i.$i][1] = $str;
+            }
         }
-//        return $info;
         return View::make('ppmcountries')->with(['all_btn' => 'flat', 'data' => $leagues, 'info' => $info, 'fromdate' => $fromdate, 'todate' => $todate, 'big' => $big, 'small' => $small, 'all_link' => "ppm/flat/$fromdate/$todate", 'ppm' => true]);
     }
 
