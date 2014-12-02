@@ -1,15 +1,15 @@
 <?php
-Route::get('/boo/{league}/{season}', function($id, $season){
+Route::get('/boo/{league}', function($id){
 //    return Updater::updateppmFromSummary(1);
 //    return Parser::parseMatchesForLeagueAndSeason($id, $season);
 
 //    return Parser::parseMatchesForGroup(Groups::find(1881), Groups::find(1898));
-    $matches = Match::where('league_details_id', 115)->where('matchTime', '=', '00:00:00')->get();
-    foreach($matches as $m) {
-        Parser::parseTimeDate($m);
-    }
+//    $matches = Match::where('league_details_id', 115)->where('matchTime', '=', '00:00:00')->get();
+//    foreach($matches as $m) {
+//        Parser::parseTimeDate($m);
+//    }
 //    return Parser::parseOdds(Match::find("KQ67VCTe"));
-//    return SeriesController::calculatePPMSeries($id);
+    return SeriesController::calculatePPMSeries($id);
 //    return Parser::test();
 //    return Parser::parseMatchesForGroup(Groups::find(1888), Groups::find(1892));
 //    Updater::updateGroup(1842);

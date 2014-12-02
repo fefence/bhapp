@@ -10,14 +10,14 @@ class SeriesController extends BaseController
         $leagues = LeagueDetails::where('id', '=', $id)->get();
         foreach ($leagues as $league) {
             $matches = Match::where('league_details_id', '=', $league->id)
-                ->where(function ($q) use ($end_match) {
-                    $q->where('matchDate', '>', $end_match->matchDate)
-                        ->orWhere(function ($query) use ($end_match) {
-                            $query->where('matchDate', '=', $end_match->matchDate)
-                                ->where('matchTime', '>', $end_match->matchTime);
-                        });
-                })
-//            ->where('season', '>', '2008-2009')
+//                ->where(function ($q) use ($end_match) {
+//                    $q->where('matchDate', '>', $end_match->matchDate)
+//                        ->orWhere(function ($query) use ($end_match) {
+//                            $query->where('matchDate', '=', $end_match->matchDate)
+//                                ->where('matchTime', '>', $end_match->matchTime);
+//                        });
+//                })
+            ->where('season', '<', '2008-2009')
                 ->orderBy('matchDate')
                 ->orderBy('matchTime')
                 ->get(array('id', 'resultShort', 'home', 'away', 'matchDate', 'matchTime', 'homeGoals', 'awayGoals'));
