@@ -18,18 +18,18 @@ $elements = array('active' => $active, 'list' => $list);
 <table id="matches">
     <thead>
     <tr>
-        <th><input type="text" name="search_engine" class="search_init" placeholder="league"></th>
-        <th><input type="hidden"></th>
-        <th><input type="hidden"></th>
-        <th><input type="hidden"></th>
-        <th><input type="hidden"></th>
-        <th><input type="hidden"></th>
-        <th><input type="hidden"></th>
-        <th><input type="hidden"></th>
-        <th><input type="hidden"></th>
-        <th><input type="hidden"></th>
-        <th><input type="hidden"></th>
-        <th><input type="hidden"></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
     </tr>
     <tr>
         <th>league</th>
@@ -55,7 +55,7 @@ $elements = array('active' => $active, 'list' => $list);
             @else
             <a href="/ppm/country/{{$d->country}}/{{isset($fromdate)?$fromdate.'/':''}}{{isset($todate)?$todate:''}}"><img src="/images/{{strtoupper($d->country)}}.png"> {{$d->country}}</a>
             @endif
-            </td>
+            <a href='http://www.betexplorer.com/soccer/{{$d->country}}/{{$d->fullName}}'>[be]</a> <a href='http://www.sportstats.com/soccer/{{$d->country}}/{{$d->fullName}}'>[ss]</a></td>
         @for($i = 5; $i < 15; $i ++)
             <td data-toggle="tooltip" title="{{$info[$d->country][$i.$i][1]}}" @if($info[$d->country][$i] > $info[$d->country][$i.$i][0]) class="text-danger hasTooltip" style='font-weight: bold' @else class="hasTooltip" @endif>{{$info[$d->country][$i]}}</td>
         @endfor

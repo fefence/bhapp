@@ -766,4 +766,57 @@ class Parser
         return array(6 => $odds00, 7 => $odds11, 8 => $odds22, 9 => $odds01, 10 => $odds02, 11 => $odds10, 12 => $odds20, 13 => $odds12, 14 => $odds21);
     }
 
+    public static function parseMatchesForLeagueAndSeason($league_details_id, $season) {
+        //www.betexplorer.com/soccer/india/i-league-2003-2004/results/
+        //leagueresults_tbody
+        $league = LeagueDetails::find($league_details_id);
+        $url = "http://www.betexplorer.com/soccer/".$league->country."/".$league->fullName."-".$season."/results/";
+        if (Parser::get_http_response_code($url) != "200") {
+            return "Wrong fixtures url! --> $url";
+        }
+        $data = file_get_contents($url);
+
+        $dom = new domDocument;
+
+        @$dom->loadHTML($data);
+        $dom->preserveWhiteSpace = false;
+
+        $table = $dom->getElementById("leagueresults_tbody");
+        $rows = $table->getElementsByTagName("tr");
+        foreach($rows as $row) {
+            $cols = $row->getElementsByTagName("td");
+            if ($cols->length > 0) {
+                $attrs = $cols->item(0)->getElementsByTagName("a");
+                $urlarr = explode("=", $attrs->item(0)->getAttribute('href'));
+                $id = $urlarr[1];
+                $ha = explode(' - ', $cols->item(0)->nodeValue);
+                $match = Match::firstOrCreate(['id' => $id]);
+                $match->home = $ha[0];
+                $match->away = $ha[1];
+                $ra = explode(':', $cols->item(1)->nodeValue);
+                if (count($ra) > 1) {
+                    $match->homeGoals = $ra[0];
+                    $match->awayGoals = $ra[1];
+                    if ($ra[0] > $ra[1]) {
+                        $match->resultShort = 'H';
+                    } else if ($ra[0] < $ra[1]) {
+                        $match->resultShort = 'A';
+                    } else {
+                        $match->resultShort = 'D';
+                    }
+                } else {
+                    echo $match->id."<br>";
+//                    return $match;
+//                    $match->resultShort = '';
+                }
+                $match->league_details_id = $league_details_id;
+                $match->season = $season;
+                $match->save();
+//                Parser::parseTimeDate($match);
+            }
+
+        }
+        return "finished";
+    }
+
 }

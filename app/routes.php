@@ -1,6 +1,8 @@
 <?php
-Route::get('/boo', function(){
-    return Updater::updateppmFromSummary(1);
+Route::get('/boo/{league}/{season}', function($id, $season){
+//    return Updater::updateppmFromSummary(1);
+    return Parser::parseMatchesForLeagueAndSeason($id, $season);
+
 //    return Parser::parseMatchesForGroup(Groups::find(1881), Groups::find(1898));
 //    $matches = Match::whereIn('league_details_id', [1, 6, 17, 35, 39, 69, 74, 85, 100, 107])->where('matchTime', '=', '00:00:00')->get();
 //    foreach($matches as $m) {

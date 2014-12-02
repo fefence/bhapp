@@ -58,9 +58,9 @@ class GamesController extends \BaseController
 
         $plusminus = GroupController::getMatchesCountForChangedSettings(Auth::user()->id, $league_details_id, $gr->id);
         if ($tail == "" || isset($offset)) {
-            return View::make('matches')->with(['all_link' => "pps/group/$league_details_id", 'all_active' => true, 'plus' => $plusminus[0], 'minus'=>$plusminus[1], 'settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/$fromdate/$todate", 'base_minus' => "pps/group/$league_details_id/" . ($offset + 1), 'base_plus' => "pps/group/$league_details_id/" . ($offset - 1), 'big' => "Round " . $gr->round, 'small' => "current", 'disable' => $disable]);
+            return View::make('matches')->with(['all_link' => "pps/group/$league_details_id", 'all_active' => true, 'plus' => $plusminus[0], 'minus' => $plusminus[1], 'settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'base' => "pps/group/$league_details_id/$fromdate/$todate", 'base_minus' => "pps/group/$league_details_id/" . ($offset + 1), 'base_plus' => "pps/group/$league_details_id/" . ($offset - 1), 'big' => "Round " . $gr->round, 'small' => "current", 'disable' => $disable]);
         }
-        return View::make('matches')->with(['plus' => $plusminus[0],'minus'=>$plusminus[1],'settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "pps/group/$league_details_id", 'big' => $big, 'small' => $small, 'disable' => $disable]);
+        return View::make('matches')->with(['plus' => $plusminus[0], 'minus' => $plusminus[1], 'settings' => $settings, 'tail' => $tail, 'league' => $league, 'standings' => $standings, 'datarr' => $arr, 'count' => $count, 'pool' => $pool, 'group' => $id, 'fromdate' => $fromdate, 'todate' => $todate, 'base' => "pps/group/$league_details_id", 'big' => $big, 'small' => $small, 'disable' => $disable]);
     }
 
     public static function getGamesForGroupOffset($league_details_id, $offset)
@@ -217,6 +217,11 @@ class GamesController extends \BaseController
         }
         $value = Input::get('value');
         $bsf = "";
+        if ($col == 8 || $col == '8') {
+            $league_details_id = Match::find($game->match_id)->league_details_id;
+            $pool = Pools::where('user_id', '=', $game->user_id)->where('league_details_id', '=', $league_details_id)->first();
+            $diff = $value - $pool->amount;
+        }
         if ($col == 9 || $col == '9') {
             $bsf = $game->bsf;
             $game->bsf = $value;
@@ -278,8 +283,8 @@ class GamesController extends \BaseController
     }
 
 
-
-    public static function removeGameFromGroup($games_id, $groups_id) {
+    public static function removeGameFromGroup($games_id, $groups_id)
+    {
         $to_delete = Games::find($games_id);
         $bsfsum = $to_delete->bsf;
         $to_delete->delete();

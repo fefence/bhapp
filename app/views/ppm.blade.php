@@ -75,7 +75,7 @@ $i = 0;
         <td>{{$d->resultShort}}</td>
         <td class='text-muted'><em>{{$d->type}}</em></td>
 <!--        <td class='editabledd warning'>{{$d->bookmakerName}}</td>-->
-        <td>{{$d->bsf}}</td>
+        <td @if($d->resultShort == '-') class='editable' @endif>{{$d->bsf}}</td>
         <td @if($d->resultShort == '-') class='editable oddsColumn' @endif id="{{$d->game_type_id}}">{{$d->bet}}</td>
         @if ($d->odds == 0 || $d->odds == -1)
         <td style="background-color: #F8E0E6;" @if($d->resultShort == '-') class='editable' @endif id="{{$d->game_type_id}}">3.00</td>
