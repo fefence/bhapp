@@ -772,7 +772,10 @@ class Parser
         $league = LeagueDetails::find($league_details_id);
         $url = "http://www.betexplorer.com/soccer/".$league->country."/".$league->fullName."-".$season."/results/";
         if (Parser::get_http_response_code($url) != "200") {
-            return "Wrong fixtures url! --> $url";
+            $url = "http://www.betexplorer.com/soccer/".$league->country."/".$league->fullName."/results/";
+            if (Parser::get_http_response_code($url)) {
+                return "Wrong fixtures url! --> $url";
+            }
         }
         $data = file_get_contents($url);
 
