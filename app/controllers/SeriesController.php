@@ -5,8 +5,8 @@ class SeriesController extends BaseController
     {
 //        $ids = [1, 6, 17, 35, 39];
 //        , 69, 74, 85, 100
-        $end_match_id = SeriesStats::where('active', '=', 1)->where('league_details_id', '=', $id)->first()->end_match_id;
-        $end_match = Match::find($end_match_id);
+//        $end_match_id = SeriesStats::where('active', '=', 1)->where('league_details_id', '=', $id)->first()->end_match_id;
+//        $end_match = Match::find($end_match_id);
         $leagues = LeagueDetails::where('id', '=', $id)->get();
         foreach ($leagues as $league) {
             $matches = Match::where('league_details_id', '=', $league->id)
