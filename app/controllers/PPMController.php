@@ -46,7 +46,7 @@ class PPMController extends \BaseController
             for($i = 5; $i < 15; $i ++) {
                 $info[$league->country][$i] = Series::where('league_details_id', '=', $league->id)->where('active', '=', 1)->where('game_type_id', '=', $i)->first(['current_length'])->current_length;
                 $t = SeriesStats::where('league_details_id', '=', $league->id)->where('game_type_id', '=', $i)->orderBy('current_length', 'desc')->take(25)->lists('current_length');
-                $info[$league->country][$i.$i][0] = $t[count($t) - 1];
+                $info[$league->country][$i.$i][0] = $t[count($t) - 11];
                 $str = '';
                 foreach($t as $l) {
                     $str = $str.$l." ";
