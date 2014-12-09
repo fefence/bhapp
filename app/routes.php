@@ -4,7 +4,7 @@ Route::get('/boo/{league}', function($id){
     return Parser::parseMatchesForLeagueAndSeason($id, '2014-2015');
 
 //    return Parser::parseMatchesForGroup(Groups::find(1881), Groups::find(1898));
-    $matches = Match::where('league_details_id', 115)->where('matchTime', '=', '00:00:00')->get();
+    $matches = Match::where('league_details_id', $id)->where('matchTime', '=', '00:00:00')->get();
     foreach($matches as $m) {
         Parser::parseTimeDate($m);
     }
