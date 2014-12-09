@@ -742,6 +742,7 @@ class Parser
 //        $odds11 = 3;
 //        $odds22 = 3;
         try {
+//            $oddsx = $odds_arr['d']['oddsdata']['back']
             $odds00 = $odds_arr['d']['oddsdata']["back"]['E-8-2-0-0-1']['odds'][16][0];
             $odds11 = $odds_arr['d']['oddsdata']["back"]['E-8-2-0-0-3']['odds'][16][0];
             $odds22 = $odds_arr['d']['oddsdata']["back"]['E-8-2-0-0-7']['odds'][16][0];
