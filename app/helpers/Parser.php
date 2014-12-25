@@ -818,7 +818,7 @@ class Parser
                 $match->season = $season;
                 $match->save();
                 echo $match->id;
-//                Parser::parseTimeDate($match);
+                Parser::parseTimeDate($match);
             }
 
         }
