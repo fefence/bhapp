@@ -778,6 +778,7 @@ class Parser
 //                return "Wrong fixtures url! --> $url";
             }
         }
+        return $url;
         $data = file_get_contents($url);
 
         $dom = new domDocument;
