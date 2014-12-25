@@ -774,7 +774,9 @@ class Parser
         $url = "http://www.betexplorer.com/soccer/".$league->country."/".$league->fullName."-".$season."/results/";
         if (Parser::get_http_response_code($url) != "200") {
             $url = "http://www.betexplorer.com/soccer/".$league->country."/".$league->fullName."/results/";
-            if (Parser::get_http_response_code($url)) {
+            if (Parser::get_http_response_code($url) != '200') {
+                $url = "http://www.betexplorer.com/soccer/".$league->country."/".$league->alternativeName."-".$season."/results/";
+
 //                return "Wrong fixtures url! --> $url";
             }
         }
