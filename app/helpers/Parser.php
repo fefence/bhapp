@@ -778,7 +778,7 @@ class Parser
 //                return "Wrong fixtures url! --> $url";
             }
         }
-        return $url;
+//        return $url;
         $data = file_get_contents($url);
 
         $dom = new domDocument;
@@ -817,6 +817,7 @@ class Parser
                 $match->league_details_id = $league_details_id;
                 $match->season = $season;
                 $match->save();
+                echo $match->id;
 //                Parser::parseTimeDate($match);
             }
 
